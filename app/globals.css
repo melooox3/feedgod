@@ -1,0 +1,268 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import '@solana/wallet-adapter-react-ui/styles.css';
+
+:root {
+  --feedgod-primary: #EC4899;
+  --feedgod-secondary: #F472B6;
+  --feedgod-accent: #F9A8D4;
+  --feedgod-light: #FCE7F3;
+  --feedgod-bg: #FFF1F2;
+}
+
+.dark {
+  --feedgod-primary: #FF00FF;
+  --feedgod-secondary: #00FFFF;
+  --feedgod-accent: #9D4EDD;
+  --feedgod-light: #1A1F3A;
+  --feedgod-bg: #0A0E27;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: #FFF1F2;
+  color: #1F2937;
+}
+
+body {
+  background: 
+    radial-gradient(ellipse at top left, rgba(236, 72, 153, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(244, 114, 182, 0.2) 0%, transparent 50%),
+    radial-gradient(ellipse at center, rgba(249, 168, 212, 0.1) 0%, transparent 70%),
+    linear-gradient(135deg, #FFF1F2 0%, #FCE7F3 50%, #FFF1F2 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  transition: background 0.3s ease;
+}
+
+.dark body {
+  background: 
+    radial-gradient(ellipse at top left, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at center, rgba(157, 78, 221, 0.08) 0%, transparent 70%),
+    linear-gradient(135deg, #0A0E27 0%, #1A1F3A 50%, #0A0E27 100%);
+  color: #E5E7EB;
+}
+
+.pixel-font {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  line-height: 1.6;
+  letter-spacing: 0.5px;
+}
+
+.pixel-font-large {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 24px;
+  line-height: 1.6;
+  letter-spacing: 2px;
+  font-weight: 900;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Custom scrollbar - pink theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FCE7F3;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #1A1F3A;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #F472B6;
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #9D4EDD;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #EC4899;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #FF00FF;
+}
+
+/* Animations */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
+  background: linear-gradient(
+    to right,
+    #FCE7F3 0%,
+    #F9A8D4 20%,
+    #FCE7F3 40%,
+    #FCE7F3 100%
+  );
+  background-size: 1000px 100%;
+}
+
+/* Star glow animation */
+.star-glow,
+.star-glow-on-hover {
+  position: relative;
+  transition: all 0.3s ease;
+  overflow: visible;
+}
+
+.star-glow:hover {
+  animation: starGlow 1.5s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(236, 72, 153, 0.6))
+          drop-shadow(0 0 12px rgba(244, 114, 182, 0.4))
+          drop-shadow(0 0 16px rgba(249, 168, 212, 0.3));
+}
+
+.star-glow-on-hover {
+  overflow: visible;
+  isolation: isolate;
+}
+
+.star-glow-on-hover:hover {
+  animation: starGlow 1.5s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(236, 72, 153, 0.6))
+          drop-shadow(0 0 12px rgba(244, 114, 182, 0.4))
+          drop-shadow(0 0 16px rgba(249, 168, 212, 0.3));
+}
+
+.star-glow-on-hover::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 12px;
+  background: radial-gradient(circle at center, 
+    rgba(236, 72, 153, 0.4) 0%, 
+    rgba(244, 114, 182, 0.3) 30%, 
+    rgba(249, 168, 212, 0.2) 60%, 
+    transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: -1;
+  filter: blur(8px);
+}
+
+.star-glow-on-hover:hover::before {
+  opacity: 1;
+}
+
+.dark .star-glow-on-hover::before {
+  background: radial-gradient(circle at center, 
+    rgba(255, 0, 255, 0.5) 0%, 
+    rgba(0, 255, 255, 0.4) 30%, 
+    rgba(157, 78, 221, 0.3) 60%, 
+    transparent 100%);
+}
+
+@keyframes starGlow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(236, 72, 153, 0.5),
+                0 0 10px rgba(244, 114, 182, 0.3),
+                0 0 15px rgba(249, 168, 212, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 10px rgba(236, 72, 153, 0.8),
+                0 0 20px rgba(244, 114, 182, 0.6),
+                0 0 30px rgba(249, 168, 212, 0.4),
+                0 0 40px rgba(236, 72, 153, 0.2);
+  }
+}
+
+.dark .star-glow:hover,
+.dark .star-glow-on-hover:hover {
+  animation: starGlowDark 1.5s ease-in-out infinite;
+}
+
+@keyframes starGlowDark {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(255, 0, 255, 0.6),
+                0 0 10px rgba(0, 255, 255, 0.4),
+                0 0 15px rgba(157, 78, 221, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 10px rgba(255, 0, 255, 0.9),
+                0 0 20px rgba(0, 255, 255, 0.7),
+                0 0 30px rgba(157, 78, 221, 0.5),
+                0 0 40px rgba(255, 0, 255, 0.3);
+  }
+}
+
+/* Stars floating out */
+.star-glow:hover::before,
+.star-glow:hover::after,
+.star-glow-on-hover:hover::before,
+.star-glow-on-hover:hover::after {
+  content: '✨';
+  position: absolute;
+  font-size: 14px;
+  pointer-events: none;
+  z-index: 1000;
+  top: 50%;
+  left: 50%;
+}
+
+.star-glow:hover::before,
+.star-glow-on-hover:hover::before {
+  animation: starFloat1 1s ease-out forwards;
+}
+
+.star-glow:hover::after,
+.star-glow-on-hover:hover::after {
+  content: '⭐';
+  font-size: 12px;
+  animation: starFloat2 1s ease-out forwards;
+  animation-delay: 0.2s;
+}
+
+@keyframes starFloat1 {
+  0% {
+    transform: translate(-50%, -50%) scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) translate(-40px, -40px) scale(1.8) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes starFloat2 {
+  0% {
+    transform: translate(-50%, -50%) scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) translate(40px, 40px) scale(1.8) rotate(-360deg);
+    opacity: 0;
+  }
+}
