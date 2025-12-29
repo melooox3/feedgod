@@ -195,7 +195,7 @@ export default function VRFBuilder({ config, onConfigChange }: VRFBuilderProps) 
         {/* Right Column - Info & Actions */}
         <div className="space-y-6">
           <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-            <h3 className="text-lg font-semibold text-feedgod-dark mb-4 flex items-center gap-2">
+            <h3 className="text-base font-semibold text-feedgod-dark mb-3 flex items-center gap-2">
               <Dice6 className="w-5 h-5 text-feedgod-primary" />
               VRF Info
             </h3>

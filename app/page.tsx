@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Plus } from 'lucide-react'
 import FeedBuilder from '@/components/FeedBuilder'
 import FunctionBuilder from '@/components/FunctionBuilder'
@@ -20,6 +20,25 @@ export default function Home() {
   const [vrfConfig, setVRFConfig] = useState<VRFConfig | null>(null)
   const [secretConfig, setSecretConfig] = useState<SecretConfig | null>(null)
   const [showBulkCreator, setShowBulkCreator] = useState(false)
+  const prevTabRef = useRef<BuilderType | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  // Track tab changes for debugging
+  useEffect(() => {
+    if (prevTabRef.current !== activeTab) {
+      console.log('[Tab Debug] Tab changed from', prevTabRef.current, 'to', activeTab)
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect()
+        console.log('[Tab Debug] Container dimensions:', {
+          width: rect.width,
+          height: rect.height,
+          top: rect.top,
+          left: rect.left
+        })
+      }
+      prevTabRef.current = activeTab
+    }
+  }, [activeTab])
 
   // Load config from sessionStorage if available (from profile page)
   useEffect(() => {
@@ -92,8 +111,15 @@ export default function Home() {
   }
 
   const renderBuilder = () => {
+    console.log('[Tab Debug] Rendering builder for tab:', activeTab)
+    console.log('[Tab Debug] Feed config:', feedConfig)
+    console.log('[Tab Debug] Function config:', functionConfig)
+    console.log('[Tab Debug] VRF config:', vrfConfig)
+    console.log('[Tab Debug] Secret config:', secretConfig)
+    
     switch (activeTab) {
       case 'feed':
+        console.log('[Tab Debug] Rendering FeedBuilder')
         return (
           <FeedBuilder
             config={feedConfig}
@@ -101,6 +127,7 @@ export default function Home() {
           />
         )
       case 'function':
+        console.log('[Tab Debug] Rendering FunctionBuilder')
         return (
           <FunctionBuilder
             config={functionConfig}
@@ -108,6 +135,7 @@ export default function Home() {
           />
         )
       case 'vrf':
+        console.log('[Tab Debug] Rendering VRFBuilder')
         return (
           <VRFBuilder
             config={vrfConfig}
@@ -115,6 +143,7 @@ export default function Home() {
           />
         )
       case 'secret':
+        console.log('[Tab Debug] Rendering SecretBuilder')
         return (
           <SecretBuilder
             config={secretConfig}
@@ -122,6 +151,7 @@ export default function Home() {
           />
         )
       default:
+        console.log('[Tab Debug] No builder for tab:', activeTab)
         return null
     }
   }
@@ -129,10 +159,10 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       <Header />
-      <div className="container mx-auto px-4 py-6">
-        <div className="space-y-5">
+      <div className="container mx-auto px-4 py-8">
+        <div className="space-y-6">
           {/* Command Bar */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <div className="flex-1 min-w-0">
               <CommandBar
                 onFeedGenerated={setFeedConfig}
@@ -146,20 +176,27 @@ export default function Home() {
             {activeTab === 'feed' && (
               <button
                 onClick={() => setShowBulkCreator(true)}
-                className="px-3 py-1.5 bg-feedgod-pink-200 dark:bg-feedgod-dark-secondary hover:bg-feedgod-pink-300 dark:hover:bg-feedgod-dark-accent rounded-lg text-feedgod-dark dark:text-feedgod-neon-cyan text-sm font-medium transition-colors flex items-center gap-2 star-glow-on-hover"
+                className="px-4 py-2 bg-feedgod-pink-200 dark:bg-feedgod-dark-secondary hover:bg-feedgod-pink-300 dark:hover:bg-feedgod-dark-accent rounded-lg text-feedgod-dark dark:text-feedgod-neon-cyan text-sm font-medium transition-colors flex items-center gap-2 star-glow-on-hover"
               >
-                <Plus className="w-3.5 h-3.5" />
+                <Plus className="w-4 h-4" />
                 <span>Bulk Create</span>
               </button>
             )}
           </div>
 
           {/* Tab Navigation */}
-          <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent backdrop-blur-sm overflow-hidden">
+          <div 
+            ref={containerRef}
+            className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent backdrop-blur-sm overflow-hidden min-h-[800px] relative"
+            style={{ transition: 'none', animation: 'none' }}
+          >
             <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
             
             {/* Builder Content */}
-            <div className="p-5">
+            <div 
+              className="p-6 relative overflow-hidden"
+              style={{ transition: 'none', animation: 'none' }}
+            >
               {renderBuilder()}
             </div>
           </div>

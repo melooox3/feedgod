@@ -49,7 +49,7 @@ export default function ChainSelector({
       <div>
         <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2 flex items-center gap-2">
           <NetworkIcon className="w-4 h-4" />
-          Blockchain
+          Chain
         </label>
         <div className="grid grid-cols-3 gap-2">
           {BLOCKCHAINS.map((chain) => (
