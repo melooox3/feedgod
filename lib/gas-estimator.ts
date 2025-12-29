@@ -156,18 +156,10 @@ export async function estimateDeploymentCost(
     }
   } catch (error) {
     console.error('Error estimating gas cost:', error)
-    // Return fallback estimate - but keep Monad cheap
-    if (blockchain === 'monad') {
-      return {
-        estimatedCost: '0.00001',
-        currency: 'MON',
-        usdEstimate: '$0.000001',
-      }
-    }
-    const currency = blockchain === 'ethereum' ? 'ETH' : 'ETH'
+    // Return fallback estimate for Ethereum
     return {
       estimatedCost: '0.001',
-      currency,
+      currency: 'ETH',
       usdEstimate: '$2.00',
     }
   }
