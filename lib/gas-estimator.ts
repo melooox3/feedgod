@@ -3,7 +3,7 @@
 import { ethers } from 'ethers'
 import { Blockchain, Network } from '@/types/feed'
 
-interface CostEstimate {
+export interface CostEstimate {
   estimatedCost: string
   currency: string
   gasPrice?: string
