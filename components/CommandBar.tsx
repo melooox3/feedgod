@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { Search, Sparkles, Loader2, X } from 'lucide-react'
+import { Search, Loader2, X } from 'lucide-react'
 import { FeedConfig } from '@/types/feed'
 import { BuilderType } from '@/types/switchboard'
 import { generateFromPrompt } from '@/lib/ai-assistant-extended'
@@ -43,45 +43,23 @@ export default function CommandBar({
   const finalPlaceholder = placeholder || getPlaceholder(activeTab)
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [showSuggestions, setShowSuggestions] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const getSuggestions = () => {
+  const getLoadingMessage = () => {
     switch (activeTab) {
       case 'feed':
-        return [
-          "Create BTC/USD feed",
-          "SOL/USD with 1 minute updates",
-          "ETH price using CoinGecko and Binance",
-          "Build a weighted aggregator feed",
-        ]
+        return 'Generating your feed...'
       case 'function':
-        return [
-          "Create an arbitrage bot",
-          "Build a web scraper function",
-          "Create a ML prediction function",
-          "Build a function that runs every 5 minutes",
-        ]
+        return 'Creating your function...'
       case 'vrf':
-        return [
-          "Create a VRF for NFT mints",
-          "Build a random number generator from 1 to 100",
-          "Create a gaming randomizer",
-          "Build a lottery VRF",
-        ]
+        return 'Setting up your VRF...'
       case 'secret':
-        return [
-          "Create a CoinGecko API key",
-          "Store a private key",
-          "Create a webhook URL secret",
-          "Store a database connection",
-        ]
+        return 'Creating your secret...'
       default:
-        return []
+        return 'Generating...'
     }
   }
 
-  const suggestions = getSuggestions()
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -105,7 +83,7 @@ export default function CommandBar({
     if (!input.trim() || isLoading) return
 
     const query = input.trim()
-    setInput('')
+    // Don't clear input immediately - keep it visible during loading
     setIsLoading(true)
 
     try {
@@ -140,6 +118,7 @@ export default function CommandBar({
       console.error('Error:', error)
     } finally {
       setIsLoading(false)
+      setInput('') // Clear input after loading completes
     }
   }
 
@@ -147,62 +126,48 @@ export default function CommandBar({
     <div className="relative">
       <form onSubmit={handleSubmit} className="relative">
         <div className="relative flex items-center">
-          <div className="absolute left-4 flex items-center gap-2 pointer-events-none">
+          <div className="absolute left-3 flex items-center gap-2 pointer-events-none">
             {isLoading ? (
-              <Loader2 className="w-5 h-5 animate-spin text-feedgod-primary" />
+              <Loader2 className="w-4 h-4 animate-spin text-feedgod-primary dark:text-feedgod-neon-pink" />
             ) : (
-              <Search className="w-5 h-5 text-feedgod-pink-400" />
+              <Search className="w-4 h-4 text-feedgod-pink-400 dark:text-feedgod-neon-cyan/70" />
             )}
           </div>
           <input
             ref={inputRef}
             type="text"
             value={input}
-            onChange={(e) => {
-              setInput(e.target.value)
-              setShowSuggestions(e.target.value.length > 0)
-            }}
-            onFocus={() => setShowSuggestions(input.length > 0)}
-            onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+            onChange={(e) => setInput(e.target.value)}
             placeholder={finalPlaceholder}
-            className="w-full bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg px-12 py-3 text-feedgod-dark dark:text-feedgod-neon-cyan placeholder-feedgod-pink-400 dark:placeholder-feedgod-neon-cyan/50 focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:focus:ring-feedgod-neon-pink focus:border-feedgod-primary dark:focus:border-feedgod-neon-pink transition-all star-glow-on-hover"
+            className="w-full bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg px-10 py-2.5 text-feedgod-dark dark:text-feedgod-neon-cyan placeholder-feedgod-pink-400 dark:placeholder-feedgod-neon-cyan/50 focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:focus:ring-feedgod-neon-pink focus:border-feedgod-primary dark:focus:border-feedgod-neon-pink transition-all star-glow-on-hover disabled:opacity-70"
             disabled={isLoading}
           />
-          {input && (
+          {input && !isLoading && (
             <button
               type="button"
               onClick={() => setInput('')}
-              className="absolute right-4 p-1 hover:bg-feedgod-pink-100 rounded transition-colors star-glow-on-hover"
+              className="absolute right-3 p-0.5 hover:bg-feedgod-pink-100 dark:hover:bg-feedgod-dark-accent rounded transition-colors star-glow-on-hover"
             >
-              <X className="w-4 h-4 text-feedgod-pink-400" />
+              <X className="w-3.5 h-3.5 text-feedgod-pink-400 dark:text-feedgod-neon-cyan/70" />
             </button>
           )}
-          <div className="absolute right-4 flex items-center gap-2 pointer-events-none">
-            <kbd className="hidden sm:inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-feedgod-pink-500 bg-feedgod-pink-50 border border-feedgod-pink-200 rounded">
-              <span className="text-[10px]">⌘</span>K
-            </kbd>
-          </div>
+          {!isLoading && (
+            <div className="absolute right-3 flex items-center gap-2 pointer-events-none">
+              <kbd className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-medium text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded">
+                <span className="text-[9px]">⌘</span>K
+              </kbd>
+            </div>
+          )}
         </div>
       </form>
-
-            {showSuggestions && suggestions.length > 0 && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-feedgod-pink-100 border border-feedgod-pink-200 rounded-lg shadow-xl z-50 max-h-64 overflow-y-auto">
-          {suggestions
-            .filter(s => s.toLowerCase().includes(input.toLowerCase()))
-            .map((suggestion, idx) => (
-              <button
-                key={idx}
-                onClick={() => {
-                  setInput(suggestion)
-                  setShowSuggestions(false)
-                  inputRef.current?.focus()
-                }}
-                className="w-full text-left px-4 py-3 hover:bg-feedgod-pink-200 transition-colors flex items-center gap-2 star-glow-on-hover"
-              >
-                <Sparkles className="w-4 h-4 text-feedgod-primary flex-shrink-0" />
-                <span className="text-sm text-feedgod-dark">{suggestion}</span>
-              </button>
-            ))}
+      
+      {/* Loading indicator */}
+      {isLoading && (
+        <div className="absolute top-full left-0 right-0 mt-2 flex items-center gap-2 px-3 py-2 bg-feedgod-pink-100 dark:bg-feedgod-dark-accent border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg shadow-lg">
+          <Loader2 className="w-4 h-4 animate-spin text-feedgod-primary dark:text-feedgod-neon-pink flex-shrink-0" />
+          <span className="text-xs font-medium text-feedgod-dark dark:text-feedgod-neon-cyan">
+            {getLoadingMessage()}
+          </span>
         </div>
       )}
     </div>

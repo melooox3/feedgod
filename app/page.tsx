@@ -129,10 +129,10 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       <Header />
-      <div className="container mx-auto px-4 py-8">
-        <div className="space-y-6">
+      <div className="container mx-auto px-4 py-6">
+        <div className="space-y-5">
           {/* Command Bar */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <div className="flex-1 min-w-0">
               <CommandBar
                 onFeedGenerated={setFeedConfig}
@@ -146,9 +146,9 @@ export default function Home() {
             {activeTab === 'feed' && (
               <button
                 onClick={() => setShowBulkCreator(true)}
-                className="px-4 py-2 bg-feedgod-pink-200 dark:bg-feedgod-dark-secondary hover:bg-feedgod-pink-300 dark:hover:bg-feedgod-dark-accent rounded-lg text-feedgod-dark dark:text-feedgod-neon-cyan text-sm font-medium transition-colors flex items-center gap-2 star-glow-on-hover"
+                className="px-3 py-1.5 bg-feedgod-pink-200 dark:bg-feedgod-dark-secondary hover:bg-feedgod-pink-300 dark:hover:bg-feedgod-dark-accent rounded-lg text-feedgod-dark dark:text-feedgod-neon-cyan text-sm font-medium transition-colors flex items-center gap-2 star-glow-on-hover"
               >
-                <Plus className="w-4 h-4" />
+                <Plus className="w-3.5 h-3.5" />
                 <span>Bulk Create</span>
               </button>
             )}
@@ -159,7 +159,7 @@ export default function Home() {
             <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
             
             {/* Builder Content */}
-            <div className="p-6">
+            <div className="p-5">
               {renderBuilder()}
             </div>
           </div>

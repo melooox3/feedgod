@@ -39,7 +39,7 @@ const TABS: { id: BuilderType; label: string; icon: typeof Database; description
 export default function TabNavigation({ activeTab, onTabChange }: TabNavigationProps) {
   return (
     <div className="border-b border-feedgod-pink-200 dark:border-feedgod-dark-accent bg-white/60 dark:bg-feedgod-dark-secondary/80 backdrop-blur-sm rounded-t-lg">
-      <div className="flex gap-1 px-2 pt-2">
+      <div className="flex gap-1 px-1.5 pt-1.5">
         {TABS.map((tab) => {
           const Icon = tab.icon
           return (
@@ -49,15 +49,15 @@ export default function TabNavigation({ activeTab, onTabChange }: TabNavigationP
                 playPickupSound()
                 onTabChange(tab.id)
               }}
-              className={`flex items-center gap-2 px-4 py-3 rounded-t-lg transition-colors relative ${
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-t-lg transition-colors relative ${
                 activeTab === tab.id
                   ? 'bg-feedgod-pink-50 dark:bg-feedgod-dark-accent text-feedgod-primary dark:text-feedgod-neon-pink border-b-2 border-feedgod-primary dark:border-feedgod-neon-pink'
                   : 'text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 hover:text-feedgod-primary dark:hover:text-feedgod-neon-pink hover:bg-feedgod-pink-50/50 dark:hover:bg-feedgod-dark-accent/50'
               } star-glow-on-hover`}
               title={tab.description}
             >
-              <Icon className="w-4 h-4" />
-              <span className="font-medium text-sm">{tab.label}</span>
+              <Icon className="w-3.5 h-3.5" />
+              <span className="font-medium text-xs">{tab.label}</span>
             </button>
           )
         })}
