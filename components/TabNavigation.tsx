@@ -2,6 +2,7 @@
 
 import { Database, Code, Dice6, Key } from 'lucide-react'
 import { BuilderType } from '@/types/switchboard'
+import { playPickupSound } from '@/lib/sound-utils'
 
 interface TabNavigationProps {
   activeTab: BuilderType
@@ -44,7 +45,10 @@ export default function TabNavigation({ activeTab, onTabChange }: TabNavigationP
           return (
             <button
               key={tab.id}
-              onClick={() => onTabChange(tab.id)}
+              onClick={() => {
+                playPickupSound()
+                onTabChange(tab.id)
+              }}
               className={`flex items-center gap-2 px-4 py-3 rounded-t-lg transition-colors relative ${
                 activeTab === tab.id
                   ? 'bg-feedgod-pink-50 dark:bg-feedgod-dark-accent text-feedgod-primary dark:text-feedgod-neon-pink border-b-2 border-feedgod-primary dark:border-feedgod-neon-pink'

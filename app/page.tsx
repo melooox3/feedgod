@@ -133,14 +133,16 @@ export default function Home() {
         <div className="space-y-6">
           {/* Command Bar */}
           <div className="flex items-center gap-3">
-            <CommandBar
-              onFeedGenerated={setFeedConfig}
-              onFunctionGenerated={setFunctionConfig}
-              onVRFGenerated={setVRFConfig}
-              onSecretGenerated={setSecretConfig}
-              onSearch={handleSearch}
-              activeTab={activeTab}
-            />
+            <div className="flex-1 min-w-0">
+              <CommandBar
+                onFeedGenerated={setFeedConfig}
+                onFunctionGenerated={setFunctionConfig}
+                onVRFGenerated={setVRFConfig}
+                onSecretGenerated={setSecretConfig}
+                onSearch={handleSearch}
+                activeTab={activeTab}
+              />
+            </div>
             {activeTab === 'feed' && (
               <button
                 onClick={() => setShowBulkCreator(true)}

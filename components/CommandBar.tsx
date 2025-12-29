@@ -19,15 +19,15 @@ interface CommandBarProps {
 const getPlaceholder = (tab?: BuilderType) => {
   switch (tab) {
     case 'feed':
-      return "Create a feed or search... (e.g., 'BTC/USD feed', 'SOL price with 30s updates')"
+      return "Create something... (e.g., 'MON/USDT feed', 'BTC price with 30s updates', 'ETH/USD')"
     case 'function':
-      return "Create a function... (e.g., 'arbitrage bot', 'web scraper', 'ML prediction')"
+      return "Create something... (e.g., 'arbitrage bot', 'web scraper', 'ML prediction')"
     case 'vrf':
-      return "Create a VRF... (e.g., 'NFT mint randomizer', 'random number 1 to 100')"
+      return "Create something... (e.g., 'NFT mint randomizer', 'random number 1 to 100')"
     case 'secret':
-      return "Create a secret... (e.g., 'CoinGecko API key', 'private key storage')"
+      return "Create something... (e.g., 'CoinGecko API key', 'private key storage')"
     default:
-      return "Create or search..."
+      return "Create something..."
   }
 }
 
@@ -164,7 +164,7 @@ export default function CommandBar({
             }}
             onFocus={() => setShowSuggestions(input.length > 0)}
             onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-            placeholder={placeholder}
+            placeholder={finalPlaceholder}
             className="w-full bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg px-12 py-3 text-feedgod-dark dark:text-feedgod-neon-cyan placeholder-feedgod-pink-400 dark:placeholder-feedgod-neon-cyan/50 focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:focus:ring-feedgod-neon-pink focus:border-feedgod-primary dark:focus:border-feedgod-neon-pink transition-all star-glow-on-hover"
             disabled={isLoading}
           />

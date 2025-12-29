@@ -8,6 +8,7 @@ import { Heart, Trash2, Edit, ArrowLeft, Database, Code, Dice6, Key } from 'luci
 import Header from '@/components/Header'
 import { FeedConfig } from '@/types/feed'
 import { FunctionConfig, VRFConfig, SecretConfig, BuilderType } from '@/types/switchboard'
+import { playPickupSound } from '@/lib/sound-utils'
 
 type ProfileTab = 'feed' | 'function' | 'vrf' | 'secret'
 
@@ -86,7 +87,7 @@ export default function ProfilePage() {
         console.error('Error loading secrets:', e)
       }
     }
-  }, [connected, publicKey, router])
+  }, [connected, router])
 
   const loadItem = (item: any, type: BuilderType) => {
     sessionStorage.setItem('loadConfig', JSON.stringify({ ...item, type }))
@@ -214,7 +215,10 @@ export default function ProfilePage() {
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => {
+                  playPickupSound()
+                  setActiveTab(tab.id)
+                }}
                 className={`flex items-center gap-2 px-4 py-3 rounded-t-lg text-sm font-medium transition-colors ${
                   activeTab === tab.id
                     ? 'bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary text-feedgod-primary dark:text-feedgod-neon-pink border-b-2 border-feedgod-primary dark:border-feedgod-neon-pink'
@@ -232,7 +236,10 @@ export default function ProfilePage() {
         {/* Filter Tabs */}
         <div className="flex gap-2 mb-6">
           <button
-            onClick={() => setFilter('all')}
+            onClick={() => {
+              playPickupSound()
+              setFilter('all')
+            }}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors star-glow-on-hover ${
               filter === 'all'
                 ? 'bg-feedgod-primary dark:bg-feedgod-neon-pink text-white'
@@ -242,7 +249,10 @@ export default function ProfilePage() {
             All ({getTotalCount()})
           </button>
           <button
-            onClick={() => setFilter('favorites')}
+            onClick={() => {
+              playPickupSound()
+              setFilter('favorites')
+            }}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 star-glow-on-hover ${
               filter === 'favorites'
                 ? 'bg-feedgod-primary dark:bg-feedgod-neon-pink text-white'

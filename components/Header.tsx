@@ -16,7 +16,7 @@ export default function Header() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center gap-3">
-              <span className="text-feedgod-primary dark:text-feedgod-neon-pink lowercase" style={{ fontFamily: 'Arial, sans-serif', fontSize: '32px', fontWeight: '900', letterSpacing: '-2px' }}>feedgod. 🥕🥗</span>
+              <span className="text-feedgod-primary dark:text-feedgod-neon-pink lowercase" style={{ fontFamily: 'Arial, sans-serif', fontSize: '32px', fontWeight: '900', letterSpacing: '-2px' }}>feedgod. 🥕</span>
             </Link>
             <span className="text-feedgod-pink-300 dark:text-feedgod-neon-cyan">/</span>
             <span className="pixel-font text-feedgod-pink-400 dark:text-feedgod-neon-cyan lowercase" style={{ fontSize: '13px' }}>powered by Switchboard</span>

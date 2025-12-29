@@ -16,68 +16,98 @@ export async function generateFeedFromPrompt(prompt: string): Promise<FeedConfig
 
   const lowerPrompt = prompt.toLowerCase()
   
-  // Normalize common variations
-  const normalizedPrompt = lowerPrompt
-    .replace(/\bmon\b/g, 'mon') // Keep mon as is
-    .replace(/\busdt\b/g, 'usd') // USDT -> USD
-    .replace(/\busdc\b/g, 'usd') // USDC -> USD
-    .replace(/\btether\b/g, 'usd') // Tether -> USD
-    .replace(/\bcreate\b/g, '') // Remove "create"
-    .replace(/\bfeed\b/g, '') // Remove "feed"
-    .replace(/\bprice\b/g, '') // Remove "price"
-    .replace(/\bfor\b/g, '') // Remove "for"
-    .trim()
-
+  // Valid quote currencies (keep USDT and USDC as separate pairs)
+  const validQuoteCurrencies = ['usd', 'usdt', 'usdc', 'eur', 'btc', 'eth', 'sol', 'bnb', 'ada', 'xrp', 'doge', 'dot', 'matic', 'avax']
+  
+  // Base symbol mapping (full names to tickers)
+  const symbolMap: Record<string, string> = {
+    'bitcoin': 'BTC',
+    'btc': 'BTC',
+    'ethereum': 'ETH',
+    'eth': 'ETH',
+    'solana': 'SOL',
+    'sol': 'SOL',
+    'monad': 'MON',
+    'mon': 'MON',
+    'cardano': 'ADA',
+    'ada': 'ADA',
+    'ripple': 'XRP',
+    'xrp': 'XRP',
+    'dogecoin': 'DOGE',
+    'doge': 'DOGE',
+    'polkadot': 'DOT',
+    'dot': 'DOT',
+    'matic': 'MATIC',
+    'polygon': 'MATIC',
+    'avalanche': 'AVAX',
+    'avax': 'AVAX',
+    'binance': 'BNB',
+    'bnb': 'BNB',
+  }
+  
   // Extract symbol - handle many variations
-  // Patterns: BTC/USD, BTC-USD, BTC USD, btc usd, mon usd, mon/usd, etc.
+  // Patterns: BTC/USD, BTC-USD, BTC USD, btc usd, mon usdt, mon/usdt, monad usdt, etc.
   let symbol = 'BTC/USD' // Default
+  let baseSymbol = ''
+  let quoteSymbol = 'USD'
   
-  // Try to find symbol pairs
-  const symbolPatterns = [
-    /([a-z]{2,10})\s*[\/\-]\s*(usd|eur|btc|eth|usdt|usdc)/i, // BTC/USD, BTC-USD
-    /([a-z]{2,10})\s+(usd|eur|btc|eth|usdt|usdc)/i, // BTC USD, mon usd
-    /(bitcoin|btc|ethereum|eth|solana|sol|monad|mon|cardano|ada|ripple|xrp|dogecoin|doge|polkadot|dot|matic|polygon|avalanche|avax|binance|bnb)\s*(?:price|feed|usd|eur|usdt|usdc)?/i, // bitcoin, btc, monad, mon, etc.
-  ]
-  
-  for (const pattern of symbolPatterns) {
-    const match = normalizedPrompt.match(pattern) || lowerPrompt.match(pattern)
-    if (match) {
-      let baseSymbol = match[1].toUpperCase()
-      let quoteSymbol = (match[2] || 'USD').toUpperCase()
-      
-      // Normalize symbol names
-      const symbolMap: Record<string, string> = {
-        'BITCOIN': 'BTC',
-        'ETHEREUM': 'ETH',
-        'SOLANA': 'SOL',
-        'MONAD': 'MON',
-        'CARDANO': 'ADA',
-        'RIPPLE': 'XRP',
-        'DOGECOIN': 'DOGE',
-        'POLKADOT': 'DOT',
-        'MATIC': 'MATIC',
-        'POLYGON': 'MATIC',
-        'AVALANCHE': 'AVAX',
-        'BINANCE': 'BNB',
-      }
-      
-      baseSymbol = symbolMap[baseSymbol] || baseSymbol
-      
-      // Normalize quote symbols
-      if (quoteSymbol === 'USDT' || quoteSymbol === 'USDC' || quoteSymbol === 'TETHER') {
-        quoteSymbol = 'USD'
-      }
-      
+  // Pattern 1: Symbol with separator (/, -, or space) followed by quote currency
+  // Matches: MON/USDT, MON-USDT, MON USDT, MONAD/USDT, etc.
+  const separatorPattern = new RegExp(
+    `(?:^|\\s)(?:${Object.keys(symbolMap).join('|')})\\s*[\\/\\-\\s]+\\s*(${validQuoteCurrencies.join('|')})(?:\\s|$)`,
+    'i'
+  )
+  const separatorMatch = lowerPrompt.match(separatorPattern)
+  if (separatorMatch) {
+    const baseMatch = lowerPrompt.match(new RegExp(`(?:^|\\s)(${Object.keys(symbolMap).join('|')})\\s*[\\/\\-\\s]+`, 'i'))
+    if (baseMatch) {
+      baseSymbol = symbolMap[baseMatch[1].toLowerCase()] || baseMatch[1].toUpperCase()
+      quoteSymbol = separatorMatch[1].toUpperCase()
       symbol = `${baseSymbol}/${quoteSymbol}`
-      break
     }
   }
   
-  // If still default, try to extract just the base symbol
+  // Pattern 2: Two consecutive words where first is base, second is quote
+  // Matches: "mon usdt", "monad usdt", "btc eth", etc.
   if (symbol === 'BTC/USD') {
-    const baseSymbolMatch = normalizedPrompt.match(/\b(btc|eth|sol|mon|ada|xrp|doge|dot|matic|avax|bnb)\b/i)
-    if (baseSymbolMatch) {
-      symbol = `${baseSymbolMatch[1].toUpperCase()}/USD`
+    const words = lowerPrompt.split(/\s+/)
+    for (let i = 0; i < words.length - 1; i++) {
+      const word1 = words[i].replace(/[^a-z]/g, '')
+      const word2 = words[i + 1].replace(/[^a-z]/g, '')
+      
+      if (symbolMap[word1] && validQuoteCurrencies.includes(word2)) {
+        baseSymbol = symbolMap[word1]
+        quoteSymbol = word2.toUpperCase()
+        symbol = `${baseSymbol}/${quoteSymbol}`
+        break
+      }
+    }
+  }
+  
+  // Pattern 3: Symbol with slash or dash separator
+  // Matches: MON/USDT, MON-USDT, BTC/ETH, etc.
+  if (symbol === 'BTC/USD') {
+    const slashPattern = new RegExp(
+      `(${Object.keys(symbolMap).join('|')})\\s*[\\/\\-]\\s*(${validQuoteCurrencies.join('|')})`,
+      'i'
+    )
+    const slashMatch = lowerPrompt.match(slashPattern)
+    if (slashMatch) {
+      baseSymbol = symbolMap[slashMatch[1].toLowerCase()] || slashMatch[1].toUpperCase()
+      quoteSymbol = slashMatch[2].toUpperCase()
+      symbol = `${baseSymbol}/${quoteSymbol}`
+    }
+  }
+  
+  // Pattern 4: Just base symbol mentioned (default to USD)
+  if (symbol === 'BTC/USD') {
+    for (const [key, value] of Object.entries(symbolMap)) {
+      if (lowerPrompt.includes(key) && key.length >= 2) {
+        baseSymbol = value
+        quoteSymbol = 'USD'
+        symbol = `${baseSymbol}/${quoteSymbol}`
+        break
+      }
     }
   }
 

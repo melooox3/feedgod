@@ -56,6 +56,7 @@ export default function WalletButton() {
   }
 
   const handleProfile = () => {
+    playPickupSound()
     router.push('/profile')
   }
 
