@@ -386,8 +386,8 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
       : (updates.blockchain !== undefined ? updates.blockchain : localConfig.blockchain)
     
     const updated = isNetworkOnlyUpdate
-      ? { ...localConfig, network: updates.network, blockchain: blockchainToUse }
-      : { ...localConfig, ...updates, blockchain: blockchainToUse }
+      ? { ...localConfig, network: updates.network ?? localConfig.network, blockchain: blockchainToUse }
+      : { ...localConfig, ...updates, blockchain: blockchainToUse, network: updates.network ?? localConfig.network }
     
     // Update the ref to match the new state
     if (updated.blockchain) {
