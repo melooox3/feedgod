@@ -73,9 +73,6 @@ export async function estimateDeploymentCost(
     }
   }
 
-  // EVM networks (Ethereum, Monad)
-  const networkKey = `${blockchain}-${network}`
-  
   // Handle Monad separately with fixed very cheap prices (no RPC call needed)
   if (blockchain === 'monad') {
     // Monad has extremely cheap gas fees - use fixed very low values
@@ -102,6 +99,13 @@ export async function estimateDeploymentCost(
   }
   
   // For Ethereum, fetch actual gas prices
+  // At this point, blockchain can only be 'ethereum' (solana and monad already handled)
+  if (blockchain !== 'ethereum') {
+    // This should never happen, but TypeScript needs this check for type narrowing
+    throw new Error(`Unsupported blockchain: ${blockchain}`)
+  }
+  
+  const networkKey = `${blockchain}-${network}`
   const rpcUrl = NETWORK_RPCS[networkKey] || NETWORK_RPCS['ethereum-mainnet']
   const chainId = CHAIN_IDS[networkKey] || 1
   
