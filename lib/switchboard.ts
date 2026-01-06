@@ -61,7 +61,7 @@ export function getCoinGeckoId(symbol: string): string {
 
 // Build job definition for a price feed
 export function buildPriceFeedJob(config: FeedConfig): object {
-  const baseSymbol = config.pair.split('/')[0]
+  const baseSymbol = config.symbol.split('/')[0]
   const coinId = getCoinGeckoId(baseSymbol)
   
   // Build tasks based on data sources
@@ -340,7 +340,7 @@ export function storeDeployedFeed(config: FeedConfig, result: DeploymentResult):
   feeds.push({
     id: `deployed-${Date.now()}`,
     name: config.name,
-    pair: config.pair,
+    symbol: config.symbol,
     publicKey: result.publicKey,
     signature: result.signature,
     network: config.network,
