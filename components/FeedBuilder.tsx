@@ -1,13 +1,21 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Play, Save, CheckCircle2, XCircle, TrendingUp, TrendingDown, Settings, Clock, Network, Hash, RefreshCw, Plus, DollarSign } from 'lucide-react'
+import { Play, Save, CheckCircle2, XCircle, TrendingUp, TrendingDown, Settings, Clock, Network, Hash, RefreshCw, Plus, DollarSign, Database, Loader2, ExternalLink, Copy, CheckCircle, X, Rocket } from 'lucide-react'
 import { FeedConfig, DataSource, Blockchain } from '@/types/feed'
 import { fetchCoinGeckoPrice, fetchSourcePrice, generateChartData } from '@/lib/price-api'
 import { playPickupSound } from '@/lib/sound-utils'
 import { useCostEstimate } from '@/lib/use-cost-estimate'
 import ChainSelector from './ChainSelector'
 import CustomSourceModal from './CustomSourceModal'
+import { 
+  createPriceFeed, 
+  DeploymentResult, 
+  getSolscanLink, 
+  generateIntegrationCode,
+  storeDeployedFeed 
+} from '@/lib/switchboard'
+import { useWallet } from '@solana/wallet-adapter-react'
 
 interface FeedBuilderProps {
   config: FeedConfig | null
@@ -22,6 +30,13 @@ const AVAILABLE_SOURCES: DataSource[] = [
   { id: 'pyth', name: 'Pyth Network', type: 'on-chain', enabled: true, weight: 1 },
   { id: 'chainlink', name: 'Chainlink', type: 'on-chain', enabled: true, weight: 1 },
 ]
+
+// Chain logo mapping
+const CHAIN_LOGOS: Record<string, string> = {
+  solana: '/solana.png',
+  ethereum: '/ethereum.png',
+  monad: '/monad.png',
+}
 
 // Format price with appropriate decimal places
 // For prices < 1, show 5 decimal places, otherwise show 2
@@ -96,7 +111,14 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
   const [isLoadingPrices, setIsLoadingPrices] = useState(true)
   const [lastSymbol, setLastSymbol] = useState<string>('')
   const [showCustomModal, setShowCustomModal] = useState(false)
+  const [isDeploying, setIsDeploying] = useState(false)
+  const [deploymentResult, setDeploymentResult] = useState<DeploymentResult | null>(null)
+  const [showDeploymentModal, setShowDeploymentModal] = useState(false)
+  const [copiedText, setCopiedText] = useState<string | null>(null)
   const isLocalUpdateRef = useRef(false)
+  
+  // Wallet connection
+  const wallet = useWallet()
   const lastBlockchainChangeRef = useRef<{ blockchain: string; network: string } | null>(null)
   const lastConfigIdRef = useRef<string | undefined>(undefined)
   const currentBlockchainRef = useRef<Blockchain | undefined>(localConfig?.blockchain)
@@ -458,11 +480,69 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
     alert('Feed saved! Check your profile to manage saved feeds.')
   }
 
+  const handleCopyToClipboard = (text: string, id: string) => {
+    navigator.clipboard.writeText(text)
+    setCopiedText(id)
+    setTimeout(() => setCopiedText(null), 2000)
+  }
+
   const handleDeploy = async () => {
     if (!localConfig) return
     playPickupSound()
-    console.log('Deploying feed:', localConfig)
-    alert('Feed deployed! (This is a demo - in production, this would deploy to Switchboard)')
+    
+    // Check wallet connection
+    if (!wallet.connected || !wallet.publicKey) {
+      alert('Please connect your wallet to deploy a feed.')
+      return
+    }
+    
+    // Check if Solana is selected (only Solana supported for now)
+    if (localConfig.blockchain !== 'solana') {
+      alert('Currently, only Solana deployment is supported. Please select Solana as the blockchain.')
+      return
+    }
+    
+    setIsDeploying(true)
+    setShowDeploymentModal(true)
+    setDeploymentResult(null)
+    
+    try {
+      console.log('[FeedBuilder] Starting deployment for:', localConfig.name)
+      
+      // Prepare config for deployment
+      const deployConfig: FeedConfig = {
+        ...localConfig,
+        pair: localConfig.symbol,
+        sources: localConfig.dataSources.filter(s => s.enabled),
+      }
+      
+      // Call the Switchboard deployment function
+      const result = await createPriceFeed(deployConfig, wallet)
+      
+      console.log('[FeedBuilder] Deployment result:', result)
+      
+      setDeploymentResult(result)
+      
+      if (result.success && result.publicKey) {
+        // Store the deployed feed
+        storeDeployedFeed(deployConfig, result)
+        playPickupSound()
+      }
+      
+    } catch (error) {
+      console.error('[FeedBuilder] Deployment error:', error)
+      setDeploymentResult({
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown deployment error'
+      })
+    } finally {
+      setIsDeploying(false)
+    }
+  }
+
+  const closeDeploymentModal = () => {
+    setShowDeploymentModal(false)
+    setDeploymentResult(null)
   }
 
   if (!localConfig) {
@@ -480,12 +560,49 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
 
   return (
       <div className="space-y-6">
+        {/* Module Header */}
+        <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-pink-500 flex items-center justify-center">
+              <Database className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-feedgod-primary dark:text-feedgod-neon-pink">
+                Price Feed Builder
+              </h2>
+              <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                Aggregate real-time price data from multiple sources into reliable on-chain oracles
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Price Display */}
-        <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-8 backdrop-blur-sm">
-          <div className="flex items-start justify-between">
+        <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-8 backdrop-blur-sm relative overflow-hidden">
+          {/* Subtle chain logo watermark */}
+          <div className="absolute -right-8 -bottom-8 opacity-5 dark:opacity-10 pointer-events-none">
+            <img 
+              src={CHAIN_LOGOS[localConfig.blockchain] || CHAIN_LOGOS.solana} 
+              alt="" 
+              className="w-48 h-48 object-contain"
+            />
+          </div>
+          
+          <div className="flex items-start justify-between relative z-10">
             <div className="flex-1">
               <div className="flex items-center gap-4 mb-4">
                 <h2 className="text-2xl font-bold text-feedgod-primary">{localConfig.symbol}</h2>
+                {/* Chain badge */}
+                <div className="flex items-center gap-1.5 px-2 py-1 bg-feedgod-pink-100 dark:bg-feedgod-dark-accent rounded-full">
+                  <img 
+                    src={CHAIN_LOGOS[localConfig.blockchain] || CHAIN_LOGOS.solana}
+                    alt={localConfig.blockchain}
+                    className="w-4 h-4 object-contain"
+                  />
+                  <span className="text-xs font-medium text-feedgod-pink-600 dark:text-feedgod-neon-cyan capitalize">
+                    {localConfig.blockchain}
+                  </span>
+                </div>
                 {priceChange !== null && (
                   priceChange >= 0 ? (
                     <TrendingUp className="w-6 h-6 text-green-600" />
@@ -803,10 +920,21 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
             </button>
             <button
               onClick={handleDeploy}
-              className="flex-1 px-4 py-3 bg-feedgod-primary hover:bg-feedgod-secondary rounded-lg text-white text-sm font-medium transition-colors flex items-center justify-center gap-2 star-glow-on-hover"
+              disabled={isDeploying || !wallet.connected}
+              className="flex-1 px-4 py-3 bg-feedgod-primary hover:bg-feedgod-secondary disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-white text-sm font-medium transition-colors flex items-center justify-center gap-2 star-glow-on-hover"
+              title={!wallet.connected ? 'Connect wallet to deploy' : ''}
             >
-              <Play className="w-4 h-4" />
-              Deploy
+              {isDeploying ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Deploying...
+                </>
+              ) : (
+                <>
+                  <Play className="w-4 h-4" />
+                  {wallet.connected ? 'Deploy' : 'Connect Wallet'}
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -818,6 +946,192 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
         onClose={() => setShowCustomModal(false)}
         onAdd={(source) => addSource(source)}
       />
+
+      {/* Deployment Modal */}
+      {showDeploymentModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="w-full max-w-lg bg-white dark:bg-feedgod-dark-secondary rounded-2xl border border-feedgod-pink-200 dark:border-feedgod-dark-accent shadow-2xl overflow-hidden relative">
+            {/* Subtle chain watermark */}
+            <div className="absolute -right-12 -top-12 opacity-5 dark:opacity-10 pointer-events-none">
+              <img 
+                src={CHAIN_LOGOS[localConfig?.blockchain || 'solana']} 
+                alt="" 
+                className="w-64 h-64 object-contain"
+              />
+            </div>
+            
+            {/* Header */}
+            <div className="p-6 border-b border-feedgod-pink-200 dark:border-feedgod-dark-accent relative z-10">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center relative ${
+                    isDeploying ? 'bg-feedgod-primary/20' :
+                    deploymentResult?.success ? 'bg-emerald-500/20' : 'bg-red-500/20'
+                  }`}>
+                    {isDeploying ? (
+                      <Loader2 className="w-5 h-5 text-feedgod-primary animate-spin" />
+                    ) : deploymentResult?.success ? (
+                      <CheckCircle className="w-5 h-5 text-emerald-500" />
+                    ) : (
+                      <XCircle className="w-5 h-5 text-red-500" />
+                    )}
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-lg font-bold text-feedgod-dark dark:text-white">
+                        {isDeploying ? 'Deploying Feed...' :
+                         deploymentResult?.success ? 'Deployment Successful!' : 'Deployment Failed'}
+                      </h3>
+                      <img 
+                        src={CHAIN_LOGOS[localConfig?.blockchain || 'solana']}
+                        alt={localConfig?.blockchain}
+                        className="w-5 h-5 object-contain"
+                      />
+                    </div>
+                    <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                      {localConfig?.name}
+                    </p>
+                  </div>
+                </div>
+                {!isDeploying && (
+                  <button
+                    onClick={closeDeploymentModal}
+                    className="p-2 hover:bg-feedgod-pink-100 dark:hover:bg-feedgod-dark-accent rounded-lg transition-colors"
+                  >
+                    <X className="w-5 h-5 text-feedgod-pink-500" />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="p-6">
+              {isDeploying ? (
+                <div className="text-center py-8">
+                  <Rocket className="w-16 h-16 text-feedgod-primary mx-auto mb-4 animate-bounce" />
+                  <p className="text-feedgod-dark dark:text-white font-medium mb-2">
+                    Building and deploying your feed...
+                  </p>
+                  <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                    Please confirm the transaction in your wallet
+                  </p>
+                  <div className="mt-6 flex items-center justify-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-feedgod-primary animate-pulse" />
+                    <div className="w-2 h-2 rounded-full bg-feedgod-primary animate-pulse" style={{ animationDelay: '0.2s' }} />
+                    <div className="w-2 h-2 rounded-full bg-feedgod-primary animate-pulse" style={{ animationDelay: '0.4s' }} />
+                  </div>
+                </div>
+              ) : deploymentResult?.success ? (
+                <div className="space-y-6">
+                  {/* Public Key */}
+                  <div>
+                    <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2">
+                      Feed Public Key
+                    </label>
+                    <div className="flex items-center gap-2 bg-feedgod-pink-50 dark:bg-feedgod-dark-accent rounded-lg p-3">
+                      <code className="flex-1 text-sm font-mono text-feedgod-primary dark:text-feedgod-neon-pink break-all">
+                        {deploymentResult.publicKey}
+                      </code>
+                      <button
+                        onClick={() => handleCopyToClipboard(deploymentResult.publicKey!, 'pubkey')}
+                        className="p-2 hover:bg-feedgod-pink-100 dark:hover:bg-feedgod-dark-secondary rounded transition-colors flex-shrink-0"
+                        title="Copy public key"
+                      >
+                        {copiedText === 'pubkey' ? (
+                          <CheckCircle className="w-4 h-4 text-emerald-500" />
+                        ) : (
+                          <Copy className="w-4 h-4 text-feedgod-pink-500" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Links */}
+                  <div className="flex gap-3">
+                    <a
+                      href={getSolscanLink(deploymentResult.publicKey!, localConfig?.network || 'devnet')}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 px-4 py-3 bg-feedgod-pink-100 dark:bg-feedgod-dark-accent hover:bg-feedgod-pink-200 rounded-lg text-feedgod-dark dark:text-white font-medium transition-colors flex items-center justify-center gap-2"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      View on Solscan
+                    </a>
+                  </div>
+
+                  {/* Integration Code */}
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan">
+                        Integration Code
+                      </label>
+                      <button
+                        onClick={() => handleCopyToClipboard(
+                          generateIntegrationCode(deploymentResult.publicKey!, localConfig?.name || 'Feed'),
+                          'code'
+                        )}
+                        className="text-xs text-feedgod-primary hover:text-feedgod-secondary flex items-center gap-1"
+                      >
+                        {copiedText === 'code' ? (
+                          <>
+                            <CheckCircle className="w-3 h-3" />
+                            Copied!
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3 h-3" />
+                            Copy code
+                          </>
+                        )}
+                      </button>
+                    </div>
+                    <div className="bg-feedgod-dark dark:bg-black rounded-lg p-4 overflow-x-auto max-h-48">
+                      <pre className="text-xs text-green-400 font-mono whitespace-pre-wrap">
+                        {generateIntegrationCode(deploymentResult.publicKey!, localConfig?.name || 'Feed')}
+                      </pre>
+                    </div>
+                  </div>
+
+                  {/* Transaction Signature */}
+                  {deploymentResult.signature && (
+                    <div className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/60">
+                      Transaction: {deploymentResult.signature.slice(0, 20)}...
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+                  <p className="text-feedgod-dark dark:text-white font-medium mb-2">
+                    Deployment Failed
+                  </p>
+                  <p className="text-sm text-red-500 bg-red-50 dark:bg-red-500/10 rounded-lg p-3">
+                    {deploymentResult?.error || 'Unknown error occurred'}
+                  </p>
+                  <button
+                    onClick={handleDeploy}
+                    className="mt-6 px-6 py-2 bg-feedgod-primary hover:bg-feedgod-secondary rounded-lg text-white font-medium transition-colors"
+                  >
+                    Try Again
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            {!isDeploying && deploymentResult?.success && (
+              <div className="px-6 pb-6">
+                <button
+                  onClick={closeDeploymentModal}
+                  className="w-full px-4 py-3 bg-feedgod-primary hover:bg-feedgod-secondary rounded-lg text-white font-medium transition-colors"
+                >
+                  Done
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

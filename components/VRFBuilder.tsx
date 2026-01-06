@@ -82,6 +82,23 @@ export default function VRFBuilder({ config, onConfigChange }: VRFBuilderProps) 
 
   return (
     <div className="space-y-6">
+      {/* Module Header */}
+      <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center">
+            <Dice6 className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h2 className="text-xl font-bold text-feedgod-primary dark:text-feedgod-neon-pink">
+              VRF Builder
+            </h2>
+            <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+              Generate verifiable random numbers for games, NFTs, and fair selection mechanisms
+            </p>
+          </div>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column - Configuration */}
         <div className="lg:col-span-2 space-y-6">

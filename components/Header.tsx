@@ -1,29 +1,32 @@
 'use client'
 
 import Link from 'next/link'
-import { Book, Moon, Sun, MessageCircle } from 'lucide-react'
+import { Book, Moon, Sun, Compass, Activity } from 'lucide-react'
 import WalletButton from './WalletButton'
-import { Plus } from 'lucide-react'
-import MusicPlayer from './MusicPlayer'
 import { useTheme } from '@/contexts/ThemeContext'
 
 export default function Header() {
   const { theme, toggleTheme } = useTheme()
+
+  const handleLogoClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    // Force a fresh navigation to home, resetting any client state
+    window.location.href = '/'
+  }
 
   return (
     <header className="border-b border-feedgod-pink-200 dark:border-feedgod-dark-accent bg-feedgod-pink-50/80 dark:bg-feedgod-dark-bg/80 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link href="/" className="flex items-center gap-3">
+            <a href="/" onClick={handleLogoClick} className="flex items-center gap-3 cursor-pointer">
               <span className="text-feedgod-primary dark:text-feedgod-neon-pink lowercase" style={{ fontFamily: 'Arial, sans-serif', fontSize: '32px', fontWeight: '900', letterSpacing: '-2px' }}>feedgod. 🥕</span>
-            </Link>
+            </a>
             <span className="text-feedgod-pink-300 dark:text-feedgod-neon-cyan">/</span>
             <span className="pixel-font text-feedgod-pink-400 dark:text-feedgod-neon-cyan lowercase" style={{ fontSize: '13px' }}>powered by Switchboard</span>
           </div>
 
           <nav className="flex items-center gap-4">
-            <MusicPlayer />
             <button
               onClick={toggleTheme}
               className="p-2 bg-feedgod-pink-100 dark:bg-feedgod-dark-secondary hover:bg-feedgod-pink-200 dark:hover:bg-feedgod-dark-accent rounded-lg text-feedgod-primary dark:text-feedgod-neon-pink transition-colors star-glow-on-hover"
@@ -43,6 +46,20 @@ export default function Header() {
                 height={24}
                 className="flex-shrink-0"
               />
+            </Link>
+            <Link
+              href="/dashboard"
+              className="flex items-center gap-2 text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan hover:text-feedgod-primary dark:hover:text-feedgod-neon-pink transition-colors star-glow-on-hover rounded-lg px-2 py-1"
+            >
+              <Activity className="w-4 h-4" />
+              <span>Dashboard</span>
+            </Link>
+            <Link
+              href="/explore"
+              className="flex items-center gap-2 text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan hover:text-feedgod-primary dark:hover:text-feedgod-neon-pink transition-colors star-glow-on-hover rounded-lg px-2 py-1"
+            >
+              <Compass className="w-4 h-4" />
+              <span>Explore</span>
             </Link>
             <Link
               href="https://docs.switchboard.xyz/"

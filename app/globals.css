@@ -3,6 +3,14 @@
 @tailwind utilities;
 
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+@font-face {
+  font-family: 'Neon AI';
+  src: url('/NeonAI.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 @import '@solana/wallet-adapter-react-ui/styles.css';
 
 :root {
@@ -265,4 +273,14 @@ body {
     transform: translate(-50%, -50%) translate(40px, 40px) scale(1.8) rotate(-360deg);
     opacity: 0;
   }
+}
+
+/* Typewriter cursor blink animation */
+@keyframes cursorBlink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.typewriter-cursor {
+  animation: cursorBlink 1s infinite;
 }

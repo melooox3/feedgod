@@ -11,21 +11,24 @@ interface ChainSelectorProps {
   onNetworkChange: (network: Network) => void
 }
 
-const BLOCKCHAINS: { value: Blockchain; label: string; networks: Network[] }[] = [
+const BLOCKCHAINS: { value: Blockchain; label: string; networks: Network[]; logo: string }[] = [
   {
     value: 'solana',
     label: 'Solana',
     networks: ['mainnet', 'devnet', 'testnet'],
+    logo: '/solana.png',
   },
   {
     value: 'ethereum',
     label: 'Ethereum',
     networks: ['mainnet', 'testnet'],
+    logo: '/ethereum.png',
   },
   {
     value: 'monad',
     label: 'Monad',
     networks: ['mainnet', 'devnet', 'testnet'],
+    logo: '/monad.png',
   },
 ]
 
@@ -65,14 +68,30 @@ export default function ChainSelector({
                 // Set to first available network for this chain
                 onNetworkChange(chain.networks[0])
               }}
-              className={`p-3 rounded-lg border-2 transition-colors text-left cursor-pointer relative z-10 ${
+              className={`p-3 rounded-lg border-2 transition-colors text-left cursor-pointer relative z-10 overflow-hidden group ${
                 blockchain === chain.value
                   ? 'border-feedgod-primary dark:border-feedgod-neon-pink bg-feedgod-pink-50 dark:bg-feedgod-dark-accent'
                   : 'border-feedgod-pink-200 dark:border-feedgod-dark-accent bg-white dark:bg-feedgod-dark-secondary hover:border-feedgod-pink-300 dark:hover:border-feedgod-neon-cyan'
               }`}
             >
-              <div className="font-medium text-feedgod-dark dark:text-feedgod-neon-cyan text-sm">{chain.label}</div>
-              <div className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mt-1">
+              {/* Background logo watermark */}
+              <div className="absolute -right-2 -bottom-2 opacity-10 group-hover:opacity-20 transition-opacity">
+                <img 
+                  src={chain.logo} 
+                  alt="" 
+                  className="w-12 h-12 object-contain"
+                />
+              </div>
+              
+              <div className="flex items-center gap-2 relative z-10">
+                <img 
+                  src={chain.logo} 
+                  alt={chain.label} 
+                  className="w-5 h-5 object-contain"
+                />
+                <div className="font-medium text-feedgod-dark dark:text-feedgod-neon-cyan text-sm">{chain.label}</div>
+              </div>
+              <div className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mt-1 relative z-10">
                 {chain.networks.length} network{chain.networks.length !== 1 ? 's' : ''}
               </div>
             </button>

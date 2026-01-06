@@ -64,5 +64,5 @@ export interface SecretConfig {
   userId?: string
 }
 
-export type BuilderType = 'feed' | 'function' | 'vrf' | 'secret'
+export type BuilderType = 'feed' | 'function' | 'vrf' | 'secret' | 'prediction' | 'weather' | 'sports' | 'social' | 'ai-judge' | 'custom-api'
 

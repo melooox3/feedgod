@@ -1,10 +1,12 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
-import { Search, Loader2, X } from 'lucide-react'
+import { useState, useRef, useEffect, useMemo } from 'react'
+import { Search, Loader2, X, Sparkles, ChevronRight } from 'lucide-react'
 import { FeedConfig } from '@/types/feed'
 import { BuilderType } from '@/types/switchboard'
 import { generateFromPrompt } from '@/lib/ai-assistant-extended'
+import { detectIntent, EXAMPLE_PROMPTS, DetectedIntent } from '@/lib/prompt-router'
+import { playPickupSound } from '@/lib/sound-utils'
 
 interface CommandBarProps {
   onFeedGenerated?: (config: FeedConfig) => void
@@ -12,22 +14,39 @@ interface CommandBarProps {
   onVRFGenerated?: (config: any) => void
   onSecretGenerated?: (config: any) => void
   onSearch?: (query: string) => void
+  onModuleNavigate?: (module: BuilderType, parsed?: any) => void
   placeholder?: string
   activeTab?: BuilderType
+  showExamples?: boolean
+  isHomepage?: boolean
 }
+
+const HOMEPAGE_PLACEHOLDER = "Try: 'BTC price', 'Trump odds', 'Tokyo weather', '@elonmusk followers'..."
 
 const getPlaceholder = (tab?: BuilderType) => {
   switch (tab) {
     case 'feed':
-      return "Create something... (e.g., HYPE/USDT, CHILLCOCK/SOL, FARTCOIN with 30s updates)"
+      return "Create a price feed... (e.g., HYPE/USDT, CHILLCOCK/SOL, FARTCOIN with 30s updates)"
     case 'function':
-      return "Create something... (e.g., 'arbitrage bot', 'web scraper', 'ML prediction')"
+      return "Create a function... (e.g., 'arbitrage bot', 'web scraper', 'ML prediction')"
     case 'vrf':
-      return "Create something... (e.g., 'NFT mint randomizer', 'random number 1 to 100')"
+      return "Create VRF... (e.g., 'NFT mint randomizer', 'random number 1 to 100')"
     case 'secret':
-      return "Create something... (e.g., 'CoinGecko API key', 'private key storage')"
+      return "Create a secret... (e.g., 'CoinGecko API key', 'private key storage')"
+    case 'prediction':
+      return "Search prediction markets... (e.g., 'trump election', 'bitcoin price', 'sports')"
+    case 'weather':
+      return "Search cities... (e.g., 'tokyo', 'new york', 'london')"
+    case 'sports':
+      return "Search sports... (e.g., 'lakers', 'premier league', 'nfl')"
+    case 'social':
+      return "Enter username... (e.g., '@elonmusk', 'mrbeast', 'pewdiepie')"
+    case 'custom-api':
+      return "Enter API URL... (e.g., 'https://api.example.com/data')"
+    case 'ai-judge':
+      return "Enter your question... (e.g., 'Did Taylor Swift release a new album?')"
     default:
-      return "Create something..."
+      return "What do you want to oracle?"
   }
 }
 
@@ -36,16 +55,29 @@ export default function CommandBar({
   onFunctionGenerated,
   onVRFGenerated,
   onSecretGenerated,
-  onSearch, 
+  onSearch,
+  onModuleNavigate,
   placeholder,
-  activeTab = 'feed'
+  activeTab,
+  showExamples = false,
+  isHomepage = false
 }: CommandBarProps) {
-  const finalPlaceholder = placeholder || getPlaceholder(activeTab)
+  const finalPlaceholder = placeholder || (isHomepage ? HOMEPAGE_PLACEHOLDER : getPlaceholder(activeTab))
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [isFocused, setIsFocused] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
+  // Detect intent as user types
+  const detectedIntent: DetectedIntent | null = useMemo(() => {
+    if (!input || input.length < 2 || !isHomepage) return null
+    return detectIntent(input)
+  }, [input, isHomepage])
+
   const getLoadingMessage = () => {
+    if (detectedIntent) {
+      return `Routing to ${detectedIntent.label}...`
+    }
     switch (activeTab) {
       case 'feed':
         return 'Generating your feed...'
@@ -56,10 +88,9 @@ export default function CommandBar({
       case 'secret':
         return 'Creating your secret...'
       default:
-        return 'Generating...'
+        return 'Processing...'
     }
   }
-
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -83,11 +114,25 @@ export default function CommandBar({
     if (!input.trim() || isLoading) return
 
     const query = input.trim()
-    // Don't clear input immediately - keep it visible during loading
     setIsLoading(true)
+    playPickupSound()
 
     try {
-      // Check if it's a search query (starts with /search or just a symbol)
+      // If on homepage with smart routing
+      if (isHomepage && onModuleNavigate) {
+        const intent = detectIntent(query)
+        
+        // Small delay for visual feedback
+        await new Promise(resolve => setTimeout(resolve, 300))
+        
+        // Navigate to the detected module with parsed data
+        onModuleNavigate(intent.module, intent.parsed)
+        setInput('')
+        setIsLoading(false)
+        return
+      }
+      
+      // Check if it's a search query
       if (query.startsWith('/search ') || query.startsWith('search ')) {
         const searchQuery = query.replace(/^\/?search\s+/, '')
         if (onSearch) {
@@ -118,8 +163,14 @@ export default function CommandBar({
       console.error('Error:', error)
     } finally {
       setIsLoading(false)
-      setInput('') // Clear input after loading completes
+      setInput('')
     }
+  }
+
+  const handleExampleClick = (example: typeof EXAMPLE_PROMPTS[0]) => {
+    playPickupSound()
+    setInput(example.text)
+    inputRef.current?.focus()
   }
 
   return (
@@ -138,19 +189,33 @@ export default function CommandBar({
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setTimeout(() => setIsFocused(false), 200)}
             placeholder={finalPlaceholder}
-            className="w-full bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg px-12 py-3 text-feedgod-dark dark:text-feedgod-neon-cyan placeholder-feedgod-pink-400 dark:placeholder-feedgod-neon-cyan/50 focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:focus:ring-feedgod-neon-pink focus:border-feedgod-primary dark:focus:border-feedgod-neon-pink transition-all star-glow-on-hover disabled:opacity-70"
+            className="w-full bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-xl px-12 py-4 text-feedgod-dark dark:text-feedgod-neon-cyan placeholder-feedgod-pink-400 dark:placeholder-feedgod-neon-cyan/50 focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:focus:ring-feedgod-neon-pink focus:border-feedgod-primary dark:focus:border-feedgod-neon-pink transition-all star-glow-on-hover disabled:opacity-70 text-sm md:text-base"
             disabled={isLoading}
           />
-          {input && !isLoading && (
+          
+          {/* Intent indicator */}
+          {detectedIntent && input.length >= 2 && !isLoading && (
+            <div className="absolute right-16 flex items-center gap-1.5 px-2.5 py-1 bg-feedgod-primary/10 dark:bg-feedgod-neon-pink/10 border border-feedgod-primary/30 dark:border-feedgod-neon-pink/30 rounded-full">
+              <span className="text-sm">{detectedIntent.icon}</span>
+              <span className="text-xs font-medium text-feedgod-primary dark:text-feedgod-neon-pink">
+                {detectedIntent.label}
+              </span>
+            </div>
+          )}
+          
+          {input && !isLoading && !detectedIntent && (
             <button
               type="button"
               onClick={() => setInput('')}
-              className="absolute right-4 p-1 hover:bg-feedgod-pink-100 dark:hover:bg-feedgod-dark-accent rounded transition-colors star-glow-on-hover"
+              className="absolute right-12 p-1 hover:bg-feedgod-pink-100 dark:hover:bg-feedgod-dark-accent rounded transition-colors"
             >
               <X className="w-4 h-4 text-feedgod-pink-400 dark:text-feedgod-neon-cyan/70" />
             </button>
           )}
+          
           {!isLoading && (
             <div className="absolute right-4 flex items-center gap-2 pointer-events-none">
               <kbd className="hidden sm:inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded">
@@ -163,17 +228,41 @@ export default function CommandBar({
       
       {/* Loading indicator */}
       {isLoading && (
-        <div className="absolute top-full left-0 right-0 mt-3 flex items-center gap-3 px-4 py-3 bg-feedgod-pink-100 dark:bg-feedgod-dark-accent border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg shadow-lg">
+        <div className="absolute top-full left-0 right-0 mt-3 flex items-center justify-center gap-3 px-4 py-3 bg-gradient-to-r from-feedgod-primary/10 to-feedgod-pink-200/20 dark:from-feedgod-neon-pink/10 dark:to-feedgod-dark-accent border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-xl shadow-lg">
           <Loader2 className="w-5 h-5 animate-spin text-feedgod-primary dark:text-feedgod-neon-pink flex-shrink-0" />
           <span className="text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan">
             {getLoadingMessage()}
           </span>
+          {detectedIntent && (
+            <span className="text-lg">{detectedIntent.icon}</span>
+          )}
+        </div>
+      )}
+      
+      {/* Example prompts (homepage only) */}
+      {(showExamples || isHomepage) && !isLoading && (
+        <div className="mt-4 flex flex-wrap gap-2 justify-center">
+          {EXAMPLE_PROMPTS.map((example, i) => (
+            <button
+              key={i}
+              onClick={() => handleExampleClick(example)}
+              className="group flex items-center gap-1.5 px-3 py-1.5 bg-white/60 dark:bg-feedgod-dark-secondary/60 hover:bg-feedgod-primary/10 dark:hover:bg-feedgod-neon-pink/10 border border-feedgod-pink-200 dark:border-feedgod-dark-accent hover:border-feedgod-primary/50 dark:hover:border-feedgod-neon-pink/50 rounded-full text-xs text-feedgod-dark dark:text-white transition-all"
+            >
+              <span>{example.icon}</span>
+              <span>{example.text}</span>
+              <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-feedgod-primary dark:text-feedgod-neon-pink" />
+            </button>
+          ))}
+        </div>
+      )}
+      
+      {/* Smart routing hint */}
+      {isHomepage && isFocused && input.length === 0 && (
+        <div className="mt-3 text-center text-xs text-feedgod-pink-400 dark:text-feedgod-neon-cyan/60 flex items-center justify-center gap-2">
+          <Sparkles className="w-3 h-3" />
+          <span>Smart routing auto-detects what you want</span>
         </div>
       )}
     </div>
   )
 }
-
-
-
-
