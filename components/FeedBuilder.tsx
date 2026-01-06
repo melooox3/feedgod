@@ -512,7 +512,7 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
       // Prepare config for deployment
       const deployConfig: FeedConfig = {
         ...localConfig,
-        sources: localConfig.dataSources.filter(s => s.enabled),
+        dataSources: localConfig.dataSources.filter(s => s.enabled),
       }
       
       // Call the Switchboard deployment function
