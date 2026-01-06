@@ -512,7 +512,6 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
       // Prepare config for deployment
       const deployConfig: FeedConfig = {
         ...localConfig,
-        pair: localConfig.symbol,
         sources: localConfig.dataSources.filter(s => s.enabled),
       }
       
