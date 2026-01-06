@@ -68,8 +68,8 @@ export function buildPriceFeedJob(config: FeedConfig): object {
   const tasks: object[] = []
   
   // If we have specific sources, use them
-  if (config.sources && config.sources.length > 0) {
-    const sourceTasks = config.sources.map((source: DataSource) => {
+  if (config.dataSources && config.dataSources.length > 0) {
+    const sourceTasks = config.dataSources.map((source: DataSource) => {
       switch (source.name.toLowerCase()) {
         case 'coingecko':
           return {
