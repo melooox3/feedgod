@@ -19,15 +19,15 @@ export const metadata = {
   icons: ['/symbol-colored.svg']
 }
 
-// Configure networks
-export const networks = [mainnet, arbitrum, optimism, base, polygon, sepolia] as const
+// Configure networks (mutable array for AppKit compatibility)
+export const networks = [mainnet, arbitrum, optimism, base, polygon, sepolia]
 
 // Create Wagmi adapter
 export const wagmiAdapter = new WagmiAdapter({
   storage: createStorage({
     storage: cookieStorage
   }),
-  networks,
+  networks: [mainnet, arbitrum, optimism, base, polygon, sepolia],
   projectId,
   ssr: true,
 })
