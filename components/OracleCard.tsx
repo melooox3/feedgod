@@ -31,6 +31,7 @@ const CHAIN_LOGOS: Record<string, string> = {
 interface OracleCardProps {
   oracle: Oracle
   onClick: () => void
+  isInUse?: boolean
 }
 
 // Get icon for oracle type
@@ -64,7 +65,7 @@ function truncateKey(key: string): string {
   return `${key.slice(0, 8)}...${key.slice(-6)}`
 }
 
-export default function OracleCard({ oracle, onClick }: OracleCardProps) {
+export default function OracleCard({ oracle, onClick, isInUse }: OracleCardProps) {
   const Icon = getOracleIcon(oracle.type)
   const typeColor = getOracleTypeColor(oracle.type)
   
@@ -77,8 +78,22 @@ export default function OracleCard({ oracle, onClick }: OracleCardProps) {
   return (
     <div
       onClick={onClick}
-      className="group bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-xl border border-feedgod-purple-200 dark:border-feedgod-dark-accent dark:border-feedgod-purple-200 dark:border-feedgod-dark-accent hover:border-feedgod-primary dark:text-feedgod-primary dark:hover:border-feedgod-primary dark:text-feedgod-primary transition-all duration-300 backdrop-blur-sm cursor-pointer hover:shadow-lg hover:shadow-feedgod-primary dark:text-feedgod-primary/10 dark:hover:shadow-feedgod-primary dark:text-feedgod-primary/10 overflow-hidden"
+      className={`group bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-xl border transition-all duration-300 backdrop-blur-sm cursor-pointer hover:shadow-lg overflow-hidden ${
+        isInUse 
+          ? 'border-emerald-500/50 hover:border-emerald-400 hover:shadow-emerald-500/10 ring-1 ring-emerald-500/20' 
+          : 'border-feedgod-purple-200 dark:border-feedgod-dark-accent hover:border-feedgod-primary hover:shadow-feedgod-primary/10'
+      }`}
     >
+      {/* In Use Badge */}
+      {isInUse && (
+        <div className="bg-gradient-to-r from-emerald-500/20 to-emerald-600/10 border-b border-emerald-500/30 px-4 py-1.5">
+          <div className="flex items-center gap-1.5">
+            <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="text-[10px] font-semibold text-emerald-400 uppercase tracking-wider">In Use</span>
+          </div>
+        </div>
+      )}
+      
       {/* Header with type badge and status */}
       <div className="p-4 pb-3 border-b border-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:border-feedgod-purple-200 dark:border-feedgod-dark-accent/50">
         <div className="flex items-start justify-between">

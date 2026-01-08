@@ -43,11 +43,28 @@ export interface AlertThreshold {
   enabled: boolean
 }
 
-// Generate mock historical data
+// Store for real prices fetched from API
+let realPriceStore: Record<string, { price: number; change24h: number }> = {}
+
+/**
+ * Update the real price store with fetched prices
+ */
+export function updateRealPrices(prices: Record<string, { price: number; change24h: number }>) {
+  realPriceStore = { ...realPriceStore, ...prices }
+}
+
+/**
+ * Get real price from store
+ */
+export function getRealPrice(symbol: string): { price: number; change24h: number } | null {
+  return realPriceStore[symbol] || null
+}
+
+// Generate mock historical data based on current value
 function generateHistory(currentValue: number, volatility: number = 0.02): OracleDataPoint[] {
   const points: OracleDataPoint[] = []
   const now = new Date()
-  let value = currentValue * (1 - volatility * 10 * Math.random()) // Start slightly lower
+  let value = currentValue * (1 - volatility * 5 * Math.random()) // Start slightly lower
   
   // Generate 288 points (24 hours at 5-minute intervals)
   for (let i = 287; i >= 0; i--) {
@@ -67,212 +84,266 @@ function generateHistory(currentValue: number, volatility: number = 0.02): Oracl
   return points
 }
 
-// Calculate 24h change from history
-function calculate24hChange(history: OracleDataPoint[]): number {
-  if (history.length < 2) return 0
-  const oldest = history[0].value
-  const newest = history[history.length - 1].value
-  return ((newest - oldest) / oldest) * 100
+// Oracle metadata (prices will be fetched from API)
+const oracleMetadata: Omit<MonitoredOracle, 'history' | 'change24h' | 'changeDirection' | 'currentValue' | 'previousValue'>[] = [
+  {
+    id: 'btc-usd-1',
+    name: 'BTC/USD Price Feed',
+    symbol: 'BTC/USD',
+    type: 'feed',
+    blockchain: 'solana',
+    network: 'mainnet',
+    publicKey: '7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU',
+    status: 'healthy',
+    lastUpdate: new Date(),
+    updateInterval: 30,
+    alerts: [],
+    source: 'CoinGecko',
+  },
+  {
+    id: 'eth-usd-1',
+    name: 'ETH/USD Price Feed',
+    symbol: 'ETH/USD',
+    type: 'feed',
+    blockchain: 'solana',
+    network: 'mainnet',
+    publicKey: '9aBC2defGHIjk3LmNoPQrStUv4WxYz56Ab78CdEf90Gh',
+    status: 'healthy',
+    lastUpdate: new Date(),
+    updateInterval: 30,
+    alerts: [],
+    source: 'CoinGecko',
+  },
+  {
+    id: 'sol-usd-1',
+    name: 'SOL/USD Price Feed',
+    symbol: 'SOL/USD',
+    type: 'feed',
+    blockchain: 'solana',
+    network: 'mainnet',
+    publicKey: '3mNoPQrStUv4WxYz56Ab78CdEf90GhIjK2LmNoPQrStU',
+    status: 'healthy',
+    lastUpdate: new Date(),
+    updateInterval: 30,
+    alerts: [],
+    source: 'Binance, Coinbase',
+  },
+  {
+    id: 'trump-win-1',
+    name: 'Trump 2028 Election',
+    symbol: 'TRUMP-WIN',
+    type: 'prediction',
+    blockchain: 'solana',
+    network: 'mainnet',
+    publicKey: '5pQrStUv4WxYz56Ab78CdEf90GhIjK2LmNoPQrStUv4W',
+    status: 'healthy',
+    lastUpdate: new Date(),
+    updateInterval: 3600,
+    alerts: [],
+    source: 'Polymarket',
+  },
+  {
+    id: 'btc-100k-1',
+    name: 'BTC Above $100K Jan 2026',
+    symbol: 'BTC-100K',
+    type: 'prediction',
+    blockchain: 'solana',
+    network: 'mainnet',
+    publicKey: '8vWxYz56Ab78CdEf90GhIjK2LmNoPQrStUv4WxYz56Ab',
+    status: 'healthy',
+    lastUpdate: new Date(),
+    updateInterval: 3600,
+    alerts: [
+      {
+        id: 'alert-1',
+        type: 'threshold_high',
+        message: 'Value crossed above 75% threshold',
+        severity: 'info',
+        timestamp: new Date(Date.now() - 3600000),
+        acknowledged: false,
+      }
+    ],
+    source: 'Kalshi',
+  },
+  {
+    id: 'nyc-temp-1',
+    name: 'NYC Temperature',
+    symbol: 'NYC-TEMP',
+    type: 'weather',
+    blockchain: 'solana',
+    network: 'mainnet',
+    publicKey: '2yZ56Ab78CdEf90GhIjK2LmNoPQrStUv4WxYz56Ab78C',
+    status: 'healthy',
+    lastUpdate: new Date(),
+    updateInterval: 3600,
+    alerts: [],
+    source: 'Open-Meteo',
+  },
+  {
+    id: 'elon-followers-1',
+    name: 'Elon Musk Followers',
+    symbol: 'ELON-FLLW',
+    type: 'social',
+    blockchain: 'solana',
+    network: 'devnet',
+    publicKey: '4bCdEf90GhIjK2LmNoPQrStUv4WxYz56Ab78CdEf90Gh',
+    status: 'healthy',
+    lastUpdate: new Date(),
+    updateInterval: 3600,
+    alerts: [],
+    source: 'Twitter/X',
+  },
+  {
+    id: 'github-stars-1',
+    name: 'Solana Repo Stars',
+    symbol: 'SOL-STARS',
+    type: 'custom-api',
+    blockchain: 'solana',
+    network: 'mainnet',
+    publicKey: '6fGhIjK2LmNoPQrStUv4WxYz56Ab78CdEf90GhIjK2Lm',
+    status: 'healthy',
+    lastUpdate: new Date(),
+    updateInterval: 3600,
+    alerts: [],
+    source: 'GitHub API',
+  },
+  {
+    id: 'stale-oracle-1',
+    name: 'Stale Test Oracle',
+    symbol: 'STALE',
+    type: 'feed',
+    blockchain: 'solana',
+    network: 'devnet',
+    publicKey: '9jK2LmNoPQrStUv4WxYz56Ab78CdEf90GhIjK2LmNoPQ',
+    status: 'stale',
+    lastUpdate: new Date(Date.now() - 7200000),
+    updateInterval: 60,
+    alerts: [
+      {
+        id: 'alert-2',
+        type: 'stale',
+        message: 'Oracle has not updated in over 2 hours',
+        severity: 'warning',
+        timestamp: new Date(Date.now() - 3600000),
+        acknowledged: false,
+      }
+    ],
+    source: 'Custom',
+  },
+]
+
+// Default values for non-price oracles
+const DEFAULT_VALUES: Record<string, number> = {
+  'TRUMP-WIN': 0.42,
+  'BTC-100K': 0.78,
+  'NYC-TEMP': 38,
+  'ELON-FLLW': 195800000,
+  'SOL-STARS': 12450,
+  'STALE': 1.05,
 }
 
-// Mock deployed oracles data
+/**
+ * Get all price feed symbols from monitored oracles
+ */
+export function getMonitoredPriceSymbols(): string[] {
+  return oracleMetadata
+    .filter(o => o.type === 'feed' && !DEFAULT_VALUES[o.symbol])
+    .map(o => o.symbol)
+}
+
+/**
+ * Get deployed oracles with real prices where available
+ */
 export function getMockDeployedOracles(): MonitoredOracle[] {
   const now = new Date()
   
-  const oracles: Omit<MonitoredOracle, 'history' | 'change24h' | 'changeDirection'>[] = [
-    {
-      id: 'btc-usd-1',
-      name: 'BTC/USD Price Feed',
-      symbol: 'BTC/USD',
-      type: 'feed',
-      blockchain: 'solana',
-      network: 'mainnet',
-      publicKey: '7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU',
-      currentValue: 97542.50,
-      previousValue: 97380.25,
-      status: 'healthy',
-      lastUpdate: new Date(now.getTime() - 15000),
-      updateInterval: 30,
-      alerts: [],
-      source: 'CoinGecko',
-    },
-    {
-      id: 'eth-usd-1',
-      name: 'ETH/USD Price Feed',
-      symbol: 'ETH/USD',
-      type: 'feed',
-      blockchain: 'solana',
-      network: 'mainnet',
-      publicKey: '9aBC2defGHIjk3LmNoPQrStUv4WxYz56Ab78CdEf90Gh',
-      currentValue: 3542.18,
-      previousValue: 3498.90,
-      status: 'healthy',
-      lastUpdate: new Date(now.getTime() - 22000),
-      updateInterval: 30,
-      alerts: [],
-      source: 'CoinGecko',
-    },
-    {
-      id: 'sol-usd-1',
-      name: 'SOL/USD Price Feed',
-      symbol: 'SOL/USD',
-      type: 'feed',
-      blockchain: 'solana',
-      network: 'mainnet',
-      publicKey: '3mNoPQrStUv4WxYz56Ab78CdEf90GhIjK2LmNoPQrStU',
-      currentValue: 189.45,
-      previousValue: 185.20,
-      status: 'healthy',
-      lastUpdate: new Date(now.getTime() - 8000),
-      updateInterval: 30,
-      alerts: [],
-      source: 'Binance, Coinbase',
-    },
-    {
-      id: 'trump-win-1',
-      name: 'Trump 2028 Election',
-      symbol: 'TRUMP-WIN',
-      type: 'prediction',
-      blockchain: 'solana',
-      network: 'mainnet',
-      publicKey: '5pQrStUv4WxYz56Ab78CdEf90GhIjK2LmNoPQrStUv4W',
-      currentValue: 0.42,
-      previousValue: 0.38,
-      status: 'healthy',
-      lastUpdate: new Date(now.getTime() - 300000),
-      updateInterval: 3600,
-      alerts: [],
-      source: 'Polymarket',
-    },
-    {
-      id: 'btc-100k-1',
-      name: 'BTC Above $100K Jan 2026',
-      symbol: 'BTC-100K',
-      type: 'prediction',
-      blockchain: 'solana',
-      network: 'mainnet',
-      publicKey: '8vWxYz56Ab78CdEf90GhIjK2LmNoPQrStUv4WxYz56Ab',
-      currentValue: 0.78,
-      previousValue: 0.72,
-      status: 'healthy',
-      lastUpdate: new Date(now.getTime() - 180000),
-      updateInterval: 3600,
-      alerts: [
-        {
-          id: 'alert-1',
-          type: 'threshold_high',
-          message: 'Value crossed above 75% threshold',
-          severity: 'info',
-          timestamp: new Date(now.getTime() - 3600000),
-          acknowledged: false,
-        }
-      ],
-      source: 'Kalshi',
-    },
-    {
-      id: 'nyc-temp-1',
-      name: 'NYC Temperature',
-      symbol: 'NYC-TEMP',
-      type: 'weather',
-      blockchain: 'solana',
-      network: 'mainnet',
-      publicKey: '2yZ56Ab78CdEf90GhIjK2LmNoPQrStUv4WxYz56Ab78C',
-      currentValue: 38,
-      previousValue: 35,
-      status: 'healthy',
-      lastUpdate: new Date(now.getTime() - 900000),
-      updateInterval: 3600,
-      alerts: [],
-      source: 'Open-Meteo',
-    },
-    {
-      id: 'elon-followers-1',
-      name: 'Elon Musk Followers',
-      symbol: 'ELON-FLLW',
-      type: 'social',
-      blockchain: 'solana',
-      network: 'devnet',
-      publicKey: '4bCdEf90GhIjK2LmNoPQrStUv4WxYz56Ab78CdEf90Gh',
-      currentValue: 195800000,
-      previousValue: 195750000,
-      status: 'healthy',
-      lastUpdate: new Date(now.getTime() - 3600000),
-      updateInterval: 3600,
-      alerts: [],
-      source: 'Twitter/X',
-    },
-    {
-      id: 'github-stars-1',
-      name: 'Solana Repo Stars',
-      symbol: 'SOL-STARS',
-      type: 'custom-api',
-      blockchain: 'solana',
-      network: 'mainnet',
-      publicKey: '6fGhIjK2LmNoPQrStUv4WxYz56Ab78CdEf90GhIjK2Lm',
-      currentValue: 12450,
-      previousValue: 12380,
-      status: 'healthy',
-      lastUpdate: new Date(now.getTime() - 1800000),
-      updateInterval: 3600,
-      alerts: [],
-      source: 'GitHub API',
-    },
-    {
-      id: 'stale-oracle-1',
-      name: 'Stale Test Oracle',
-      symbol: 'STALE',
-      type: 'feed',
-      blockchain: 'solana',
-      network: 'devnet',
-      publicKey: '9jK2LmNoPQrStUv4WxYz56Ab78CdEf90GhIjK2LmNoPQ',
-      currentValue: 1.05,
-      previousValue: 1.05,
-      status: 'stale',
-      lastUpdate: new Date(now.getTime() - 7200000), // 2 hours ago
-      updateInterval: 60,
-      alerts: [
-        {
-          id: 'alert-2',
-          type: 'stale',
-          message: 'Oracle has not updated in over 2 hours',
-          severity: 'warning',
-          timestamp: new Date(now.getTime() - 3600000),
-          acknowledged: false,
-        }
-      ],
-      source: 'Custom',
-    },
-  ]
-  
-  // Add history and calculate changes
-  return oracles.map(oracle => {
-    const volatility = oracle.type === 'feed' ? 0.015 : 
-                       oracle.type === 'prediction' ? 0.05 :
-                       oracle.type === 'social' ? 0.001 : 0.02
-    const history = generateHistory(oracle.currentValue, volatility)
-    const change24h = calculate24hChange(history)
+  return oracleMetadata.map(meta => {
+    // Get current value - either from real prices or defaults
+    let currentValue: number
+    let change24h: number = 0
+    
+    const realPrice = getRealPrice(meta.symbol)
+    if (realPrice) {
+      currentValue = realPrice.price
+      change24h = realPrice.change24h
+    } else if (DEFAULT_VALUES[meta.symbol] !== undefined) {
+      currentValue = DEFAULT_VALUES[meta.symbol]
+      // Small random change for non-price oracles
+      change24h = (Math.random() - 0.5) * 10
+    } else {
+      // Placeholder for price feeds that haven't loaded yet
+      currentValue = 0
+      change24h = 0
+    }
+    
+    const previousValue = currentValue * (1 - change24h / 100 * 0.1)
+    
+    const volatility = meta.type === 'feed' ? 0.015 : 
+                       meta.type === 'prediction' ? 0.05 :
+                       meta.type === 'social' ? 0.001 : 0.02
+    
+    const history = generateHistory(currentValue || 100, volatility)
     
     return {
-      ...oracle,
+      ...meta,
+      currentValue,
+      previousValue,
       history,
       change24h,
       changeDirection: change24h > 0.01 ? 'up' : change24h < -0.01 ? 'down' : 'neutral' as const,
+      lastUpdate: meta.status === 'stale' ? meta.lastUpdate : new Date(now.getTime() - Math.random() * 60000),
     }
   })
 }
 
-// Simulate real-time value updates
+/**
+ * Update oracles with fresh real prices
+ */
+export function updateOraclesWithRealPrices(
+  oracles: MonitoredOracle[], 
+  prices: Record<string, { price: number; change24h: number }>
+): MonitoredOracle[] {
+  // Update the store
+  updateRealPrices(prices)
+  
+  return oracles.map(oracle => {
+    const priceData = prices[oracle.symbol]
+    if (!priceData) return oracle
+    
+    const newHistory = [...oracle.history.slice(1), { 
+      timestamp: new Date(), 
+      value: priceData.price 
+    }]
+    
+    return {
+      ...oracle,
+      previousValue: oracle.currentValue,
+      currentValue: priceData.price,
+      change24h: priceData.change24h,
+      changeDirection: priceData.change24h > 0.01 ? 'up' : priceData.change24h < -0.01 ? 'down' : 'neutral' as const,
+      history: newHistory,
+      lastUpdate: new Date(),
+      status: 'healthy' as OracleStatus,
+    }
+  })
+}
+
+// Simulate real-time value updates (small fluctuations around real price)
 export function simulateValueUpdate(oracle: MonitoredOracle): MonitoredOracle {
-  const volatility = oracle.type === 'feed' ? 0.002 : 
-                     oracle.type === 'prediction' ? 0.01 :
-                     oracle.type === 'social' ? 0.0001 : 0.005
+  // For price feeds, use smaller fluctuations since we have real data
+  const volatility = oracle.type === 'feed' ? 0.0005 : 
+                     oracle.type === 'prediction' ? 0.005 :
+                     oracle.type === 'social' ? 0.0001 : 0.002
   
   const change = (Math.random() - 0.5) * volatility * oracle.currentValue
   const newValue = Math.max(0.01, oracle.currentValue + change)
   
   const now = new Date()
   const newHistory = [...oracle.history.slice(1), { timestamp: now, value: newValue }]
-  const change24h = calculate24hChange(newHistory)
+  
+  // Recalculate 24h change
+  const oldest = newHistory[0]?.value || newValue
+  const change24h = ((newValue - oldest) / oldest) * 100
   
   return {
     ...oracle,
@@ -288,6 +359,8 @@ export function simulateValueUpdate(oracle: MonitoredOracle): MonitoredOracle {
 
 // Format value based on oracle type
 export function formatOracleValue(value: number, type: MonitoredOracle['type'], symbol?: string): string {
+  if (value === 0) return 'Loading...'
+  
   if (type === 'prediction') {
     return `${(value * 100).toFixed(1)}%`
   }
@@ -426,5 +499,3 @@ export function calculateDashboardStats(oracles: MonitoredOracle[]) {
     },
   }
 }
-
-

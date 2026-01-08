@@ -10,7 +10,6 @@ import {
   Cloud,
   ArrowUpDown,
   Loader2,
-  Compass,
   Sparkles,
   Activity,
   RefreshCw,
@@ -40,9 +39,13 @@ import {
   formatOracleValue,
   getStatusBg,
   getTypeIcon,
-  getTimeSinceUpdate
+  getTimeSinceUpdate,
+  getMonitoredPriceSymbols,
+  updateOraclesWithRealPrices
 } from '@/lib/oracle-monitor'
 import { playPickupSound } from '@/lib/sound-utils'
+import { usePrices } from '@/lib/use-prices'
+import { getPriceFeedSymbols, updatePriceCache } from '@/lib/explore-api'
 
 type TabType = 'my-oracles' | 'all-oracles'
 type FilterType = OracleType | 'all'
@@ -174,6 +177,7 @@ export default function ExplorePage() {
   const [typeFilter, setTypeFilter] = useState<FilterType>('all')
   const [sortBy, setSortBy] = useState<SortOption>('newest')
   const [showSortDropdown, setShowSortDropdown] = useState(false)
+  const [showOnlyInUse, setShowOnlyInUse] = useState(false)
   
   // Dashboard state
   const [myOracles, setMyOracles] = useState<MonitoredOracle[]>([])
@@ -183,10 +187,43 @@ export default function ExplorePage() {
   const [isLive, setIsLive] = useState(true)
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date())
   
+  // Get all price symbols we need to fetch
+  const allPriceSymbols = useMemo(() => {
+    const monitoredSymbols = getMonitoredPriceSymbols()
+    const exploreSymbols = getPriceFeedSymbols()
+    return [...new Set([...monitoredSymbols, ...exploreSymbols])]
+  }, [])
+  
+  // Fetch real prices from CoinGecko
+  const { prices, loading: pricesLoading, refresh: refreshPrices } = usePrices(allPriceSymbols, 30000)
+  
   // Initialize dashboard oracles
   useEffect(() => {
     setMyOracles(getMockDeployedOracles())
   }, [])
+  
+  // Update oracles when real prices come in
+  useEffect(() => {
+    if (Object.keys(prices).length > 0) {
+      // Update "My Oracles" with real prices
+      setMyOracles(prev => updateOraclesWithRealPrices(prev, prices))
+      
+      // Update explore price cache for "All Oracles"
+      Object.entries(prices).forEach(([symbol, data]) => {
+        updatePriceCache(symbol, data.price, data.change24h)
+      })
+      
+      // Refresh explore oracles to get updated prices
+      if (activeTab === 'all-oracles' && oracles.length > 0) {
+        // Re-fetch oracles to get updated cached prices
+        fetchAllOracles({
+          type: typeFilter,
+          search: searchQuery,
+          sortBy,
+        }).then(setOracles)
+      }
+    }
+  }, [prices])
   
   // Load explore oracles
   useEffect(() => {
@@ -284,6 +321,8 @@ export default function ExplorePage() {
   
   const handleRefreshAll = () => {
     playPickupSound()
+    // Refresh real prices from API
+    refreshPrices()
     setMyOracles(prev => prev.map(o => 
       o.status === 'healthy' ? simulateValueUpdate(o) : o
     ))
@@ -297,9 +336,6 @@ export default function ExplorePage() {
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         {/* Hero Section */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-feedgod-primary to-feedgod-secondary mb-4">
-            <Compass className="w-8 h-8 text-white" />
-          </div>
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">
             Explore
           </h1>
@@ -574,7 +610,7 @@ export default function ExplorePage() {
               </div>
               
               {/* Type Filter Pills */}
-              <div className="flex flex-wrap gap-2 mt-4">
+              <div className="flex flex-wrap items-center gap-2 mt-4">
                 {TYPE_FILTERS.map(({ value, label, icon: Icon }) => (
                   <button
                     key={value}
@@ -589,6 +625,29 @@ export default function ExplorePage() {
                     {label}
                   </button>
                 ))}
+                
+                {/* Divider */}
+                <div className="w-px h-6 bg-feedgod-dark-accent mx-2" />
+                
+                {/* In Use Filter Toggle */}
+                <button
+                  onClick={() => { playPickupSound(); setShowOnlyInUse(!showOnlyInUse); }}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 ${
+                    showOnlyInUse
+                      ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20'
+                      : 'bg-feedgod-dark-accent text-gray-300 hover:bg-feedgod-dark-accent/80'
+                  }`}
+                >
+                  <CheckCircle className="w-4 h-4" />
+                  In Use
+                  {myOracles.length > 0 && (
+                    <span className={`text-xs px-1.5 py-0.5 rounded-full ${
+                      showOnlyInUse ? 'bg-emerald-600' : 'bg-feedgod-dark-secondary'
+                    }`}>
+                      {myOracles.length}
+                    </span>
+                  )}
+                </button>
               </div>
             </div>
             
@@ -607,18 +666,33 @@ export default function ExplorePage() {
               <>
                 <div className="flex items-center justify-between mb-4">
                   <p className="text-sm text-gray-400">
-                    Showing {oracles.length} oracle{oracles.length !== 1 ? 's' : ''}
+                    Showing {showOnlyInUse 
+                      ? `${oracles.filter(o => myOracles.some(m => m.symbol === o.symbol || m.name === o.name)).length} in use`
+                      : `${oracles.length} oracle${oracles.length !== 1 ? 's' : ''}`
+                    }
                   </p>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {oracles.map((oracle) => (
-                    <OracleCard
-                      key={oracle.id}
-                      oracle={oracle}
-                      onClick={() => handleOracleClick(oracle)}
-                    />
-                  ))}
+                  {oracles
+                    .map((oracle) => {
+                      // Check if this oracle is being used (matches any of our deployed oracles)
+                      const isInUse = myOracles.some(
+                        (myOracle) => 
+                          myOracle.symbol === oracle.symbol || 
+                          myOracle.name === oracle.name
+                      )
+                      return { oracle, isInUse }
+                    })
+                    .filter(({ isInUse }) => !showOnlyInUse || isInUse)
+                    .map(({ oracle, isInUse }) => (
+                      <OracleCard
+                        key={oracle.id}
+                        oracle={oracle}
+                        onClick={() => handleOracleClick(oracle)}
+                        isInUse={isInUse}
+                      />
+                    ))}
                 </div>
               </>
             )}
