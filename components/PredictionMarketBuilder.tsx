@@ -87,8 +87,8 @@ function CostEstimateDisplay({
 
   if (isLoading || !estimate) {
     return (
-      <div className="px-4 py-3 bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent">
-        <div className="flex items-center gap-2 text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+      <div className="px-4 py-3 bg-[#252620] rounded-lg border border-[#3a3b35]">
+        <div className="flex items-center gap-2 text-sm text-gray-400">
           <DollarSign className="w-4 h-4 animate-pulse" />
           <span>Calculating deployment cost...</span>
         </div>
@@ -97,18 +97,18 @@ function CostEstimateDisplay({
   }
 
   return (
-    <div className="px-4 py-3 bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent">
+    <div className="px-4 py-3 bg-[#252620] rounded-lg border border-[#3a3b35]">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+        <div className="flex items-center gap-2 text-sm text-gray-400">
           <DollarSign className="w-4 h-4" />
           <span>Estimated Cost:</span>
         </div>
         <div className="text-right">
-          <div className="text-lg font-bold text-feedgod-primary dark:text-feedgod-neon-pink">
+          <div className="text-lg font-bold gradient-text">
             {estimate.estimatedCost} {estimate.currency}
           </div>
           {estimate.usdEstimate && (
-            <div className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+            <div className="text-xs text-gray-400">
               {estimate.usdEstimate}
             </div>
           )}
@@ -137,15 +137,15 @@ function MarketCard({
       className={`
         p-4 rounded-lg border cursor-pointer transition-all duration-200
         ${isSelected 
-          ? 'bg-feedgod-primary/10 dark:bg-feedgod-neon-pink/10 border-feedgod-primary dark:border-feedgod-neon-pink ring-2 ring-feedgod-primary/20 dark:ring-feedgod-neon-pink/20' 
-          : 'bg-white/60 dark:bg-feedgod-dark-secondary/80 border-feedgod-pink-200 dark:border-feedgod-dark-accent hover:border-feedgod-primary/50 dark:hover:border-feedgod-neon-pink/50'
+          ? 'bg-feedgod-primary dark:text-feedgod-primary/10 dark:bg-feedgod-primary dark:text-feedgod-primary/10 border-feedgod-primary dark:text-feedgod-primary dark:border-feedgod-primary dark:text-feedgod-primary ring-2 ring-feedgod-primary dark:text-feedgod-primary/20 dark:ring-feedgod-primary dark:text-feedgod-primary/20' 
+          : 'bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 border-[#3a3b35] hover:border-feedgod-primary dark:text-feedgod-primary/50 dark:hover:border-feedgod-primary dark:text-feedgod-primary/50'
         }
       `}
     >
       <div className="flex items-start gap-3">
         <PlatformLogo platform={market.platform} />
         <div className="flex-1 min-w-0">
-          <h4 className="font-medium text-feedgod-dark dark:text-white text-sm leading-tight mb-2 line-clamp-2">
+          <h4 className="font-medium text-white text-sm leading-tight mb-2 line-clamp-2">
             {market.title}
           </h4>
           
@@ -154,9 +154,9 @@ function MarketCard({
             <div className="flex-1">
               <div className="flex items-center justify-between text-xs mb-1">
                 <span className="text-green-600 dark:text-green-400 font-medium">YES</span>
-                <span className="text-feedgod-dark dark:text-white font-bold">{formatProbability(yesPrice)}</span>
+                <span className="text-white font-bold">{formatProbability(yesPrice)}</span>
               </div>
-              <div className="h-1.5 bg-feedgod-pink-100 dark:bg-feedgod-dark-accent rounded-full overflow-hidden">
+              <div className="h-1.5 bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-green-500 dark:bg-green-400 rounded-full transition-all duration-300"
                   style={{ width: `${yesPrice * 100}%` }}
@@ -166,9 +166,9 @@ function MarketCard({
             <div className="flex-1">
               <div className="flex items-center justify-between text-xs mb-1">
                 <span className="text-red-500 dark:text-red-400 font-medium">NO</span>
-                <span className="text-feedgod-dark dark:text-white font-bold">{formatProbability(noPrice)}</span>
+                <span className="text-white font-bold">{formatProbability(noPrice)}</span>
               </div>
-              <div className="h-1.5 bg-feedgod-pink-100 dark:bg-feedgod-dark-accent rounded-full overflow-hidden">
+              <div className="h-1.5 bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-red-500 dark:bg-red-400 rounded-full transition-all duration-300"
                   style={{ width: `${noPrice * 100}%` }}
@@ -178,7 +178,7 @@ function MarketCard({
           </div>
           
           {/* Meta info */}
-          <div className="flex items-center gap-4 text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+          <div className="flex items-center gap-4 text-xs text-gray-400">
             <div className="flex items-center gap-1">
               <Clock className="w-3 h-3" />
               <span>{getTimeUntilClose(new Date(market.endDate))}</span>
@@ -190,7 +190,7 @@ function MarketCard({
               </div>
             )}
             {market.category && (
-              <span className="px-1.5 py-0.5 bg-feedgod-pink-100 dark:bg-feedgod-dark-accent rounded text-[10px] uppercase tracking-wide">
+              <span className="px-1.5 py-0.5 bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded text-[10px] uppercase tracking-wide">
                 {market.category}
               </span>
             )}
@@ -198,7 +198,7 @@ function MarketCard({
         </div>
         
         {isSelected && (
-          <CheckCircle2 className="w-5 h-5 text-feedgod-primary dark:text-feedgod-neon-pink flex-shrink-0" />
+          <CheckCircle2 className="w-5 h-5 gradient-text flex-shrink-0" />
         )}
       </div>
     </div>
@@ -353,17 +353,17 @@ export default function PredictionMarketBuilder() {
   return (
     <div className="space-y-6">
       {/* Header with step indicator */}
-      <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
+      <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-feedgod-primary to-pink-500 flex items-center justify-center">
               <Target className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-feedgod-primary dark:text-feedgod-neon-pink">
+              <h2 className="text-xl font-bold gradient-text">
                 Prediction Market Oracle
               </h2>
-              <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+              <p className="text-sm text-gray-400">
                 Create on-chain oracles for Polymarket & Kalshi markets
               </p>
             </div>
@@ -373,24 +373,24 @@ export default function PredictionMarketBuilder() {
           <div className="flex items-center gap-2">
             <div className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
               step === 'browse' 
-                ? 'bg-feedgod-primary text-white' 
-                : 'bg-feedgod-pink-100 dark:bg-feedgod-dark-accent text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70'
+                ? 'bg-feedgod-primary dark:text-feedgod-primary text-white' 
+                : 'bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent text-gray-400'
             }`}>
               1. Browse
             </div>
-            <ChevronRight className="w-4 h-4 text-feedgod-pink-300 dark:text-feedgod-dark-accent" />
+            <ChevronRight className="w-4 h-4 text-feedgod-purple-300 dark:border-feedgod-dark-accent dark:text-feedgod-purple-200 dark:border-feedgod-dark-accent" />
             <div className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
               step === 'configure' 
-                ? 'bg-feedgod-primary text-white' 
-                : 'bg-feedgod-pink-100 dark:bg-feedgod-dark-accent text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70'
+                ? 'bg-feedgod-primary dark:text-feedgod-primary text-white' 
+                : 'bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent text-gray-400'
             }`}>
               2. Configure
             </div>
-            <ChevronRight className="w-4 h-4 text-feedgod-pink-300 dark:text-feedgod-dark-accent" />
+            <ChevronRight className="w-4 h-4 text-feedgod-purple-300 dark:border-feedgod-dark-accent dark:text-feedgod-purple-200 dark:border-feedgod-dark-accent" />
             <div className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
               step === 'preview' 
-                ? 'bg-feedgod-primary text-white' 
-                : 'bg-feedgod-pink-100 dark:bg-feedgod-dark-accent text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70'
+                ? 'bg-feedgod-primary dark:text-feedgod-primary text-white' 
+                : 'bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent text-gray-400'
             }`}>
               3. Deploy
             </div>
@@ -398,10 +398,10 @@ export default function PredictionMarketBuilder() {
         </div>
 
         {/* How it works */}
-        <div className="flex items-center gap-6 text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 pt-4 border-t border-feedgod-pink-200 dark:border-feedgod-dark-accent">
+        <div className="flex items-center gap-6 text-xs text-gray-400 pt-4 border-t border-[#3a3b35]">
           <div className="flex items-center gap-2">
             <Zap className="w-4 h-4" />
-            <span>Oracle outputs <strong className="text-feedgod-dark dark:text-white">1</strong> for YES, <strong className="text-feedgod-dark dark:text-white">0</strong> for NO</span>
+            <span>Oracle outputs <strong className="text-white">1</strong> for YES, <strong className="text-white">0</strong> for NO</span>
           </div>
           <div className="flex items-center gap-2">
             <Activity className="w-4 h-4" />
@@ -420,33 +420,33 @@ export default function PredictionMarketBuilder() {
           {/* Market list */}
           <div className="lg:col-span-2 space-y-4">
             {/* Search and filters */}
-            <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-4 backdrop-blur-sm">
+            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-4 backdrop-blur-sm">
               <div className="flex items-center gap-3">
                 <div className="flex-1 relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-feedgod-pink-400 dark:text-feedgod-neon-cyan/50" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-feedgod-secondary/70 /50" />
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search markets... (e.g., Bitcoin, Trump, weather)"
-                    className="w-full pl-10 pr-4 py-2 bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg text-feedgod-dark dark:text-white placeholder-feedgod-pink-400 dark:placeholder-feedgod-neon-cyan/50 focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:focus:ring-feedgod-neon-pink"
+                    className="w-full pl-10 pr-4 py-2 bg-[#252620] border border-[#3a3b35] rounded-lg text-white placeholder-feedgod-feedgod-secondary dark:text-feedgod-secondary/70 dark:placeholder-feedgod-feedgod-primary dark:text-feedgod-secondary/50 focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary dark:focus:ring-feedgod-primary dark:text-feedgod-primary"
                   />
                 </div>
                 
                 <button
                   onClick={handleRefresh}
-                  className="p-2 bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 hover:border-feedgod-primary dark:hover:border-feedgod-neon-pink transition-colors"
+                  className="p-2 bg-[#252620] border border-[#3a3b35] rounded-lg text-gray-400 hover:border-feedgod-primary dark:text-feedgod-primary dark:hover:border-feedgod-primary dark:text-feedgod-primary transition-colors"
                 >
                   <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
                 </button>
               </div>
               
               {/* Filters - always visible */}
-              <div className="mt-4 pt-4 border-t border-feedgod-pink-200 dark:border-feedgod-dark-accent">
+              <div className="mt-4 pt-4 border-t border-[#3a3b35]">
                   <div className="flex flex-wrap gap-4">
                     {/* Platform filter */}
                     <div>
-                      <label className="block text-xs font-medium text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mb-2">Platform</label>
+                      <label className="block text-xs font-medium text-gray-400 mb-2">Platform</label>
                       <div className="flex gap-2">
                         {(['all', 'polymarket', 'kalshi'] as const).map((platform) => (
                           <button
@@ -454,8 +454,8 @@ export default function PredictionMarketBuilder() {
                             onClick={() => setSelectedPlatform(platform)}
                             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                               selectedPlatform === platform
-                                ? 'bg-feedgod-primary text-white dark:bg-feedgod-neon-pink'
-                                : 'bg-feedgod-pink-100 dark:bg-feedgod-dark-accent text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 hover:bg-feedgod-pink-200 dark:hover:bg-feedgod-dark-secondary'
+                                ? 'bg-feedgod-primary dark:text-feedgod-primary text-white dark:bg-feedgod-primary dark:text-feedgod-primary'
+                                : 'bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent text-gray-400 hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent dark:hover:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary'
                             }`}
                           >
                             {platform === 'all' ? 'All' : platform.charAt(0).toUpperCase() + platform.slice(1)}
@@ -466,14 +466,14 @@ export default function PredictionMarketBuilder() {
                     
                     {/* Category filter */}
                     <div>
-                      <label className="block text-xs font-medium text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mb-2">Category</label>
+                      <label className="block text-xs font-medium text-gray-400 mb-2">Category</label>
                       <div className="flex flex-wrap gap-2">
                         <button
                           onClick={() => setSelectedCategory('all')}
                           className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                             selectedCategory === 'all'
-                              ? 'bg-feedgod-primary text-white dark:bg-feedgod-neon-pink'
-                              : 'bg-feedgod-pink-100 dark:bg-feedgod-dark-accent text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 hover:bg-feedgod-pink-200 dark:hover:bg-feedgod-dark-secondary'
+                              ? 'bg-feedgod-primary dark:text-feedgod-primary text-white dark:bg-feedgod-primary dark:text-feedgod-primary'
+                              : 'bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent text-gray-400 hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent dark:hover:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary'
                           }`}
                         >
                           All
@@ -484,8 +484,8 @@ export default function PredictionMarketBuilder() {
                             onClick={() => setSelectedCategory(cat)}
                             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                               selectedCategory === cat
-                                ? 'bg-feedgod-primary text-white dark:bg-feedgod-neon-pink'
-                                : 'bg-feedgod-pink-100 dark:bg-feedgod-dark-accent text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 hover:bg-feedgod-pink-200 dark:hover:bg-feedgod-dark-secondary'
+                                ? 'bg-feedgod-primary dark:text-feedgod-primary text-white dark:bg-feedgod-primary dark:text-feedgod-primary'
+                                : 'bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent text-gray-400 hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent dark:hover:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary'
                             }`}
                           >
                             {cat}
@@ -500,14 +500,14 @@ export default function PredictionMarketBuilder() {
             {/* Markets list */}
             <div className="space-y-3">
               {isLoading ? (
-                <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-12 text-center">
-                  <RefreshCw className="w-8 h-8 animate-spin text-feedgod-primary dark:text-feedgod-neon-pink mx-auto mb-4" />
-                  <p className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Loading markets...</p>
+                <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-12 text-center">
+                  <RefreshCw className="w-8 h-8 animate-spin gradient-text mx-auto mb-4" />
+                  <p className="text-gray-400">Loading markets...</p>
                 </div>
               ) : markets.length === 0 ? (
-                <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-12 text-center">
-                  <Search className="w-8 h-8 text-feedgod-pink-400 dark:text-feedgod-neon-cyan/50 mx-auto mb-4" />
-                  <p className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">No markets found. Try adjusting your search.</p>
+                <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-12 text-center">
+                  <Search className="w-8 h-8 text-gray-400 dark:text-feedgod-secondary/70 /50 mx-auto mb-4" />
+                  <p className="text-gray-400">No markets found. Try adjusting your search.</p>
                 </div>
               ) : (
                 markets.map((market) => (
@@ -526,25 +526,25 @@ export default function PredictionMarketBuilder() {
           <div className="space-y-4">
             {selectedMarket ? (
               <>
-                <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
+                <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
                   <div className="flex items-center gap-3 mb-4">
                     <PlatformLogo platform={selectedMarket.platform} />
-                    <span className="text-xs font-medium text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 uppercase tracking-wide">
+                    <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">
                       {selectedMarket.platform}
                     </span>
                   </div>
                   
-                  <h3 className="text-lg font-semibold text-feedgod-dark dark:text-white mb-3">
+                  <h3 className="text-lg font-semibold text-white mb-3">
                     {selectedMarket.title}
                   </h3>
                   
-                  <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mb-4 line-clamp-4">
+                  <p className="text-sm text-gray-400 mb-4 line-clamp-4">
                     {selectedMarket.description}
                   </p>
                   
                   {/* Current odds */}
-                  <div className="bg-feedgod-pink-50 dark:bg-feedgod-dark-accent rounded-lg p-4 mb-4">
-                    <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mb-3">Current Odds</p>
+                  <div className="bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg p-4 mb-4">
+                    <p className="text-xs text-gray-400 mb-3">Current Odds</p>
                     <div className="space-y-2">
                       {selectedMarket.outcomes.map((outcome) => (
                         <div key={outcome.id} className="flex items-center justify-between">
@@ -555,7 +555,7 @@ export default function PredictionMarketBuilder() {
                           }`}>
                             {outcome.name}
                           </span>
-                          <span className="text-lg font-bold text-feedgod-dark dark:text-white">
+                          <span className="text-lg font-bold text-white">
                             {formatProbability(selectedMarket.currentPrices[outcome.id] || outcome.price)}
                           </span>
                         </div>
@@ -564,25 +564,25 @@ export default function PredictionMarketBuilder() {
                   </div>
                   
                   {/* Oracle output preview */}
-                  <div className="bg-gradient-to-r from-feedgod-primary/10 to-purple-500/10 dark:from-feedgod-neon-pink/10 dark:to-purple-500/10 rounded-lg p-4 border border-feedgod-primary/20 dark:border-feedgod-neon-pink/20">
-                    <p className="text-xs text-feedgod-primary dark:text-feedgod-neon-pink font-medium mb-2">Oracle Output</p>
-                    <p className="text-sm text-feedgod-dark dark:text-white">
+                  <div className="bg-gradient-to-r from-feedgod-primary dark:text-feedgod-primary/10 to-feedgod-primary/10 dark:from-feedgod-primary dark:text-feedgod-primary/10 dark:to-feedgod-primary/10 rounded-lg p-4 border border-feedgod-primary dark:text-feedgod-primary/20 dark:border-feedgod-primary dark:text-feedgod-primary/20">
+                    <p className="text-xs gradient-text font-medium mb-2">Oracle Output</p>
+                    <p className="text-sm text-white">
                       Will resolve to <strong className="text-green-600 dark:text-green-400">1</strong> for YES or <strong className="text-red-500 dark:text-red-400">0</strong> for NO
                     </p>
                   </div>
                   
                   {/* Meta info */}
-                  <div className="mt-4 pt-4 border-t border-feedgod-pink-200 dark:border-feedgod-dark-accent space-y-2">
+                  <div className="mt-4 pt-4 border-t border-[#3a3b35] space-y-2">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Closes in</span>
-                      <span className="text-feedgod-dark dark:text-white font-medium">
+                      <span className="text-gray-400">Closes in</span>
+                      <span className="text-white font-medium">
                         {getTimeUntilClose(new Date(selectedMarket.endDate))}
                       </span>
                     </div>
                     {selectedMarket.volume && (
                       <div className="flex items-center justify-between text-sm">
-                        <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Volume</span>
-                        <span className="text-feedgod-dark dark:text-white font-medium">
+                        <span className="text-gray-400">Volume</span>
+                        <span className="text-white font-medium">
                           {formatVolume(selectedMarket.volume)}
                         </span>
                       </div>
@@ -592,7 +592,7 @@ export default function PredictionMarketBuilder() {
                         href={selectedMarket.marketUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-sm text-feedgod-primary dark:text-feedgod-neon-cyan hover:underline mt-2"
+                        className="flex items-center gap-2 text-sm text-feedgod-primary dark:text-feedgod-primary  hover:underline mt-2"
                       >
                         <ExternalLink className="w-3 h-3" />
                         View on {selectedMarket.platform}
@@ -603,19 +603,19 @@ export default function PredictionMarketBuilder() {
                 
                 <button
                   onClick={handleContinue}
-                  className="w-full px-4 py-3 bg-feedgod-primary hover:bg-feedgod-secondary dark:bg-feedgod-neon-pink dark:hover:bg-feedgod-neon-pink/80 rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2 star-glow-on-hover"
+                  className="w-full px-4 py-3 gradient-bg hover:opacity-90 rounded-lg text-white font-medium transition-all flex items-center justify-center gap-2 star-glow-on-hover"
                 >
                   Continue to Configure
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </>
             ) : (
-              <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm text-center">
-                <Target className="w-12 h-12 text-feedgod-pink-300 dark:text-feedgod-dark-accent mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-feedgod-dark dark:text-white mb-2">
+              <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm text-center">
+                <Target className="w-12 h-12 text-feedgod-purple-300 dark:border-feedgod-dark-accent dark:text-feedgod-purple-200 dark:border-feedgod-dark-accent mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-white mb-2">
                   Select a Market
                 </h3>
-                <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                <p className="text-sm text-gray-400">
                   Choose a prediction market from the list to create an oracle for it.
                 </p>
               </div>
@@ -629,20 +629,20 @@ export default function PredictionMarketBuilder() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             {/* Selected market summary */}
-            <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-4 backdrop-blur-sm">
+            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-4 backdrop-blur-sm">
               <div className="flex items-center gap-3">
                 <PlatformLogo platform={selectedMarket.platform} />
                 <div className="flex-1">
-                  <h4 className="font-medium text-feedgod-dark dark:text-white text-sm">
+                  <h4 className="font-medium text-white text-sm">
                     {selectedMarket.title}
                   </h4>
-                  <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                  <p className="text-xs text-gray-400">
                     {selectedMarket.platform} • Closes in {getTimeUntilClose(new Date(selectedMarket.endDate))}
                   </p>
                 </div>
                 <button
                   onClick={handleBack}
-                  className="text-sm text-feedgod-primary dark:text-feedgod-neon-cyan hover:underline"
+                  className="text-sm text-feedgod-primary dark:text-feedgod-primary  hover:underline"
                 >
                   Change
                 </button>
@@ -650,39 +650,39 @@ export default function PredictionMarketBuilder() {
             </div>
 
             {/* Oracle configuration */}
-            <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-6">
+            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h3 className="text-lg font-semibold gradient-text mb-6">
                 Oracle Configuration
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Oracle name */}
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2">
+                  <label className="block text-sm font-medium text-white mb-2">
                     Oracle Name
                   </label>
                   <input
                     type="text"
                     value={oracleConfig.name || ''}
                     onChange={(e) => setOracleConfig(prev => ({ ...prev, name: e.target.value }))}
-                    className="w-full bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg px-4 py-2 text-feedgod-dark dark:text-white focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:focus:ring-feedgod-neon-pink"
+                    className="w-full bg-[#252620] border border-[#3a3b35] rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary dark:focus:ring-feedgod-primary dark:text-feedgod-primary"
                   />
                 </div>
                 
                 {/* Resolution type */}
                 <div>
-                  <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2">
+                  <label className="block text-sm font-medium text-white mb-2">
                     Resolution Type
                   </label>
                   <select
                     value={oracleConfig.resolutionType}
                     onChange={(e) => setOracleConfig(prev => ({ ...prev, resolutionType: e.target.value as any }))}
-                    className="w-full bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg px-4 py-2 text-feedgod-dark dark:text-white focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:focus:ring-feedgod-neon-pink"
+                    className="w-full bg-[#252620] border border-[#3a3b35] rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary dark:focus:ring-feedgod-primary dark:text-feedgod-primary"
                   >
                     <option value="binary">Binary (YES=1, NO=0)</option>
                     <option value="multi-outcome">Multi-Outcome (Index)</option>
                   </select>
-                  <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mt-1">
+                  <p className="text-xs text-gray-400 mt-1">
                     {oracleConfig.resolutionType === 'binary' 
                       ? 'Returns 1 for YES, 0 for NO'
                       : 'Returns winning outcome index (0, 1, 2, ...)'
@@ -692,14 +692,14 @@ export default function PredictionMarketBuilder() {
                 
                 {/* Update interval */}
                 <div>
-                  <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2 flex items-center gap-2">
+                  <label className="block text-sm font-medium text-white mb-2 flex items-center gap-2">
                     <Clock className="w-4 h-4" />
                     Update Interval
                   </label>
                   <select
                     value={oracleConfig.updateInterval}
                     onChange={(e) => setOracleConfig(prev => ({ ...prev, updateInterval: parseInt(e.target.value) }))}
-                    className="w-full bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg px-4 py-2 text-feedgod-dark dark:text-white focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:focus:ring-feedgod-neon-pink"
+                    className="w-full bg-[#252620] border border-[#3a3b35] rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary dark:focus:ring-feedgod-primary dark:text-feedgod-primary"
                   >
                     <option value="60">Every minute</option>
                     <option value="300">Every 5 minutes</option>
@@ -707,7 +707,7 @@ export default function PredictionMarketBuilder() {
                     <option value="3600">Every hour</option>
                     <option value="86400">Daily</option>
                   </select>
-                  <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mt-1">
+                  <p className="text-xs text-gray-400 mt-1">
                     How often to check market status
                   </p>
                 </div>
@@ -729,13 +729,13 @@ export default function PredictionMarketBuilder() {
                       type="checkbox"
                       checked={oracleConfig.autoResolve}
                       onChange={(e) => setOracleConfig(prev => ({ ...prev, autoResolve: e.target.checked }))}
-                      className="w-5 h-5 rounded border-feedgod-pink-300 dark:border-feedgod-dark-accent bg-white dark:bg-feedgod-dark-secondary text-feedgod-primary dark:text-feedgod-neon-pink focus:ring-feedgod-primary dark:focus:ring-feedgod-neon-pink"
+                      className="w-5 h-5 rounded border-feedgod-purple-300 dark:border-feedgod-dark-accent dark:border-feedgod-purple-200 dark:border-feedgod-dark-accent bg-feedgod-dark-secondary dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary gradient-text focus:ring-feedgod-primary dark:text-feedgod-primary dark:focus:ring-feedgod-primary dark:text-feedgod-primary"
                     />
                     <div>
-                      <span className="text-sm font-medium text-feedgod-dark dark:text-white">
+                      <span className="text-sm font-medium text-white">
                         Auto-resolve when market closes
                       </span>
-                      <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                      <p className="text-xs text-gray-400">
                         Automatically fetch final result when the market end date is reached
                       </p>
                     </div>
@@ -748,40 +748,40 @@ export default function PredictionMarketBuilder() {
           {/* Right column - preview & actions */}
           <div className="space-y-4">
             {/* Quick preview */}
-            <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-              <h4 className="text-sm font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h4 className="text-sm font-semibold gradient-text mb-4">
                 Oracle Preview
               </h4>
               
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Market</span>
-                  <span className="text-feedgod-dark dark:text-white font-medium text-right max-w-[60%] truncate">
+                  <span className="text-gray-400">Market</span>
+                  <span className="text-white font-medium text-right max-w-[60%] truncate">
                     {selectedMarket.title}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Chain</span>
+                  <span className="text-gray-400">Chain</span>
                   <div className="flex items-center gap-1.5">
                     <img 
                       src={CHAIN_LOGOS[oracleConfig.blockchain || 'solana']}
                       alt={oracleConfig.blockchain}
                       className="w-4 h-4 object-contain"
                     />
-                    <span className="text-feedgod-dark dark:text-white font-medium capitalize">
+                    <span className="text-white font-medium capitalize">
                       {oracleConfig.blockchain} ({oracleConfig.network})
                     </span>
                   </div>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Output</span>
-                  <span className="text-feedgod-dark dark:text-white font-medium">
+                  <span className="text-gray-400">Output</span>
+                  <span className="text-white font-medium">
                     uint8 (0 or 1)
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Updates</span>
-                  <span className="text-feedgod-dark dark:text-white font-medium">
+                  <span className="text-gray-400">Updates</span>
+                  <span className="text-white font-medium">
                     {oracleConfig.updateInterval === 60 && 'Every minute'}
                     {oracleConfig.updateInterval === 300 && 'Every 5 min'}
                     {oracleConfig.updateInterval === 900 && 'Every 15 min'}
@@ -802,14 +802,14 @@ export default function PredictionMarketBuilder() {
             <div className="flex flex-col gap-3">
               <button
                 onClick={handlePreview}
-                className="w-full px-4 py-3 bg-feedgod-primary hover:bg-feedgod-secondary dark:bg-feedgod-neon-pink dark:hover:bg-feedgod-neon-pink/80 rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2 star-glow-on-hover"
+                className="w-full px-4 py-3 gradient-bg hover:opacity-90 rounded-lg text-white font-medium transition-all flex items-center justify-center gap-2 star-glow-on-hover"
               >
                 Preview & Deploy
                 <ChevronRight className="w-4 h-4" />
               </button>
               <button
                 onClick={handleBack}
-                className="w-full px-4 py-3 bg-feedgod-pink-100 dark:bg-feedgod-dark-accent hover:bg-feedgod-pink-200 dark:hover:bg-feedgod-dark-secondary rounded-lg text-feedgod-dark dark:text-white font-medium transition-colors"
+                className="w-full px-4 py-3 bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent dark:hover:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary rounded-lg text-white font-medium transition-colors"
               >
                 Back to Markets
               </button>
@@ -823,12 +823,12 @@ export default function PredictionMarketBuilder() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             {/* Config preview */}
-            <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h3 className="text-lg font-semibold gradient-text mb-4">
                 Switchboard Oracle Configuration
               </h3>
               
-              <div className="bg-feedgod-dark dark:bg-black rounded-lg p-4 overflow-x-auto">
+              <div className="bg-feedgod-dark-secondary dark:bg-black rounded-lg p-4 overflow-x-auto">
                 <pre className="text-sm text-green-400 font-mono">
                   {JSON.stringify(generateSwitchboardConfig(), null, 2)}
                 </pre>
@@ -836,19 +836,19 @@ export default function PredictionMarketBuilder() {
             </div>
 
             {/* What happens next */}
-            <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-              <h4 className="text-sm font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h4 className="text-sm font-semibold gradient-text mb-4">
                 What happens when you deploy?
               </h4>
               
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-feedgod-primary/10 dark:bg-feedgod-neon-pink/10 flex items-center justify-center flex-shrink-0">
-                    <span className="text-xs font-bold text-feedgod-primary dark:text-feedgod-neon-pink">1</span>
+                  <div className="w-6 h-6 rounded-full bg-feedgod-primary dark:text-feedgod-primary/10 dark:bg-feedgod-primary dark:text-feedgod-primary/10 flex items-center justify-center flex-shrink-0">
+                    <span className="text-xs font-bold gradient-text">1</span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-feedgod-dark dark:text-white">Oracle Created</p>
-                    <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 flex items-center gap-1">
+                    <p className="text-sm font-medium text-white">Oracle Created</p>
+                    <p className="text-xs text-gray-400 flex items-center gap-1">
                       A new Switchboard oracle will be deployed on 
                       <img 
                         src={CHAIN_LOGOS[oracleConfig.blockchain || 'solana']}
@@ -861,12 +861,12 @@ export default function PredictionMarketBuilder() {
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-feedgod-primary/10 dark:bg-feedgod-neon-pink/10 flex items-center justify-center flex-shrink-0">
-                    <span className="text-xs font-bold text-feedgod-primary dark:text-feedgod-neon-pink">2</span>
+                  <div className="w-6 h-6 rounded-full bg-feedgod-primary dark:text-feedgod-primary/10 dark:bg-feedgod-primary dark:text-feedgod-primary/10 flex items-center justify-center flex-shrink-0">
+                    <span className="text-xs font-bold gradient-text">2</span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-feedgod-dark dark:text-white">Monitoring Starts</p>
-                    <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                    <p className="text-sm font-medium text-white">Monitoring Starts</p>
+                    <p className="text-xs text-gray-400">
                       The oracle will check {selectedMarket.platform} every {
                         oracleConfig.updateInterval === 60 ? 'minute' :
                         oracleConfig.updateInterval === 300 ? '5 minutes' :
@@ -878,12 +878,12 @@ export default function PredictionMarketBuilder() {
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-feedgod-primary/10 dark:bg-feedgod-neon-pink/10 flex items-center justify-center flex-shrink-0">
-                    <span className="text-xs font-bold text-feedgod-primary dark:text-feedgod-neon-pink">3</span>
+                  <div className="w-6 h-6 rounded-full bg-feedgod-primary dark:text-feedgod-primary/10 dark:bg-feedgod-primary dark:text-feedgod-primary/10 flex items-center justify-center flex-shrink-0">
+                    <span className="text-xs font-bold gradient-text">3</span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-feedgod-dark dark:text-white">Resolution</p>
-                    <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                    <p className="text-sm font-medium text-white">Resolution</p>
+                    <p className="text-xs text-gray-400">
                       When the market closes, the oracle will output <strong>1</strong> for YES or <strong>0</strong> for NO
                     </p>
                   </div>
@@ -895,41 +895,41 @@ export default function PredictionMarketBuilder() {
           {/* Right column - final actions */}
           <div className="space-y-4">
             {/* Summary card */}
-            <div className="bg-gradient-to-br from-feedgod-primary/10 to-purple-500/10 dark:from-feedgod-neon-pink/10 dark:to-purple-500/10 rounded-lg border border-feedgod-primary/20 dark:border-feedgod-neon-pink/20 p-6">
-              <h4 className="text-sm font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+            <div className="bg-gradient-to-br from-feedgod-primary dark:text-feedgod-primary/10 to-feedgod-primary/10 dark:from-feedgod-primary dark:text-feedgod-primary/10 dark:to-feedgod-primary/10 rounded-lg border border-feedgod-primary dark:text-feedgod-primary/20 dark:border-feedgod-primary dark:text-feedgod-primary/20 p-6">
+              <h4 className="text-sm font-semibold gradient-text mb-4">
                 Ready to Deploy
               </h4>
               
               <div className="space-y-2 text-sm mb-4">
                 <div className="flex justify-between">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Oracle</span>
-                  <span className="text-feedgod-dark dark:text-white font-medium truncate max-w-[60%]">
+                  <span className="text-gray-400">Oracle</span>
+                  <span className="text-white font-medium truncate max-w-[60%]">
                     {oracleConfig.name}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Chain</span>
+                  <span className="text-gray-400">Chain</span>
                   <div className="flex items-center gap-1.5">
                     <img 
                       src={CHAIN_LOGOS[oracleConfig.blockchain || 'solana']}
                       alt={oracleConfig.blockchain}
                       className="w-4 h-4 object-contain"
                     />
-                    <span className="text-feedgod-dark dark:text-white font-medium capitalize">
+                    <span className="text-white font-medium capitalize">
                       {oracleConfig.blockchain}
                     </span>
                   </div>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Network</span>
-                  <span className="text-feedgod-dark dark:text-white font-medium capitalize">
+                  <span className="text-gray-400">Network</span>
+                  <span className="text-white font-medium capitalize">
                     {oracleConfig.network}
                   </span>
                 </div>
               </div>
               
-              <div className="pt-4 border-t border-feedgod-primary/20 dark:border-feedgod-neon-pink/20">
-                <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+              <div className="pt-4 border-t border-feedgod-primary dark:text-feedgod-primary/20 dark:border-feedgod-primary dark:text-feedgod-primary/20">
+                <p className="text-xs text-gray-400">
                   Your smart contracts can read this oracle to get trustless prediction market data on-chain.
                 </p>
               </div>
@@ -945,21 +945,21 @@ export default function PredictionMarketBuilder() {
             <div className="flex flex-col gap-3">
               <button
                 onClick={handleDeploy}
-                className="w-full px-4 py-3 bg-feedgod-primary hover:bg-feedgod-secondary dark:bg-feedgod-neon-pink dark:hover:bg-feedgod-neon-pink/80 rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2 star-glow-on-hover"
+                className="w-full px-4 py-3 gradient-bg hover:opacity-90 rounded-lg text-white font-medium transition-all flex items-center justify-center gap-2 star-glow-on-hover"
               >
                 <Play className="w-4 h-4" />
                 Deploy Oracle
               </button>
               <button
                 onClick={handleSave}
-                className="w-full px-4 py-3 bg-feedgod-pink-100 dark:bg-feedgod-dark-accent hover:bg-feedgod-pink-200 dark:hover:bg-feedgod-dark-secondary rounded-lg text-feedgod-dark dark:text-white font-medium transition-colors flex items-center justify-center gap-2"
+                className="w-full px-4 py-3 bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent dark:hover:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2"
               >
                 <Save className="w-4 h-4" />
                 Save Configuration
               </button>
               <button
                 onClick={handleBack}
-                className="w-full px-4 py-2 text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 hover:text-feedgod-primary dark:hover:text-feedgod-neon-pink transition-colors"
+                className="w-full px-4 py-2 text-sm text-gray-400 hover:text-feedgod-primary dark:text-feedgod-primary dark:hover:text-feedgod-primary dark:text-feedgod-primary transition-colors"
               >
                 Back to Configure
               </button>

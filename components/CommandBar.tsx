@@ -68,7 +68,6 @@ export default function CommandBar({
   const [isFocused, setIsFocused] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  // Detect intent as user types
   const detectedIntent: DetectedIntent | null = useMemo(() => {
     if (!input || input.length < 2 || !isHomepage) return null
     return detectIntent(input)
@@ -94,12 +93,10 @@ export default function CommandBar({
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Cmd/Ctrl + K to focus
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault()
         inputRef.current?.focus()
       }
-      // Escape to clear
       if (e.key === 'Escape') {
         setInput('')
         inputRef.current?.blur()
@@ -118,28 +115,21 @@ export default function CommandBar({
     playPickupSound()
 
     try {
-      // If on homepage with smart routing
       if (isHomepage && onModuleNavigate) {
         const intent = detectIntent(query)
-        
-        // Small delay for visual feedback
         await new Promise(resolve => setTimeout(resolve, 300))
-        
-        // Navigate to the detected module with parsed data
         onModuleNavigate(intent.module, intent.parsed)
         setInput('')
         setIsLoading(false)
         return
       }
       
-      // Check if it's a search query
       if (query.startsWith('/search ') || query.startsWith('search ')) {
         const searchQuery = query.replace(/^\/?search\s+/, '')
         if (onSearch) {
           onSearch(searchQuery)
         }
       } else {
-        // Treat as AI prompt based on active tab
         if (!activeTab) return
         
         const config = await generateFromPrompt(query, activeTab)
@@ -179,9 +169,9 @@ export default function CommandBar({
         <div className="relative flex items-center">
           <div className="absolute left-4 flex items-center gap-2 pointer-events-none">
             {isLoading ? (
-              <Loader2 className="w-5 h-5 animate-spin text-feedgod-primary dark:text-feedgod-neon-pink" />
+              <Loader2 className="w-5 h-5 animate-spin text-feedgod-primary" />
             ) : (
-              <Search className="w-5 h-5 text-feedgod-pink-400 dark:text-feedgod-neon-cyan/70" />
+              <Search className="w-5 h-5 text-gray-500" />
             )}
           </div>
           <input
@@ -192,15 +182,14 @@ export default function CommandBar({
             onFocus={() => setIsFocused(true)}
             onBlur={() => setTimeout(() => setIsFocused(false), 200)}
             placeholder={finalPlaceholder}
-            className="w-full bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-xl px-12 py-4 text-feedgod-dark dark:text-feedgod-neon-cyan placeholder-feedgod-pink-400 dark:placeholder-feedgod-neon-cyan/50 focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:focus:ring-feedgod-neon-pink focus:border-feedgod-primary dark:focus:border-feedgod-neon-pink transition-all star-glow-on-hover disabled:opacity-70 text-sm md:text-base"
+            className="w-full bg-feedgod-dark-secondary border border-feedgod-dark-accent rounded-xl px-12 py-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-feedgod-primary focus:border-feedgod-primary transition-all disabled:opacity-70 text-sm md:text-base"
             disabled={isLoading}
           />
           
-          {/* Intent indicator */}
           {detectedIntent && input.length >= 2 && !isLoading && (
-            <div className="absolute right-16 flex items-center gap-1.5 px-2.5 py-1 bg-feedgod-primary/10 dark:bg-feedgod-neon-pink/10 border border-feedgod-primary/30 dark:border-feedgod-neon-pink/30 rounded-full">
+            <div className="absolute right-16 flex items-center gap-1.5 px-2.5 py-1 bg-feedgod-primary/10 border border-feedgod-primary/30 rounded-full">
               <span className="text-sm">{detectedIntent.icon}</span>
-              <span className="text-xs font-medium text-feedgod-primary dark:text-feedgod-neon-pink">
+              <span className="text-xs font-medium text-feedgod-primary">
                 {detectedIntent.label}
               </span>
             </div>
@@ -210,15 +199,15 @@ export default function CommandBar({
             <button
               type="button"
               onClick={() => setInput('')}
-              className="absolute right-12 p-1 hover:bg-feedgod-pink-100 dark:hover:bg-feedgod-dark-accent rounded transition-colors"
+              className="absolute right-12 p-1 hover:bg-feedgod-dark-accent rounded transition-colors"
             >
-              <X className="w-4 h-4 text-feedgod-pink-400 dark:text-feedgod-neon-cyan/70" />
+              <X className="w-4 h-4 text-gray-500" />
             </button>
           )}
           
           {!isLoading && (
             <div className="absolute right-4 flex items-center gap-2 pointer-events-none">
-              <kbd className="hidden sm:inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded">
+              <kbd className="hidden sm:inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-gray-500 bg-feedgod-dark-accent border border-feedgod-dark-accent rounded">
                 <span className="text-[10px]">⌘</span>K
               </kbd>
             </div>
@@ -226,11 +215,10 @@ export default function CommandBar({
         </div>
       </form>
       
-      {/* Loading indicator */}
       {isLoading && (
-        <div className="absolute top-full left-0 right-0 mt-3 flex items-center justify-center gap-3 px-4 py-3 bg-gradient-to-r from-feedgod-primary/10 to-feedgod-pink-200/20 dark:from-feedgod-neon-pink/10 dark:to-feedgod-dark-accent border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-xl shadow-lg">
-          <Loader2 className="w-5 h-5 animate-spin text-feedgod-primary dark:text-feedgod-neon-pink flex-shrink-0" />
-          <span className="text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan">
+        <div className="absolute top-full left-0 right-0 mt-3 flex items-center justify-center gap-3 px-4 py-3 bg-feedgod-dark-secondary border border-feedgod-dark-accent rounded-xl shadow-lg">
+          <Loader2 className="w-5 h-5 animate-spin text-feedgod-primary flex-shrink-0" />
+          <span className="text-sm font-medium text-white">
             {getLoadingMessage()}
           </span>
           {detectedIntent && (
@@ -239,26 +227,24 @@ export default function CommandBar({
         </div>
       )}
       
-      {/* Example prompts (homepage only) */}
       {(showExamples || isHomepage) && !isLoading && (
         <div className="mt-4 flex flex-wrap gap-2 justify-center">
           {EXAMPLE_PROMPTS.map((example, i) => (
             <button
               key={i}
               onClick={() => handleExampleClick(example)}
-              className="group flex items-center gap-1.5 px-3 py-1.5 bg-white/60 dark:bg-feedgod-dark-secondary/60 hover:bg-feedgod-primary/10 dark:hover:bg-feedgod-neon-pink/10 border border-feedgod-pink-200 dark:border-feedgod-dark-accent hover:border-feedgod-primary/50 dark:hover:border-feedgod-neon-pink/50 rounded-full text-xs text-feedgod-dark dark:text-white transition-all"
+              className="group flex items-center gap-1.5 px-3 py-1.5 bg-feedgod-dark-secondary/60 hover:bg-feedgod-primary/10 border border-feedgod-dark-accent hover:border-feedgod-primary/50 rounded-full text-xs text-gray-300 transition-all"
             >
               <span>{example.icon}</span>
               <span>{example.text}</span>
-              <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-feedgod-primary dark:text-feedgod-neon-pink" />
+              <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-feedgod-primary" />
             </button>
           ))}
         </div>
       )}
       
-      {/* Smart routing hint */}
       {isHomepage && isFocused && input.length === 0 && (
-        <div className="mt-3 text-center text-xs text-feedgod-pink-400 dark:text-feedgod-neon-cyan/60 flex items-center justify-center gap-2">
+        <div className="mt-3 text-center text-xs text-gray-500 flex items-center justify-center gap-2">
           <Sparkles className="w-3 h-3" />
           <span>Smart routing auto-detects what you want</span>
         </div>

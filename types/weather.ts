@@ -42,3 +42,4 @@ export const WEATHER_METRICS: { value: WeatherMetric; label: string; unit: strin
   { value: 'wind_speed', label: 'Wind Speed', unit: 'km/h', icon: '💨' },
 ]
 
+

@@ -18,7 +18,7 @@ export default function FeedConfiguration({ config, onUpdate }: FeedConfiguratio
           type="text"
           value={config.name}
           onChange={(e) => onUpdate({ name: e.target.value })}
-          className="w-full bg-switchboard-dark-lighter border border-switchboard-dark-lighter rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-switchboard-primary"
+          className="w-full bg-feedgod-dark-accent border border-feedgod-dark-accent rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary"
           placeholder="My Custom Feed"
         />
       </div>
@@ -31,7 +31,7 @@ export default function FeedConfiguration({ config, onUpdate }: FeedConfiguratio
           type="text"
           value={config.symbol}
           onChange={(e) => onUpdate({ symbol: e.target.value })}
-          className="w-full bg-switchboard-dark-lighter border border-switchboard-dark-lighter rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-switchboard-primary"
+          className="w-full bg-feedgod-dark-accent border border-feedgod-dark-accent rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary"
           placeholder="BTC/USD"
         />
       </div>
@@ -43,7 +43,7 @@ export default function FeedConfiguration({ config, onUpdate }: FeedConfiguratio
         <textarea
           value={config.description || ''}
           onChange={(e) => onUpdate({ description: e.target.value })}
-          className="w-full bg-switchboard-dark-lighter border border-switchboard-dark-lighter rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-switchboard-primary h-24 resize-none"
+          className="w-full bg-feedgod-dark-accent border border-feedgod-dark-accent rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary h-24 resize-none"
           placeholder="Describe your feed..."
         />
       </div>
@@ -57,7 +57,7 @@ export default function FeedConfiguration({ config, onUpdate }: FeedConfiguratio
             type="number"
             value={config.updateInterval}
             onChange={(e) => onUpdate({ updateInterval: parseInt(e.target.value) || 60 })}
-            className="w-full bg-switchboard-dark-lighter border border-switchboard-dark-lighter rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-switchboard-primary"
+            className="w-full bg-feedgod-dark-accent border border-feedgod-dark-accent rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary"
             min="1"
           />
         </div>
@@ -70,7 +70,7 @@ export default function FeedConfiguration({ config, onUpdate }: FeedConfiguratio
             type="number"
             value={config.decimals}
             onChange={(e) => onUpdate({ decimals: parseInt(e.target.value) || 8 })}
-            className="w-full bg-switchboard-dark-lighter border border-switchboard-dark-lighter rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-switchboard-primary"
+            className="w-full bg-feedgod-dark-accent border border-feedgod-dark-accent rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary"
             min="0"
             max="18"
           />
@@ -84,7 +84,7 @@ export default function FeedConfiguration({ config, onUpdate }: FeedConfiguratio
         <select
           value={config.network}
           onChange={(e) => onUpdate({ network: e.target.value as any })}
-          className="w-full bg-switchboard-dark-lighter border border-switchboard-dark-lighter rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-switchboard-primary"
+          className="w-full bg-feedgod-dark-accent border border-feedgod-dark-accent rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary"
         >
           <option value="mainnet">Mainnet</option>
           <option value="devnet">Devnet</option>
@@ -98,7 +98,7 @@ export default function FeedConfiguration({ config, onUpdate }: FeedConfiguratio
           id="enabled"
           checked={config.enabled}
           onChange={(e) => onUpdate({ enabled: e.target.checked })}
-          className="w-4 h-4 rounded border-switchboard-dark-lighter bg-switchboard-dark-lighter text-switchboard-primary focus:ring-switchboard-primary"
+          className="w-4 h-4 rounded border-feedgod-dark-accent bg-feedgod-dark-accent text-feedgod-primary dark:text-feedgod-primary focus:ring-feedgod-primary dark:text-feedgod-primary"
         />
         <label htmlFor="enabled" className="text-sm font-medium text-gray-300">
           Enable Feed

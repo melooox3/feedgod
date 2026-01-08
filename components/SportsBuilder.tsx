@@ -54,8 +54,8 @@ function CostEstimateDisplay({ blockchain, network }: { blockchain: string; netw
 
   if (isLoading || !estimate) {
     return (
-      <div className="px-4 py-3 bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent">
-        <div className="flex items-center gap-2 text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+      <div className="px-4 py-3 bg-[#252620] rounded-lg border border-[#3a3b35]">
+        <div className="flex items-center gap-2 text-sm text-gray-400">
           <DollarSign className="w-4 h-4 animate-pulse" />
           <span>Calculating cost...</span>
         </div>
@@ -64,14 +64,14 @@ function CostEstimateDisplay({ blockchain, network }: { blockchain: string; netw
   }
 
   return (
-    <div className="px-4 py-3 bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent">
+    <div className="px-4 py-3 bg-[#252620] rounded-lg border border-[#3a3b35]">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+        <div className="flex items-center gap-2 text-sm text-gray-400">
           <DollarSign className="w-4 h-4" />
           <span>Estimated Cost:</span>
         </div>
         <div className="text-right">
-          <div className="text-lg font-bold text-feedgod-primary dark:text-feedgod-neon-pink">
+          <div className="text-lg font-bold gradient-text">
             {estimate.estimatedCost} {estimate.currency}
           </div>
         </div>
@@ -99,21 +99,21 @@ function MatchCard({
       onClick={onSelect}
       className={`p-4 rounded-xl border-2 transition-all cursor-pointer ${
         isSelected
-          ? 'border-feedgod-primary dark:border-feedgod-neon-pink bg-feedgod-primary/5 dark:bg-feedgod-neon-pink/5'
-          : 'border-feedgod-pink-200 dark:border-feedgod-dark-accent bg-white/60 dark:bg-feedgod-dark-secondary/80 hover:border-feedgod-primary/50'
+          ? 'border-feedgod-primary bg-feedgod-primary/10'
+          : 'border-[#3a3b35] bg-[#252620] hover:border-feedgod-primary/50'
       }`}
     >
       {/* League & Status */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <span className="text-lg">{getSportIcon(match.league.sport)}</span>
-          <span className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 font-medium">
+          <span className="text-xs text-gray-400 font-medium">
             {match.league.shortName || match.league.name}
           </span>
         </div>
         <div className={`px-2 py-0.5 rounded-full text-xs font-medium ${
           isLive ? 'bg-red-500/10 text-red-500 animate-pulse' :
-          isFinished ? 'bg-feedgod-pink-100 dark:bg-feedgod-dark-accent text-feedgod-pink-500' :
+          isFinished ? 'bg-[#1D1E19] text-gray-400' :
           'bg-emerald-500/10 text-emerald-500'
         }`}>
           {isLive ? '● LIVE' : isFinished ? 'Finished' : timeDisplay}
@@ -132,17 +132,17 @@ function MatchCard({
                 className="w-6 h-6 object-contain"
               />
             ) : (
-              <div className="w-6 h-6 rounded-full bg-feedgod-pink-100 dark:bg-feedgod-dark-accent flex items-center justify-center text-xs font-bold text-feedgod-pink-500">
+              <div className="w-6 h-6 rounded-full bg-[#3a3b35] flex items-center justify-center text-xs font-bold text-white">
                 {match.homeTeam.name.charAt(0)}
               </div>
             )}
-            <span className="font-medium text-feedgod-dark dark:text-white text-sm">
+            <span className="font-medium text-white text-sm">
               {match.homeTeam.name}
             </span>
           </div>
           {isFinished && (
             <span className={`text-lg font-bold ${
-              match.homeScore! > match.awayScore! ? 'text-emerald-500' : 'text-feedgod-dark dark:text-white'
+              match.homeScore! > match.awayScore! ? 'text-emerald-500' : 'text-white'
             }`}>
               {match.homeScore}
             </span>
@@ -159,17 +159,17 @@ function MatchCard({
                 className="w-6 h-6 object-contain"
               />
             ) : (
-              <div className="w-6 h-6 rounded-full bg-feedgod-pink-100 dark:bg-feedgod-dark-accent flex items-center justify-center text-xs font-bold text-feedgod-pink-500">
+              <div className="w-6 h-6 rounded-full bg-[#3a3b35] flex items-center justify-center text-xs font-bold text-white">
                 {match.awayTeam.name.charAt(0)}
               </div>
             )}
-            <span className="font-medium text-feedgod-dark dark:text-white text-sm">
+            <span className="font-medium text-white text-sm">
               {match.awayTeam.name}
             </span>
           </div>
           {isFinished && (
             <span className={`text-lg font-bold ${
-              match.awayScore! > match.homeScore! ? 'text-emerald-500' : 'text-feedgod-dark dark:text-white'
+              match.awayScore! > match.homeScore! ? 'text-emerald-500' : 'text-white'
             }`}>
               {match.awayScore}
             </span>
@@ -179,7 +179,7 @@ function MatchCard({
       
       {/* Venue & Round */}
       {(match.venue || match.round) && (
-        <div className="mt-3 pt-3 border-t border-feedgod-pink-100 dark:border-feedgod-dark-accent flex items-center gap-3 text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/60">
+        <div className="mt-3 pt-3 border-t border-[#3a3b35] flex items-center gap-3 text-xs text-gray-500">
           {match.venue && (
             <span className="flex items-center gap-1">
               <MapPin className="w-3 h-3" />
@@ -395,17 +395,17 @@ export default function SportsBuilder() {
   return (
     <div className="space-y-6">
       {/* Module Header */}
-      <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-        <div className="flex items-center justify-between">
+      <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-6">
+        <div className="flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
               <Trophy className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-feedgod-primary dark:text-feedgod-neon-pink">
+              <h2 className="text-xl font-bold gradient-text">
                 Sports Oracle Builder
               </h2>
-              <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+              <p className="text-sm text-gray-400">
                 Create on-chain oracles for sports match outcomes
               </p>
             </div>
@@ -414,19 +414,19 @@ export default function SportsBuilder() {
           {/* Step indicator */}
           <div className="flex items-center gap-2">
             <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-              step === 'browse' ? 'bg-feedgod-primary text-white' : 'bg-feedgod-pink-100 dark:bg-feedgod-dark-accent text-feedgod-pink-500'
+              step === 'browse' ? 'gradient-bg text-white' : 'bg-[#1D1E19] border border-[#3a3b35] text-gray-400'
             }`}>
               1. Browse
             </div>
-            <ChevronRight className="w-4 h-4 text-feedgod-pink-300" />
+            <ChevronRight className="w-4 h-4 text-gray-500" />
             <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-              step === 'configure' ? 'bg-feedgod-primary text-white' : 'bg-feedgod-pink-100 dark:bg-feedgod-dark-accent text-feedgod-pink-500'
+              step === 'configure' ? 'gradient-bg text-white' : 'bg-[#1D1E19] border border-[#3a3b35] text-gray-400'
             }`}>
               2. Configure
             </div>
-            <ChevronRight className="w-4 h-4 text-feedgod-pink-300" />
+            <ChevronRight className="w-4 h-4 text-gray-500" />
             <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-              step === 'preview' ? 'bg-feedgod-primary text-white' : 'bg-feedgod-pink-100 dark:bg-feedgod-dark-accent text-feedgod-pink-500'
+              step === 'preview' ? 'gradient-bg text-white' : 'bg-[#1D1E19] border border-[#3a3b35] text-gray-400'
             }`}>
               3. Deploy
             </div>
@@ -439,8 +439,8 @@ export default function SportsBuilder() {
           {/* Left - Filters */}
           <div className="space-y-4">
             {/* Sport Category */}
-            <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-4 backdrop-blur-sm">
-              <h4 className="text-sm font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-3">Sport</h4>
+            <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-4">
+              <h4 className="text-sm font-semibold gradient-text mb-3">Sport</h4>
               <div className="space-y-2">
                 {SPORT_CATEGORIES.map((sport) => (
                   <button
@@ -448,8 +448,8 @@ export default function SportsBuilder() {
                     onClick={() => { playPickupSound(); setSelectedSport(sport.value); }}
                     className={`w-full px-3 py-2 rounded-lg text-left transition-all flex items-center gap-2 ${
                       selectedSport === sport.value
-                        ? 'bg-feedgod-primary/10 border border-feedgod-primary text-feedgod-primary dark:text-feedgod-neon-pink'
-                        : 'hover:bg-feedgod-pink-50 dark:hover:bg-feedgod-dark-accent text-feedgod-dark dark:text-white'
+                        ? 'gradient-bg text-white border border-feedgod-primary/50'
+                        : 'bg-[#1D1E19] border border-[#3a3b35] text-white hover:bg-[#2a2b25] hover:border-feedgod-primary/30'
                     }`}
                   >
                     <span className="text-lg">{sport.icon}</span>
@@ -460,8 +460,8 @@ export default function SportsBuilder() {
             </div>
             
             {/* League Selector */}
-            <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-4 backdrop-blur-sm">
-              <h4 className="text-sm font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-3">League</h4>
+            <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-4">
+              <h4 className="text-sm font-semibold gradient-text mb-3">League</h4>
               <div className="space-y-2 max-h-64 overflow-y-auto">
                 {availableLeagues.map((league) => (
                   <button
@@ -469,8 +469,8 @@ export default function SportsBuilder() {
                     onClick={() => { playPickupSound(); setSelectedLeague(league); }}
                     className={`w-full px-3 py-2 rounded-lg text-left transition-all ${
                       selectedLeague?.id === league.id
-                        ? 'bg-feedgod-primary/10 border border-feedgod-primary text-feedgod-primary dark:text-feedgod-neon-pink'
-                        : 'hover:bg-feedgod-pink-50 dark:hover:bg-feedgod-dark-accent text-feedgod-dark dark:text-white'
+                        ? 'gradient-bg text-white border border-feedgod-primary/50'
+                        : 'bg-[#1D1E19] border border-[#3a3b35] text-white hover:bg-[#2a2b25] hover:border-feedgod-primary/30'
                     }`}
                   >
                     <div className="flex items-center gap-2">
@@ -478,7 +478,7 @@ export default function SportsBuilder() {
                       <span className="text-sm font-medium truncate">{league.name}</span>
                     </div>
                     {league.country && (
-                      <span className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/60 ml-7">
+                      <span className={`text-xs ml-7 ${selectedLeague?.id === league.id ? 'text-white/70' : 'text-gray-500'}`}>
                         {league.country}
                       </span>
                     )}
@@ -488,15 +488,15 @@ export default function SportsBuilder() {
             </div>
             
             {/* Options */}
-            <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-4 backdrop-blur-sm">
+            <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-4">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={includePastMatches}
                   onChange={(e) => setIncludePastMatches(e.target.checked)}
-                  className="rounded border-feedgod-pink-300 text-feedgod-primary focus:ring-feedgod-primary"
+                  className="rounded border-[#3a3b35] bg-[#1D1E19] text-feedgod-primary focus:ring-feedgod-primary"
                 />
-                <span className="text-sm text-feedgod-dark dark:text-white">Include past matches</span>
+                <span className="text-sm text-white">Include past matches</span>
               </label>
             </div>
           </div>
@@ -506,26 +506,26 @@ export default function SportsBuilder() {
             {/* Search & View Toggle */}
             <div className="flex items-center gap-3">
               <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-feedgod-pink-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search teams or venues..."
-                  className="w-full pl-10 pr-4 py-2 bg-white/60 dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg text-feedgod-dark dark:text-white placeholder-feedgod-pink-400 focus:outline-none focus:ring-2 focus:ring-feedgod-primary"
+                  className="w-full pl-10 pr-4 py-2 bg-[#252620] border border-[#3a3b35] rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-feedgod-primary focus:border-transparent"
                 />
               </div>
               
-              <div className="flex items-center bg-white/60 dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg">
+              <div className="flex items-center bg-[#252620] border border-[#3a3b35] rounded-lg">
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`p-2 rounded-l-lg ${viewMode === 'grid' ? 'bg-feedgod-primary text-white' : 'text-feedgod-pink-500'}`}
+                  className={`p-2 rounded-l-lg ${viewMode === 'grid' ? 'gradient-bg text-white' : 'text-gray-400 hover:text-white'}`}
                 >
                   <Grid className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
-                  className={`p-2 rounded-r-lg ${viewMode === 'list' ? 'bg-feedgod-primary text-white' : 'text-feedgod-pink-500'}`}
+                  className={`p-2 rounded-r-lg ${viewMode === 'list' ? 'gradient-bg text-white' : 'text-gray-400 hover:text-white'}`}
                 >
                   <List className="w-4 h-4" />
                 </button>
@@ -534,9 +534,9 @@ export default function SportsBuilder() {
               <button
                 onClick={handleRefresh}
                 disabled={isLoading}
-                className="p-2 hover:bg-feedgod-pink-100 dark:hover:bg-feedgod-dark-accent rounded-lg transition-colors"
+                className="p-2 hover:bg-[#2a2b25] rounded-lg transition-colors border border-[#3a3b35]"
               >
-                <RefreshCw className={`w-5 h-5 text-feedgod-pink-500 ${isLoading ? 'animate-spin' : ''}`} />
+                <RefreshCw className={`w-5 h-5 text-gray-400 ${isLoading ? 'animate-spin' : ''}`} />
               </button>
             </div>
 
@@ -547,17 +547,17 @@ export default function SportsBuilder() {
               </div>
             ) : filteredMatches.length === 0 ? (
               <div className="text-center py-20">
-                <Trophy className="w-16 h-16 text-feedgod-pink-300 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-feedgod-dark dark:text-white mb-2">
+                <Trophy className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-white mb-2">
                   No matches found
                 </h3>
-                <p className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                <p className="text-gray-400">
                   {selectedLeague ? 'No upcoming matches in this league' : 'Select a league to browse matches'}
                 </p>
               </div>
             ) : (
               <>
-                <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                <p className="text-sm text-gray-400">
                   {filteredMatches.length} match{filteredMatches.length !== 1 ? 'es' : ''} found
                 </p>
                 
@@ -579,7 +579,7 @@ export default function SportsBuilder() {
               <div className="sticky bottom-4 pt-4">
                 <button
                   onClick={handleConfigure}
-                  className="w-full px-4 py-3 bg-feedgod-primary hover:bg-feedgod-secondary rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2 shadow-lg"
+                  className="w-full px-4 py-3 gradient-bg hover:opacity-90 rounded-lg text-white font-medium transition-all flex items-center justify-center gap-2 shadow-lg"
                 >
                   Configure Oracle for {selectedMatch.homeTeam.name} vs {selectedMatch.awayTeam.name}
                   <ChevronRight className="w-4 h-4" />
@@ -595,14 +595,14 @@ export default function SportsBuilder() {
           {/* Left - Config */}
           <div className="lg:col-span-2 space-y-6">
             {/* Selected Match Summary */}
-            <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">Selected Match</h3>
+            <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-6">
+              <h3 className="text-lg font-semibold gradient-text mb-4">Selected Match</h3>
               <MatchCard match={selectedMatch} isSelected={true} onSelect={() => {}} />
             </div>
 
             {/* Oracle Output Type */}
-            <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+            <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-6">
+              <h3 className="text-lg font-semibold gradient-text mb-4">
                 Oracle Output Type
               </h3>
               
@@ -615,13 +615,13 @@ export default function SportsBuilder() {
                       onClick={() => { playPickupSound(); setOracleConfig(prev => ({ ...prev, outputType: type })); }}
                       className={`p-4 rounded-lg border-2 text-left transition-all ${
                         oracleConfig.outputType === type
-                          ? 'border-feedgod-primary dark:border-feedgod-neon-pink bg-feedgod-primary/5'
-                          : 'border-feedgod-pink-200 dark:border-feedgod-dark-accent hover:border-feedgod-primary/50'
+                          ? 'border-feedgod-primary bg-feedgod-primary/10'
+                          : 'border-[#3a3b35] bg-[#1D1E19] hover:border-feedgod-primary/50'
                       }`}
                     >
-                      <div className="font-medium text-feedgod-dark dark:text-white mb-1">{info.label}</div>
-                      <div className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mb-2">{info.description}</div>
-                      <div className="text-xs font-mono bg-feedgod-pink-50 dark:bg-feedgod-dark-accent p-2 rounded">
+                      <div className="font-medium text-white mb-1">{info.label}</div>
+                      <div className="text-xs text-gray-400 mb-2">{info.description}</div>
+                      <div className="text-xs font-mono bg-[#1D1E19] border border-[#3a3b35] text-green-400 p-2 rounded">
                         {info.format}
                       </div>
                     </button>
@@ -631,8 +631,8 @@ export default function SportsBuilder() {
             </div>
 
             {/* Chain Selection */}
-            <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+            <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-6">
+              <h3 className="text-lg font-semibold gradient-text mb-4">
                 Deployment Settings
               </h3>
               
@@ -645,14 +645,14 @@ export default function SportsBuilder() {
                 />
                 
                 <div>
-                  <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2 flex items-center gap-2">
+                  <label className="block text-sm font-medium text-white mb-2 flex items-center gap-2">
                     <Clock className="w-4 h-4" />
                     Update Interval
                   </label>
                   <select
                     value={oracleConfig.updateInterval}
                     onChange={(e) => setOracleConfig(prev => ({ ...prev, updateInterval: parseInt(e.target.value) }))}
-                    className="w-full bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg px-4 py-2 text-feedgod-dark dark:text-white"
+                    className="w-full bg-[#1D1E19] border border-[#3a3b35] rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-feedgod-primary"
                   >
                     <option value="60">Every minute</option>
                     <option value="300">Every 5 minutes</option>
@@ -667,32 +667,32 @@ export default function SportsBuilder() {
           {/* Right - Summary & Actions */}
           <div className="space-y-4">
             <div className="bg-gradient-to-br from-green-400/10 to-emerald-600/10 rounded-lg border border-green-400/20 p-6">
-              <h4 className="text-sm font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+              <h4 className="text-sm font-semibold gradient-text mb-4">
                 Oracle Summary
               </h4>
               
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Match</span>
-                  <span className="text-feedgod-dark dark:text-white font-medium text-right">
+                  <span className="text-gray-500">Match</span>
+                  <span className="text-white font-medium text-right">
                     {selectedMatch.homeTeam.name} vs {selectedMatch.awayTeam.name}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Output</span>
-                  <span className="text-feedgod-dark dark:text-white font-medium">
+                  <span className="text-gray-500">Output</span>
+                  <span className="text-white font-medium">
                     {OUTPUT_TYPE_INFO[oracleConfig.outputType || 'winner'].label}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Chain</span>
+                  <span className="text-gray-500">Chain</span>
                   <div className="flex items-center gap-1.5">
                     <img 
                       src={CHAIN_LOGOS[oracleConfig.blockchain || 'solana']}
                       alt={oracleConfig.blockchain}
                       className="w-4 h-4 object-contain"
                     />
-                    <span className="text-feedgod-dark dark:text-white font-medium capitalize">{oracleConfig.blockchain}</span>
+                    <span className="text-white font-medium capitalize">{oracleConfig.blockchain}</span>
                   </div>
                 </div>
               </div>
@@ -706,14 +706,14 @@ export default function SportsBuilder() {
             <div className="flex flex-col gap-3">
               <button
                 onClick={handlePreview}
-                className="w-full px-4 py-3 bg-feedgod-primary hover:bg-feedgod-secondary rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2"
+                className="w-full px-4 py-3 gradient-bg hover:opacity-90 rounded-lg text-white font-medium transition-all flex items-center justify-center gap-2"
               >
                 Preview & Deploy
                 <ChevronRight className="w-4 h-4" />
               </button>
               <button
                 onClick={handleBack}
-                className="w-full px-4 py-2 text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 hover:text-feedgod-primary transition-colors"
+                className="w-full px-4 py-2 text-sm text-gray-400 hover:text-feedgod-primary transition-colors"
               >
                 Back to Browse
               </button>
@@ -726,12 +726,12 @@ export default function SportsBuilder() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Config Preview */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+            <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-6">
+              <h3 className="text-lg font-semibold gradient-text mb-4">
                 Switchboard Oracle Configuration
               </h3>
               
-              <div className="bg-feedgod-dark dark:bg-black rounded-lg p-4 overflow-x-auto">
+              <div className="bg-[#1D1E19] rounded-lg p-4 overflow-x-auto border border-[#3a3b35]">
                 <pre className="text-sm text-green-400 font-mono">
                   {JSON.stringify(generateConfig(), null, 2)}
                 </pre>
@@ -739,43 +739,43 @@ export default function SportsBuilder() {
             </div>
 
             {/* How it works */}
-            <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-              <h4 className="text-sm font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+            <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-6">
+              <h4 className="text-sm font-semibold gradient-text mb-4">
                 How This Oracle Works
               </h4>
               
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-feedgod-primary/10 flex items-center justify-center flex-shrink-0">
-                    <span className="text-xs font-bold text-feedgod-primary">1</span>
+                  <div className="w-6 h-6 rounded-full gradient-bg flex items-center justify-center flex-shrink-0">
+                    <span className="text-xs font-bold text-white">1</span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-feedgod-dark dark:text-white">Match Monitoring</p>
-                    <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                    <p className="text-sm font-medium text-white">Match Monitoring</p>
+                    <p className="text-xs text-gray-400">
                       Oracle monitors {selectedMatch.homeTeam.name} vs {selectedMatch.awayTeam.name} for result
                     </p>
                   </div>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-feedgod-primary/10 flex items-center justify-center flex-shrink-0">
-                    <span className="text-xs font-bold text-feedgod-primary">2</span>
+                  <div className="w-6 h-6 rounded-full gradient-bg flex items-center justify-center flex-shrink-0">
+                    <span className="text-xs font-bold text-white">2</span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-feedgod-dark dark:text-white">Result Resolution</p>
-                    <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                    <p className="text-sm font-medium text-white">Result Resolution</p>
+                    <p className="text-xs text-gray-400">
                       When match ends, oracle outputs: {OUTPUT_TYPE_INFO[oracleConfig.outputType || 'winner'].format}
                     </p>
                   </div>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-feedgod-primary/10 flex items-center justify-center flex-shrink-0">
-                    <span className="text-xs font-bold text-feedgod-primary">3</span>
+                  <div className="w-6 h-6 rounded-full gradient-bg flex items-center justify-center flex-shrink-0">
+                    <span className="text-xs font-bold text-white">3</span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-feedgod-dark dark:text-white">On-Chain Settlement</p>
-                    <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                    <p className="text-sm font-medium text-white">On-Chain Settlement</p>
+                    <p className="text-xs text-gray-400">
                       Smart contracts can read the result for betting, prediction markets, and more
                     </p>
                   </div>
@@ -787,32 +787,32 @@ export default function SportsBuilder() {
           {/* Right - Actions */}
           <div className="space-y-4">
             <div className="bg-gradient-to-br from-green-400/10 to-emerald-600/10 rounded-lg border border-green-400/20 p-6">
-              <h4 className="text-sm font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+              <h4 className="text-sm font-semibold gradient-text mb-4">
                 Final Summary
               </h4>
               
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">League</span>
-                  <span className="text-feedgod-dark dark:text-white font-medium">
+                  <span className="text-gray-500">League</span>
+                  <span className="text-white font-medium">
                     {selectedMatch.league.name}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Match Time</span>
-                  <span className="text-feedgod-dark dark:text-white font-medium">
+                  <span className="text-gray-500">Match Time</span>
+                  <span className="text-white font-medium">
                     {formatMatchTime(selectedMatch.startTime)}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Chain</span>
+                  <span className="text-gray-500">Chain</span>
                   <div className="flex items-center gap-1.5">
                     <img 
                       src={CHAIN_LOGOS[oracleConfig.blockchain || 'solana']}
                       alt={oracleConfig.blockchain}
                       className="w-4 h-4 object-contain"
                     />
-                    <span className="text-feedgod-dark dark:text-white font-medium capitalize">
+                    <span className="text-white font-medium capitalize">
                       {oracleConfig.blockchain}
                     </span>
                   </div>
@@ -828,21 +828,21 @@ export default function SportsBuilder() {
             <div className="flex flex-col gap-3">
               <button
                 onClick={handleDeploy}
-                className="w-full px-4 py-3 bg-feedgod-primary hover:bg-feedgod-secondary rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2"
+                className="w-full px-4 py-3 gradient-bg hover:opacity-90 rounded-lg text-white font-medium transition-all flex items-center justify-center gap-2"
               >
                 <Play className="w-4 h-4" />
                 Deploy Oracle
               </button>
               <button
                 onClick={handleSave}
-                className="w-full px-4 py-3 bg-feedgod-pink-100 dark:bg-feedgod-dark-accent hover:bg-feedgod-pink-200 rounded-lg text-feedgod-dark dark:text-white font-medium transition-colors flex items-center justify-center gap-2"
+                className="w-full px-4 py-3 bg-[#252620] border border-[#3a3b35] hover:bg-[#2a2b25] rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2"
               >
                 <Save className="w-4 h-4" />
                 Save Configuration
               </button>
               <button
                 onClick={handleBack}
-                className="w-full px-4 py-2 text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 hover:text-feedgod-primary transition-colors"
+                className="w-full px-4 py-2 text-sm text-gray-400 hover:text-feedgod-primary transition-colors"
               >
                 Back to Configure
               </button>

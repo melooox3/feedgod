@@ -52,8 +52,8 @@ function CostEstimateDisplay({ blockchain, network }: { blockchain: string; netw
 
   if (isLoading || !estimate) {
     return (
-      <div className="px-4 py-3 bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent">
-        <div className="flex items-center gap-2 text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+      <div className="px-4 py-3 bg-[#252620] rounded-lg border border-[#3a3b35]">
+        <div className="flex items-center gap-2 text-sm text-gray-400">
           <DollarSign className="w-4 h-4 animate-pulse" />
           <span>Calculating cost...</span>
         </div>
@@ -62,14 +62,14 @@ function CostEstimateDisplay({ blockchain, network }: { blockchain: string; netw
   }
 
   return (
-    <div className="px-4 py-3 bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent">
+    <div className="px-4 py-3 bg-[#252620] rounded-lg border border-[#3a3b35]">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+        <div className="flex items-center gap-2 text-sm text-gray-400">
           <DollarSign className="w-4 h-4" />
           <span>Estimated Cost:</span>
         </div>
         <div className="text-right">
-          <div className="text-lg font-bold text-feedgod-primary dark:text-feedgod-neon-pink">
+          <div className="text-lg font-bold gradient-text">
             {estimate.estimatedCost} {estimate.currency}
           </div>
         </div>
@@ -115,13 +115,13 @@ function ResolutionTypeSelector({
           onClick={() => { playPickupSound(); onSelect(type.value); }}
           className={`p-4 rounded-xl border-2 transition-all text-left ${
             selected === type.value
-              ? 'border-feedgod-primary dark:border-feedgod-neon-pink bg-feedgod-primary/5'
-              : 'border-feedgod-pink-200 dark:border-feedgod-dark-accent bg-white/60 dark:bg-feedgod-dark-secondary/80 hover:border-feedgod-primary/50'
+              ? 'border-feedgod-primary dark:text-feedgod-primary dark:border-feedgod-primary dark:text-feedgod-primary bg-feedgod-primary dark:text-feedgod-primary/5'
+              : 'border-[#3a3b35] bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 hover:border-feedgod-primary dark:text-feedgod-primary/50'
           }`}
         >
           <span className="text-2xl mb-2 block">{type.icon}</span>
-          <h4 className="font-semibold text-feedgod-dark dark:text-white text-sm">{type.label}</h4>
-          <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mt-1">
+          <h4 className="font-semibold text-white text-sm">{type.label}</h4>
+          <p className="text-xs text-gray-400 mt-1">
             {type.description}
           </p>
         </button>
@@ -146,8 +146,8 @@ function SourceSelector({
           onClick={() => { playPickupSound(); onToggle(source.value); }}
           className={`px-3 py-2 rounded-lg border transition-all flex items-center gap-2 ${
             selected.includes(source.value)
-              ? 'border-feedgod-primary dark:border-feedgod-neon-pink bg-feedgod-primary/10 text-feedgod-primary dark:text-feedgod-neon-pink'
-              : 'border-feedgod-pink-200 dark:border-feedgod-dark-accent bg-white/60 dark:bg-feedgod-dark-secondary/80 text-feedgod-dark dark:text-white hover:border-feedgod-primary/50'
+              ? 'border-feedgod-primary dark:text-feedgod-primary dark:border-feedgod-primary dark:text-feedgod-primary bg-feedgod-primary dark:text-feedgod-primary/10 gradient-text'
+              : 'border-[#3a3b35] bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 text-white hover:border-feedgod-primary dark:text-feedgod-primary/50'
           }`}
         >
           <span>{source.icon}</span>
@@ -162,7 +162,7 @@ function SourceSelector({
 function ExampleQuestions({ onSelect }: { onSelect: (q: typeof EXAMPLE_QUESTIONS[0]) => void }) {
   return (
     <div className="space-y-2">
-      <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 flex items-center gap-1">
+      <p className="text-xs text-gray-400 flex items-center gap-1">
         <Lightbulb className="w-3 h-3" />
         Example questions for inspiration:
       </p>
@@ -171,7 +171,7 @@ function ExampleQuestions({ onSelect }: { onSelect: (q: typeof EXAMPLE_QUESTIONS
           <button
             key={i}
             onClick={() => { playPickupSound(); onSelect(example); }}
-            className="px-3 py-1.5 bg-feedgod-pink-50 dark:bg-feedgod-dark-accent hover:bg-feedgod-pink-100 rounded-full text-xs text-feedgod-dark dark:text-white transition-colors truncate max-w-[250px]"
+            className="px-3 py-1.5 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent hover:bg-feedgod-purple-100 dark:bg-feedgod-dark-accent rounded-full text-xs text-white transition-colors truncate max-w-[250px]"
           >
             {example.question}
           </button>
@@ -191,10 +191,10 @@ function ResolutionPreview({
 }) {
   if (isLoading) {
     return (
-      <div className="p-6 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl border border-purple-400/30 text-center">
-        <Loader2 className="w-8 h-8 animate-spin mx-auto text-feedgod-primary dark:text-feedgod-neon-pink mb-3" />
-        <p className="text-sm text-feedgod-dark dark:text-white">AI is analyzing your question...</p>
-        <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mt-1">
+      <div className="p-6 bg-gradient-to-br from-feedgod-primary/10 to-pink-500/10 rounded-xl border border-feedgod-secondary/30 text-center">
+        <Loader2 className="w-8 h-8 animate-spin mx-auto gradient-text mb-3" />
+        <p className="text-sm text-white">AI is analyzing your question...</p>
+        <p className="text-xs text-gray-400 mt-1">
           Consulting trusted sources...
         </p>
       </div>
@@ -204,14 +204,14 @@ function ResolutionPreview({
   if (!response) return null
   
   return (
-    <div className="p-6 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl border border-purple-400/30">
+    <div className="p-6 bg-gradient-to-br from-feedgod-primary/10 to-pink-500/10 rounded-xl border border-feedgod-secondary/30">
       <div className="flex items-center justify-between mb-4">
-        <h4 className="font-semibold text-feedgod-primary dark:text-feedgod-neon-pink flex items-center gap-2">
+        <h4 className="font-semibold gradient-text flex items-center gap-2">
           <Brain className="w-5 h-5" />
           AI Resolution Preview
         </h4>
         <div className="flex items-center gap-2">
-          <span className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Confidence:</span>
+          <span className="text-xs text-gray-400">Confidence:</span>
           <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
             response.confidence >= 85 ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' :
             response.confidence >= 70 ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' :
@@ -223,8 +223,8 @@ function ResolutionPreview({
       </div>
       
       {/* Answer */}
-      <div className="mb-4 p-4 bg-white/60 dark:bg-feedgod-dark-secondary rounded-lg">
-        <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mb-1">Answer:</p>
+      <div className="mb-4 p-4 bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary rounded-lg">
+        <p className="text-xs text-gray-400 mb-1">Answer:</p>
         <div className="flex items-center gap-2">
           {typeof response.answer === 'boolean' ? (
             <>
@@ -233,12 +233,12 @@ function ResolutionPreview({
               ) : (
                 <XCircle className="w-6 h-6 text-red-500" />
               )}
-              <span className="text-2xl font-bold text-feedgod-dark dark:text-white">
+              <span className="text-2xl font-bold text-white">
                 {response.answer ? 'YES' : 'NO'}
               </span>
             </>
           ) : (
-            <span className="text-2xl font-bold text-feedgod-dark dark:text-white">
+            <span className="text-2xl font-bold text-white">
               {String(response.answer)}
             </span>
           )}
@@ -247,16 +247,16 @@ function ResolutionPreview({
       
       {/* Reasoning */}
       <div className="mb-4">
-        <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mb-1">Reasoning:</p>
-        <p className="text-sm text-feedgod-dark dark:text-white/90">{response.reasoning}</p>
+        <p className="text-xs text-gray-400 mb-1">Reasoning:</p>
+        <p className="text-sm text-white/90">{response.reasoning}</p>
       </div>
       
       {/* Sources */}
       <div className="mb-4">
-        <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mb-1">Sources consulted:</p>
+        <p className="text-xs text-gray-400 mb-1">Sources consulted:</p>
         <div className="flex flex-wrap gap-1">
           {response.sources.map((source, i) => (
-            <span key={i} className="px-2 py-0.5 bg-feedgod-pink-100 dark:bg-feedgod-dark-accent rounded text-xs text-feedgod-dark dark:text-feedgod-neon-cyan">
+            <span key={i} className="px-2 py-0.5 bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded text-xs text-white">
               {source}
             </span>
           ))}
@@ -453,17 +453,17 @@ export default function AIJudgeBuilder() {
   return (
     <div className="space-y-6">
       {/* Module Header */}
-      <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
+      <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-feedgod-primary via-pink-500 to-orange-400 flex items-center justify-center">
               <Brain className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-feedgod-primary dark:text-feedgod-neon-pink">
+              <h2 className="text-xl font-bold gradient-text">
                 AI Judge Oracle Builder
               </h2>
-              <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+              <p className="text-sm text-gray-400">
                 Any question → On-chain answer via AI reasoning
               </p>
             </div>
@@ -472,19 +472,19 @@ export default function AIJudgeBuilder() {
           {/* Step indicator */}
           <div className="flex items-center gap-2">
             <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-              step === 'create' ? 'bg-feedgod-primary text-white' : 'bg-feedgod-pink-100 dark:bg-feedgod-dark-accent text-feedgod-pink-500'
+              step === 'create' ? 'bg-feedgod-primary dark:text-feedgod-primary text-white' : 'bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent text-gray-400'
             }`}>
               1. Question
             </div>
-            <ChevronRight className="w-4 h-4 text-feedgod-pink-300" />
+            <ChevronRight className="w-4 h-4 text-feedgod-purple-300 dark:border-feedgod-dark-accent" />
             <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-              step === 'configure' ? 'bg-feedgod-primary text-white' : 'bg-feedgod-pink-100 dark:bg-feedgod-dark-accent text-feedgod-pink-500'
+              step === 'configure' ? 'bg-feedgod-primary dark:text-feedgod-primary text-white' : 'bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent text-gray-400'
             }`}>
               2. Configure
             </div>
-            <ChevronRight className="w-4 h-4 text-feedgod-pink-300" />
+            <ChevronRight className="w-4 h-4 text-feedgod-purple-300 dark:border-feedgod-dark-accent" />
             <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-              step === 'preview' ? 'bg-feedgod-primary text-white' : 'bg-feedgod-pink-100 dark:bg-feedgod-dark-accent text-feedgod-pink-500'
+              step === 'preview' ? 'bg-feedgod-primary dark:text-feedgod-primary text-white' : 'bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent text-gray-400'
             }`}>
               3. Deploy
             </div>
@@ -498,8 +498,8 @@ export default function AIJudgeBuilder() {
       {step === 'create' && (
         <div className="space-y-6">
           {/* Question Input */}
-          <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-            <h3 className="text-lg font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+          <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+            <h3 className="text-lg font-semibold gradient-text mb-4">
               What question should the AI resolve?
             </h3>
             
@@ -507,7 +507,7 @@ export default function AIJudgeBuilder() {
               value={config.question || ''}
               onChange={(e) => setConfig(prev => ({ ...prev, question: e.target.value }))}
               placeholder="Enter your question... (e.g., 'Did Taylor Swift release a new album this week?')"
-              className="w-full h-32 bg-feedgod-pink-50 dark:bg-feedgod-dark-accent border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg px-4 py-3 text-feedgod-dark dark:text-white placeholder-feedgod-pink-400 focus:outline-none focus:ring-2 focus:ring-feedgod-primary resize-none"
+              className="w-full h-32 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent border border-[#3a3b35] rounded-lg px-4 py-3 text-white placeholder-feedgod-feedgod-secondary dark:text-feedgod-secondary/70 focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary resize-none"
             />
             
             <div className="mt-4">
@@ -516,8 +516,8 @@ export default function AIJudgeBuilder() {
           </div>
 
           {/* Resolution Type */}
-          <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-            <h3 className="text-lg font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+          <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+            <h3 className="text-lg font-semibold gradient-text mb-4">
               Resolution Type
             </h3>
             <ResolutionTypeSelector
@@ -527,8 +527,8 @@ export default function AIJudgeBuilder() {
             
             {/* Categories input for categorical type */}
             {config.resolutionType === 'categorical' && (
-              <div className="mt-4 p-4 bg-feedgod-pink-50 dark:bg-feedgod-dark-accent rounded-lg">
-                <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2">
+              <div className="mt-4 p-4 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg">
+                <label className="block text-sm font-medium text-white mb-2">
                   Define possible answers:
                 </label>
                 <div className="flex gap-2 mb-2">
@@ -538,18 +538,18 @@ export default function AIJudgeBuilder() {
                     onChange={(e) => setNewCategory(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && addCategory()}
                     placeholder="Add an option..."
-                    className="flex-1 bg-white dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg px-3 py-2 text-sm text-feedgod-dark dark:text-white"
+                    className="flex-1 bg-feedgod-dark-secondary dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary border border-[#3a3b35] rounded-lg px-3 py-2 text-sm text-white"
                   />
                   <button
                     onClick={addCategory}
-                    className="px-3 py-2 bg-feedgod-primary text-white rounded-lg"
+                    className="px-3 py-2 bg-feedgod-primary dark:text-feedgod-primary text-white rounded-lg"
                   >
                     <Plus className="w-4 h-4" />
                   </button>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {config.categories?.map((cat) => (
-                    <span key={cat} className="px-3 py-1 bg-feedgod-primary/10 border border-feedgod-primary rounded-full text-sm text-feedgod-primary flex items-center gap-1">
+                    <span key={cat} className="px-3 py-1 bg-feedgod-primary dark:text-feedgod-primary/10 border border-feedgod-primary dark:text-feedgod-primary rounded-full text-sm text-feedgod-primary dark:text-feedgod-primary flex items-center gap-1">
                       {cat}
                       <button onClick={() => removeCategory(cat)} className="hover:text-red-500">
                         <X className="w-3 h-3" />
@@ -562,11 +562,11 @@ export default function AIJudgeBuilder() {
           </div>
 
           {/* Trusted Sources */}
-          <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-            <h3 className="text-lg font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+          <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+            <h3 className="text-lg font-semibold gradient-text mb-4">
               Trusted Sources
             </h3>
-            <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mb-4">
+            <p className="text-sm text-gray-400 mb-4">
               Select sources the AI should consult when resolving
             </p>
             <SourceSelector
@@ -576,8 +576,8 @@ export default function AIJudgeBuilder() {
             
             {/* Custom sources */}
             {config.trustedSources?.includes('custom') && (
-              <div className="mt-4 p-4 bg-feedgod-pink-50 dark:bg-feedgod-dark-accent rounded-lg">
-                <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2">
+              <div className="mt-4 p-4 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg">
+                <label className="block text-sm font-medium text-white mb-2">
                   Custom source URLs:
                 </label>
                 <div className="flex gap-2 mb-2">
@@ -587,18 +587,18 @@ export default function AIJudgeBuilder() {
                     onChange={(e) => setNewCustomSource(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && addCustomSource()}
                     placeholder="https://example.com/data"
-                    className="flex-1 bg-white dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg px-3 py-2 text-sm text-feedgod-dark dark:text-white"
+                    className="flex-1 bg-feedgod-dark-secondary dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary border border-[#3a3b35] rounded-lg px-3 py-2 text-sm text-white"
                   />
                   <button
                     onClick={addCustomSource}
-                    className="px-3 py-2 bg-feedgod-primary text-white rounded-lg"
+                    className="px-3 py-2 bg-feedgod-primary dark:text-feedgod-primary text-white rounded-lg"
                   >
                     <Plus className="w-4 h-4" />
                   </button>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {config.customSources?.map((source) => (
-                    <span key={source} className="px-3 py-1 bg-feedgod-primary/10 border border-feedgod-primary rounded-full text-xs text-feedgod-primary flex items-center gap-1 max-w-[200px] truncate">
+                    <span key={source} className="px-3 py-1 bg-feedgod-primary dark:text-feedgod-primary/10 border border-feedgod-primary dark:text-feedgod-primary rounded-full text-xs text-feedgod-primary dark:text-feedgod-primary flex items-center gap-1 max-w-[200px] truncate">
                       {source}
                       <button onClick={() => removeCustomSource(source)} className="hover:text-red-500">
                         <X className="w-3 h-3" />
@@ -611,15 +611,15 @@ export default function AIJudgeBuilder() {
           </div>
 
           {/* Test Resolution */}
-          <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
+          <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-feedgod-primary dark:text-feedgod-neon-pink">
+              <h3 className="text-lg font-semibold gradient-text">
                 Test AI Resolution
               </h3>
               <button
                 onClick={handleTestResolution}
                 disabled={isTestingResolution || !config.question || config.question.length < 10}
-                className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:opacity-50 rounded-lg text-white font-medium transition-all flex items-center gap-2"
+                className="px-4 py-2 bg-gradient-to-r from-feedgod-primary to-pink-500 hover:from-feedgod-primary hover:to-pink-600 disabled:opacity-50 rounded-lg text-white font-medium transition-all flex items-center gap-2"
               >
                 {isTestingResolution ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -633,9 +633,9 @@ export default function AIJudgeBuilder() {
             <ResolutionPreview response={resolutionPreview} isLoading={isTestingResolution} />
             
             {!resolutionPreview && !isTestingResolution && (
-              <div className="p-6 border-2 border-dashed border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-xl text-center">
-                <Brain className="w-12 h-12 mx-auto text-feedgod-pink-300 dark:text-feedgod-dark-accent mb-3" />
-                <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+              <div className="p-6 border-2 border-dashed border-[#3a3b35] rounded-xl text-center">
+                <Brain className="w-12 h-12 mx-auto text-feedgod-purple-300 dark:border-feedgod-dark-accent dark:text-feedgod-purple-200 dark:border-feedgod-dark-accent mb-3" />
+                <p className="text-sm text-gray-400">
                   Click "Test Now" to see how AI would resolve your question
                 </p>
               </div>
@@ -646,7 +646,7 @@ export default function AIJudgeBuilder() {
           <button
             onClick={handleContinue}
             disabled={!config.question || config.question.length < 10}
-            className="w-full px-4 py-3 bg-feedgod-primary hover:bg-feedgod-secondary disabled:opacity-50 rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2"
+            className="w-full px-4 py-3 gradient-bg hover:opacity-90 disabled:opacity-50 rounded-lg text-white font-medium transition-all flex items-center justify-center gap-2"
           >
             Continue to Configure
             <ChevronRight className="w-4 h-4" />
@@ -658,15 +658,15 @@ export default function AIJudgeBuilder() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             {/* Oracle Settings */}
-            <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h3 className="text-lg font-semibold gradient-text mb-4">
                 Oracle Settings
               </h3>
               
               <div className="space-y-4">
                 {/* Oracle Name */}
                 <div>
-                  <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2">
+                  <label className="block text-sm font-medium text-white mb-2">
                     Oracle Name
                   </label>
                   <input
@@ -674,13 +674,13 @@ export default function AIJudgeBuilder() {
                     value={config.name || ''}
                     onChange={(e) => setConfig(prev => ({ ...prev, name: e.target.value }))}
                     placeholder={`AI Oracle: ${config.question?.slice(0, 30)}...`}
-                    className="w-full bg-feedgod-pink-50 dark:bg-feedgod-dark-accent border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg px-4 py-2 text-feedgod-dark dark:text-white"
+                    className="w-full bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent border border-[#3a3b35] rounded-lg px-4 py-2 text-white"
                   />
                 </div>
                 
                 {/* Resolution Date */}
                 <div>
-                  <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2 flex items-center gap-2">
+                  <label className="block text-sm font-medium text-white mb-2 flex items-center gap-2">
                     <Calendar className="w-4 h-4" />
                     Resolution Date
                   </label>
@@ -689,23 +689,23 @@ export default function AIJudgeBuilder() {
                     value={config.resolutionDate ? new Date(config.resolutionDate.getTime() - config.resolutionDate.getTimezoneOffset() * 60000).toISOString().slice(0, 16) : ''}
                     onChange={(e) => setConfig(prev => ({ ...prev, resolutionDate: new Date(e.target.value) }))}
                     min={new Date().toISOString().slice(0, 16)}
-                    className="w-full bg-feedgod-pink-50 dark:bg-feedgod-dark-accent border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg px-4 py-2 text-feedgod-dark dark:text-white"
+                    className="w-full bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent border border-[#3a3b35] rounded-lg px-4 py-2 text-white"
                   />
-                  <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/60 mt-1">
+                  <p className="text-xs text-gray-400 /60 mt-1">
                     When should the AI evaluate and resolve this question?
                   </p>
                 </div>
                 
                 {/* Resolution Criteria */}
                 <div>
-                  <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2">
+                  <label className="block text-sm font-medium text-white mb-2">
                     Resolution Criteria (optional)
                   </label>
                   <textarea
                     value={config.resolutionCriteria || ''}
                     onChange={(e) => setConfig(prev => ({ ...prev, resolutionCriteria: e.target.value }))}
                     placeholder="Additional context or rules for resolution... (e.g., 'Must be confirmed by at least 2 major news sources')"
-                    className="w-full h-24 bg-feedgod-pink-50 dark:bg-feedgod-dark-accent border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg px-4 py-3 text-feedgod-dark dark:text-white placeholder-feedgod-pink-400 resize-none"
+                    className="w-full h-24 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent border border-[#3a3b35] rounded-lg px-4 py-3 text-white placeholder-feedgod-feedgod-secondary dark:text-feedgod-secondary/70 resize-none"
                   />
                 </div>
                 
@@ -720,11 +720,11 @@ export default function AIJudgeBuilder() {
             </div>
 
             {/* Question Preview */}
-            <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-lg border border-purple-400/20 p-6">
-              <h4 className="text-sm font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-3">
+            <div className="bg-gradient-to-br from-feedgod-primary/10 to-pink-500/10 rounded-lg border border-feedgod-secondary/20 p-6">
+              <h4 className="text-sm font-semibold gradient-text mb-3">
                 Question to Resolve
               </h4>
-              <p className="text-lg text-feedgod-dark dark:text-white font-medium">
+              <p className="text-lg text-white font-medium">
                 "{config.question}"
               </p>
               <div className="mt-4 flex flex-wrap gap-2 text-xs">
@@ -732,7 +732,7 @@ export default function AIJudgeBuilder() {
                   {RESOLUTION_TYPES.find(t => t.value === config.resolutionType)?.icon} {config.resolutionType}
                 </span>
                 {config.trustedSources?.map(source => (
-                  <span key={source} className="px-2 py-1 bg-feedgod-pink-100 dark:bg-feedgod-dark-accent text-feedgod-dark dark:text-white rounded">
+                  <span key={source} className="px-2 py-1 bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent text-white rounded">
                     {TRUSTED_SOURCES.find(s => s.value === source)?.icon} {source}
                   </span>
                 ))}
@@ -742,47 +742,47 @@ export default function AIJudgeBuilder() {
 
           {/* Right sidebar */}
           <div className="space-y-4">
-            <div className="bg-gradient-to-br from-purple-400/10 via-pink-500/10 to-orange-400/10 rounded-lg border border-purple-400/20 p-6">
-              <h4 className="text-sm font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+            <div className="bg-gradient-to-br from-feedgod-secondary/10 via-pink-500/10 to-orange-400/10 rounded-lg border border-feedgod-secondary/20 p-6">
+              <h4 className="text-sm font-semibold gradient-text mb-4">
                 Oracle Summary
               </h4>
               
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Type</span>
-                  <span className="text-feedgod-dark dark:text-white font-medium">
+                  <span className="text-gray-400">Type</span>
+                  <span className="text-white font-medium">
                     AI Judge
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Resolution</span>
-                  <span className="text-feedgod-dark dark:text-white font-medium capitalize">
+                  <span className="text-gray-400">Resolution</span>
+                  <span className="text-white font-medium capitalize">
                     {config.resolutionType}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Sources</span>
-                  <span className="text-feedgod-dark dark:text-white font-medium">
+                  <span className="text-gray-400">Sources</span>
+                  <span className="text-white font-medium">
                     {config.trustedSources?.length || 0} selected
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Chain</span>
+                  <span className="text-gray-400">Chain</span>
                   <div className="flex items-center gap-1.5">
                     <img 
                       src={CHAIN_LOGOS[config.blockchain || 'solana']}
                       alt={config.blockchain}
                       className="w-4 h-4 object-contain"
                     />
-                    <span className="text-feedgod-dark dark:text-white font-medium capitalize">
+                    <span className="text-white font-medium capitalize">
                       {config.blockchain}
                     </span>
                   </div>
                 </div>
                 {config.resolutionDate && (
                   <div className="flex justify-between">
-                    <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Resolves</span>
-                    <span className="text-feedgod-dark dark:text-white font-medium">
+                    <span className="text-gray-400">Resolves</span>
+                    <span className="text-white font-medium">
                       {config.resolutionDate.toLocaleDateString()}
                     </span>
                   </div>
@@ -799,14 +799,14 @@ export default function AIJudgeBuilder() {
               <button
                 onClick={handlePreview}
                 disabled={!config.resolutionDate}
-                className="w-full px-4 py-3 bg-feedgod-primary hover:bg-feedgod-secondary disabled:opacity-50 rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2"
+                className="w-full px-4 py-3 gradient-bg hover:opacity-90 disabled:opacity-50 rounded-lg text-white font-medium transition-all flex items-center justify-center gap-2"
               >
                 Preview & Deploy
                 <ChevronRight className="w-4 h-4" />
               </button>
               <button
                 onClick={handleBack}
-                className="w-full px-4 py-2 text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 hover:text-feedgod-primary transition-colors"
+                className="w-full px-4 py-2 text-sm text-gray-400 hover:text-feedgod-primary dark:text-feedgod-primary transition-colors"
               >
                 Back to Question
               </button>
@@ -819,12 +819,12 @@ export default function AIJudgeBuilder() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Config Preview */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h3 className="text-lg font-semibold gradient-text mb-4">
                 Switchboard Oracle Configuration
               </h3>
               
-              <div className="bg-feedgod-dark dark:bg-black rounded-lg p-4 overflow-x-auto">
+              <div className="bg-feedgod-dark-secondary dark:bg-black rounded-lg p-4 overflow-x-auto">
                 <pre className="text-sm text-green-400 font-mono">
                   {JSON.stringify(generateConfigPreview(), null, 2)}
                 </pre>
@@ -832,18 +832,18 @@ export default function AIJudgeBuilder() {
             </div>
 
             {/* How it works */}
-            <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-              <h4 className="text-sm font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4 flex items-center gap-2">
+            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h4 className="text-sm font-semibold gradient-text mb-4 flex items-center gap-2">
                 <Info className="w-4 h-4" />
                 How AI Resolution Works
               </h4>
               
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-xs font-bold text-purple-600 dark:text-purple-400">1</div>
+                  <div className="w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-xs font-bold text-feedgod-primary dark:text-feedgod-secondary">1</div>
                   <div>
-                    <h5 className="font-medium text-feedgod-dark dark:text-white text-sm">Scheduled Trigger</h5>
-                    <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                    <h5 className="font-medium text-white text-sm">Scheduled Trigger</h5>
+                    <p className="text-xs text-gray-400">
                       At resolution time, Switchboard function wakes up
                     </p>
                   </div>
@@ -851,8 +851,8 @@ export default function AIJudgeBuilder() {
                 <div className="flex items-start gap-3">
                   <div className="w-6 h-6 rounded-full bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center text-xs font-bold text-pink-600 dark:text-pink-400">2</div>
                   <div>
-                    <h5 className="font-medium text-feedgod-dark dark:text-white text-sm">AI Consultation</h5>
-                    <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                    <h5 className="font-medium text-white text-sm">AI Consultation</h5>
+                    <p className="text-xs text-gray-400">
                       LLM evaluates question using trusted sources
                     </p>
                   </div>
@@ -860,8 +860,8 @@ export default function AIJudgeBuilder() {
                 <div className="flex items-start gap-3">
                   <div className="w-6 h-6 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-xs font-bold text-orange-600 dark:text-orange-400">3</div>
                   <div>
-                    <h5 className="font-medium text-feedgod-dark dark:text-white text-sm">On-Chain Resolution</h5>
-                    <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                    <h5 className="font-medium text-white text-sm">On-Chain Resolution</h5>
+                    <p className="text-xs text-gray-400">
                       Answer posted to oracle with confidence score
                     </p>
                   </div>
@@ -870,45 +870,45 @@ export default function AIJudgeBuilder() {
             </div>
 
             {/* Use cases */}
-            <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-              <h4 className="text-sm font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h4 className="text-sm font-semibold gradient-text mb-4">
                 Use Cases
               </h4>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 bg-feedgod-pink-50 dark:bg-feedgod-dark-accent rounded-lg">
+                <div className="p-4 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
-                    <Target className="w-5 h-5 text-purple-500" />
-                    <span className="font-medium text-feedgod-dark dark:text-white">Prediction Markets</span>
+                    <Target className="w-5 h-5 text-feedgod-primary" />
+                    <span className="font-medium text-white">Prediction Markets</span>
                   </div>
-                  <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                  <p className="text-xs text-gray-400">
                     Resolve any real-world event without custom code
                   </p>
                 </div>
-                <div className="p-4 bg-feedgod-pink-50 dark:bg-feedgod-dark-accent rounded-lg">
+                <div className="p-4 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
                     <Zap className="w-5 h-5 text-amber-500" />
-                    <span className="font-medium text-feedgod-dark dark:text-white">Smart Contracts</span>
+                    <span className="font-medium text-white">Smart Contracts</span>
                   </div>
-                  <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                  <p className="text-xs text-gray-400">
                     Trigger contract logic based on AI verification
                   </p>
                 </div>
-                <div className="p-4 bg-feedgod-pink-50 dark:bg-feedgod-dark-accent rounded-lg">
+                <div className="p-4 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
                     <Shield className="w-5 h-5 text-emerald-500" />
-                    <span className="font-medium text-feedgod-dark dark:text-white">Insurance</span>
+                    <span className="font-medium text-white">Insurance</span>
                   </div>
-                  <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                  <p className="text-xs text-gray-400">
                     Auto-resolve parametric insurance claims
                   </p>
                 </div>
-                <div className="p-4 bg-feedgod-pink-50 dark:bg-feedgod-dark-accent rounded-lg">
+                <div className="p-4 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
                     <Sparkles className="w-5 h-5 text-pink-500" />
-                    <span className="font-medium text-feedgod-dark dark:text-white">Fun Bets</span>
+                    <span className="font-medium text-white">Fun Bets</span>
                   </div>
-                  <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                  <p className="text-xs text-gray-400">
                     Social bets on anything imaginable
                   </p>
                 </div>
@@ -918,33 +918,33 @@ export default function AIJudgeBuilder() {
 
           {/* Right - Actions */}
           <div className="space-y-4">
-            <div className="bg-gradient-to-br from-purple-400/10 via-pink-500/10 to-orange-400/10 rounded-lg border border-purple-400/20 p-6">
-              <h4 className="text-sm font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+            <div className="bg-gradient-to-br from-feedgod-secondary/10 via-pink-500/10 to-orange-400/10 rounded-lg border border-feedgod-secondary/20 p-6">
+              <h4 className="text-sm font-semibold gradient-text mb-4">
                 Final Summary
               </h4>
               
               <div className="space-y-3 text-sm">
                 <div>
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 block text-xs">Question:</span>
-                  <span className="text-feedgod-dark dark:text-white font-medium text-sm">
+                  <span className="text-gray-400 block text-xs">Question:</span>
+                  <span className="text-white font-medium text-sm">
                     "{config.question?.slice(0, 60)}..."
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Resolves</span>
-                  <span className="text-feedgod-dark dark:text-white font-medium">
+                  <span className="text-gray-400">Resolves</span>
+                  <span className="text-white font-medium">
                     {config.resolutionDate?.toLocaleDateString()}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Chain</span>
+                  <span className="text-gray-400">Chain</span>
                   <div className="flex items-center gap-1.5">
                     <img 
                       src={CHAIN_LOGOS[config.blockchain || 'solana']}
                       alt={config.blockchain}
                       className="w-4 h-4 object-contain"
                     />
-                    <span className="text-feedgod-dark dark:text-white font-medium capitalize">
+                    <span className="text-white font-medium capitalize">
                       {config.blockchain}
                     </span>
                   </div>
@@ -970,21 +970,21 @@ export default function AIJudgeBuilder() {
             <div className="flex flex-col gap-3">
               <button
                 onClick={handleDeploy}
-                className="w-full px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-lg text-white font-medium transition-all flex items-center justify-center gap-2"
+                className="w-full px-4 py-3 bg-gradient-to-r from-feedgod-primary to-pink-500 hover:from-feedgod-primary hover:to-pink-600 rounded-lg text-white font-medium transition-all flex items-center justify-center gap-2"
               >
                 <Play className="w-4 h-4" />
                 Deploy AI Oracle
               </button>
               <button
                 onClick={handleSave}
-                className="w-full px-4 py-3 bg-feedgod-pink-100 dark:bg-feedgod-dark-accent hover:bg-feedgod-pink-200 rounded-lg text-feedgod-dark dark:text-white font-medium transition-colors flex items-center justify-center gap-2"
+                className="w-full px-4 py-3 bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2"
               >
                 <Save className="w-4 h-4" />
                 Save Configuration
               </button>
               <button
                 onClick={handleBack}
-                className="w-full px-4 py-2 text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 hover:text-feedgod-primary transition-colors"
+                className="w-full px-4 py-2 text-sm text-gray-400 hover:text-feedgod-primary dark:text-feedgod-primary transition-colors"
               >
                 Back to Configure
               </button>
@@ -995,4 +995,5 @@ export default function AIJudgeBuilder() {
     </div>
   )
 }
+
 

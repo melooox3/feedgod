@@ -138,14 +138,14 @@ export default function BulkFeedCreator({ isOpen, onClose, onFeedsGenerated }: B
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="bg-white dark:bg-feedgod-dark-secondary rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+      <div className="bg-feedgod-dark-secondary dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary rounded-lg border border-feedgod-purple-200 dark:border-feedgod-dark-accent dark:border-feedgod-purple-200 dark:border-feedgod-dark-accent p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-feedgod-dark dark:text-feedgod-neon-cyan">
+          <h2 className="text-xl font-bold text-white ">
             Create Bulk Feeds
           </h2>
           <button
             onClick={onClose}
-            className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 hover:text-feedgod-primary dark:hover:text-feedgod-neon-pink star-glow-on-hover"
+            className="text-gray-400 hover:text-feedgod-primary dark:text-feedgod-primary dark:hover:text-feedgod-primary dark:text-feedgod-primary star-glow-on-hover"
           >
             <X className="w-5 h-5" />
           </button>
@@ -153,45 +153,45 @@ export default function BulkFeedCreator({ isOpen, onClose, onFeedsGenerated }: B
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2">
+            <label className="block text-sm font-medium text-white  mb-2">
               Number of Feeds (1-1000)
             </label>
             <input
               type="number"
               value={count}
               onChange={(e) => setCount(Math.max(1, Math.min(1000, parseInt(e.target.value) || 1)))}
-              className="w-full bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg px-4 py-2 text-feedgod-dark dark:text-feedgod-neon-cyan focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:focus:ring-feedgod-neon-pink"
+              className="w-full bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary border border-feedgod-purple-200 dark:border-feedgod-dark-accent dark:border-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg px-4 py-2 text-white  focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary dark:focus:ring-feedgod-primary dark:text-feedgod-primary"
               min="1"
               max="1000"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2">
+            <label className="block text-sm font-medium text-white  mb-2">
               AI Prompt (Optional)
             </label>
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="Enter a prompt describing the feeds you want, one per line. Example:&#10;BTC/USD&#10;ETH/USD&#10;SOL/USD"
-              className="w-full bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg px-4 py-2 text-feedgod-dark dark:text-feedgod-neon-cyan focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:focus:ring-feedgod-neon-pink h-32"
+              className="w-full bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary border border-feedgod-purple-200 dark:border-feedgod-dark-accent dark:border-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg px-4 py-2 text-white  focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary dark:focus:ring-feedgod-primary dark:text-feedgod-primary h-32"
             />
-            <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mt-1">
+            <p className="text-xs text-gray-400 mt-1">
               Enter one feed symbol per line. The AI will generate feeds based on your prompt.
             </p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2">
+            <label className="block text-sm font-medium text-white  mb-2">
               Template (Optional)
             </label>
             <textarea
               value={template}
               onChange={(e) => setTemplate(e.target.value)}
               placeholder="Enter a template, one per line. Use {i} for index. Example:&#10;BTC/USD, Bitcoin Feed&#10;ETH/USD, Ethereum Feed"
-              className="w-full bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg px-4 py-2 text-feedgod-dark dark:text-feedgod-neon-cyan focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:focus:ring-feedgod-neon-pink h-32"
+              className="w-full bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary border border-feedgod-purple-200 dark:border-feedgod-dark-accent dark:border-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg px-4 py-2 text-white  focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary dark:focus:ring-feedgod-primary dark:text-feedgod-primary h-32"
             />
-            <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mt-1">
+            <p className="text-xs text-gray-400 mt-1">
               Format: symbol, name (one per line). Use {'{i}'} for index numbers.
             </p>
           </div>
@@ -199,14 +199,14 @@ export default function BulkFeedCreator({ isOpen, onClose, onFeedsGenerated }: B
           <div className="flex gap-3 pt-4">
             <button
               onClick={onClose}
-              className="flex-1 px-4 py-2 bg-feedgod-pink-100 dark:bg-feedgod-dark-accent hover:bg-feedgod-pink-200 dark:hover:bg-feedgod-dark-accent/80 rounded-lg text-feedgod-dark dark:text-feedgod-neon-cyan text-sm font-medium transition-colors star-glow-on-hover"
+              className="flex-1 px-4 py-2 bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent dark:hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent/80 rounded-lg text-white  text-sm font-medium transition-colors star-glow-on-hover"
             >
               Cancel
             </button>
             <button
               onClick={handleGenerate}
               disabled={isGenerating}
-              className="flex-1 px-4 py-2 bg-feedgod-primary hover:bg-feedgod-secondary rounded-lg text-white text-sm font-medium transition-colors flex items-center justify-center gap-2 star-glow-on-hover disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-4 py-2 gradient-bg hover:opacity-90 rounded-lg text-white text-sm font-medium transition-all flex items-center justify-center gap-2 star-glow-on-hover disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isGenerating ? (
                 <>

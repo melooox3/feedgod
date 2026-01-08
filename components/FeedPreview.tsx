@@ -86,7 +86,7 @@ export default function FeedPreview({ config }: FeedPreviewProps) {
         <button
           onClick={generatePreview}
           disabled={isLoading}
-          className="px-4 py-2 bg-switchboard-primary hover:bg-switchboard-primary/80 disabled:opacity-50 rounded-lg text-white text-sm font-medium transition-colors flex items-center gap-2"
+          className="px-4 py-2 bg-feedgod-primary dark:text-feedgod-primary hover:bg-feedgod-primary dark:text-feedgod-primary/80 disabled:opacity-50 rounded-lg text-white text-sm font-medium transition-colors flex items-center gap-2"
         >
           <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
           Refresh
@@ -95,13 +95,13 @@ export default function FeedPreview({ config }: FeedPreviewProps) {
 
       {isLoading ? (
         <div className="text-center py-12">
-          <RefreshCw className="w-8 h-8 animate-spin text-switchboard-primary mx-auto mb-4" />
+          <RefreshCw className="w-8 h-8 animate-spin text-feedgod-primary dark:text-feedgod-primary mx-auto mb-4" />
           <p className="text-gray-400">Loading preview...</p>
         </div>
       ) : preview ? (
         <>
           {/* Aggregated Price */}
-          <div className="bg-gradient-to-br from-switchboard-primary/20 to-switchboard-secondary/20 rounded-lg p-6 border border-switchboard-primary/30">
+          <div className="bg-gradient-to-br from-feedgod-primary dark:text-feedgod-primary/20 to-feedgod-secondary/20 rounded-lg p-6 border border-feedgod-primary dark:text-feedgod-primary/30">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-400 mb-1">Aggregated Price</p>
@@ -138,7 +138,7 @@ export default function FeedPreview({ config }: FeedPreviewProps) {
                 return (
                   <div
                     key={sourceId}
-                    className="bg-switchboard-dark-lighter rounded-lg p-4 border border-switchboard-dark-lighter"
+                    className="bg-feedgod-dark-accent rounded-lg p-4 border border-feedgod-dark-accent"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -178,17 +178,17 @@ export default function FeedPreview({ config }: FeedPreviewProps) {
 
           {/* Feed Stats */}
           <div className="grid grid-cols-3 gap-4">
-            <div className="bg-switchboard-dark-lighter rounded-lg p-4 border border-switchboard-dark-lighter">
+            <div className="bg-feedgod-dark-accent rounded-lg p-4 border border-feedgod-dark-accent">
               <p className="text-xs text-gray-400 mb-1">Update Interval</p>
               <p className="text-lg font-semibold text-white">{config.updateInterval}s</p>
             </div>
-            <div className="bg-switchboard-dark-lighter rounded-lg p-4 border border-switchboard-dark-lighter">
+            <div className="bg-feedgod-dark-accent rounded-lg p-4 border border-feedgod-dark-accent">
               <p className="text-xs text-gray-400 mb-1">Active Sources</p>
               <p className="text-lg font-semibold text-white">
                 {Object.values(preview.sources).filter(s => s.status === 'active').length} / {config.dataSources.length}
               </p>
             </div>
-            <div className="bg-switchboard-dark-lighter rounded-lg p-4 border border-switchboard-dark-lighter">
+            <div className="bg-feedgod-dark-accent rounded-lg p-4 border border-feedgod-dark-accent">
               <p className="text-xs text-gray-400 mb-1">Network</p>
               <p className="text-lg font-semibold text-white capitalize">{config.network}</p>
             </div>

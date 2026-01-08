@@ -85,3 +85,4 @@ export const CITIES: City[] = [
 // Sort cities alphabetically by name
 export const SORTED_CITIES = [...CITIES].sort((a, b) => a.name.localeCompare(b.name))
 
+

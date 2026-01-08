@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import { UnifiedWalletProvider } from '@/lib/unified-wallet-provider'
+import { Web3ModalProvider } from '@/lib/web3modal-provider'
 import { ThemeProvider } from '@/contexts/ThemeContext'
 import Footer from '@/components/Footer'
 
@@ -18,15 +18,15 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} flex flex-col min-h-screen`}>
+    <html lang="en" className="dark">
+      <body className={`${inter.className} flex flex-col min-h-screen bg-feedgod-dark text-gray-200`}>
         <ThemeProvider>
-          <UnifiedWalletProvider>
+          <Web3ModalProvider>
             <div className="flex-1">
               {children}
             </div>
             <Footer />
-          </UnifiedWalletProvider>
+          </Web3ModalProvider>
         </ThemeProvider>
       </body>
     </html>

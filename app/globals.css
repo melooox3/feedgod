@@ -11,24 +11,259 @@
   font-style: normal;
   font-display: swap;
 }
-@import '@solana/wallet-adapter-react-ui/styles.css';
 
 :root {
-  --feedgod-primary: #EC4899;
-  --feedgod-secondary: #F472B6;
-  --feedgod-accent: #F9A8D4;
-  --feedgod-light: #FCE7F3;
-  --feedgod-bg: #FFF1F2;
+  --feedgod-primary: #ff0d6e;
+  --feedgod-secondary: #ff3d8a;
+  --feedgod-accent: #ff6b8a;
+  --feedgod-purple: #e534a8;
+  --feedgod-light: #2a2b25;
+  --feedgod-bg: #1D1E19;
+  --feedgod-surface: #2a2b25;
+  --feedgod-border: #3a3b35;
 }
 
-.dark {
-  --feedgod-primary: #FF00FF;
-  --feedgod-secondary: #00FFFF;
-  --feedgod-accent: #9D4EDD;
-  --feedgod-light: #1A1F3A;
-  --feedgod-bg: #0A0E27;
+/* Subtle gradient text - red to purple */
+.gradient-text {
+  background: linear-gradient(135deg, #ff0d6e 0%, #ff0d6e 60%, #e534a8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
+/* Gradient text hover variant */
+.gradient-text-hover:hover {
+  background: linear-gradient(135deg, #ff0d6e 0%, #ff0d6e 50%, #d946ef 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Subtle gradient background for buttons/elements */
+.gradient-bg {
+  background: linear-gradient(135deg, #ff0d6e 0%, #ff0d6e 70%, #d63384 100%);
+}
+
+.gradient-bg:hover {
+  background: linear-gradient(135deg, #ff3d8a 0%, #ff3d8a 60%, #e534a8 100%);
+}
+
+/* Gradient border effect */
+.gradient-border {
+  border: 1px solid transparent;
+  background: linear-gradient(#1D1E19, #1D1E19) padding-box,
+              linear-gradient(135deg, #ff0d6e 0%, #ff0d6e 70%, #d63384 100%) border-box;
+}
+
+/* ==========================================
+   DARK THEME - Form Elements & Global Fixes
+   ========================================== */
+
+/* Force dark inputs/textareas/selects */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), 
+textarea, 
+select,
+[type="text"], 
+[type="number"], 
+[type="search"], 
+[type="email"],
+[type="password"],
+[type="url"] {
+  background-color: #252620 !important;
+  color: #ffffff !important;
+  border: 1px solid #3a3b35 !important;
+  border-radius: 8px;
+}
+
+input::placeholder, 
+textarea::placeholder {
+  color: #6b6b6b !important;
+}
+
+input:focus:not([type="checkbox"]):not([type="radio"]), 
+textarea:focus, 
+select:focus {
+  border-color: #ff0d6e !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(255, 13, 110, 0.15) !important;
+}
+
+/* Fix autofill background color */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #252620 inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #ffffff !important;
+}
+
+/* Checkbox and radio dark styling */
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: #ff0d6e;
+}
+
+/* Range slider dark styling */
+input[type="range"] {
+  accent-color: #ff0d6e;
+  background: transparent;
+}
+
+/* Select dropdown dark styling */
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%236b6b6b' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px !important;
+}
+
+select option {
+  background-color: #252620;
+  color: #ffffff;
+}
+
+/* Global outline color */
+*:focus {
+  outline-color: #ff0d6e;
+}
+
+/* Force dark backgrounds on white/light elements */
+.bg-white {
+  background-color: #252620 !important;
+}
+
+.bg-gray-50, .bg-gray-100 {
+  background-color: #2a2b25 !important;
+}
+
+/* Override any undefined/legacy purple backgrounds */
+[class*="bg-feedgod-purple-50"],
+[class*="bg-feedgod-purple-100"] {
+  background-color: #2a2b25 !important;
+}
+
+[class*="bg-feedgod-purple-200"] {
+  background-color: #3a3b35 !important;
+}
+
+/* Force dark borders */
+.border-white,
+.border-gray-100,
+.border-gray-200,
+.border-gray-300,
+.border-gray-400 {
+  border-color: #3a3b35 !important;
+}
+
+/* Override any undefined/legacy purple borders */
+[class*="border-feedgod-purple"] {
+  border-color: #3a3b35 !important;
+}
+
+/* Fix any border-2/border-4 that might have default colors */
+.border-2:not([class*="border-feedgod"]):not([class*="border-gray"]):not([class*="border-white"]),
+.border-4:not([class*="border-feedgod"]):not([class*="border-gray"]):not([class*="border-white"]) {
+  border-color: #3a3b35;
+}
+
+/* Ensure ring colors are dark */
+[class*="ring-"]:not([class*="ring-feedgod-primary"]):not([class*="ring-offset"]) {
+  --tw-ring-color: rgba(255, 13, 110, 0.3);
+}
+
+/* ==========================================
+   TEXT COLOR FIXES - Ensure readability
+   ========================================== */
+
+/* Fix all invalid/typo text classes - make them readable */
+[class*="text-feedgod-feedgod"] {
+  color: #9ca3af !important; /* gray-400 - readable on dark */
+}
+
+/* Fix classes with typo "dark-secondary0" (with zero) */
+[class*="dark-secondary0"] {
+  color: #9ca3af !important;
+}
+
+/* Ensure text-feedgod-purple-50 is readable (light gray for text context) */
+.text-feedgod-purple-50 {
+  color: #9ca3af !important;
+}
+
+/* Make sure secondary text colors are visible */
+[class*="text-feedgod-secondary\\/70"],
+[class*="text-feedgod-secondary\\/60"],
+[class*="text-feedgod-secondary\\/50"],
+[class*="text-feedgod-secondary\\/80"] {
+  color: #d1d5db !important; /* gray-300 */
+}
+
+/* Ensure white text stays white */
+.text-white {
+  color: #ffffff !important;
+}
+
+/* Fix description/muted text to be readable gray */
+.text-muted,
+[class*="text-gray-500"],
+[class*="text-gray-600"] {
+  color: #9ca3af !important;
+}
+
+/* Fix any dark-on-dark text issues */
+.dark .text-feedgod-dark,
+.dark [class*="text-feedgod-dark-secondary"],
+.dark [class*="text-feedgod-dark-accent"] {
+  color: #e5e7eb !important; /* Make dark text classes light in dark mode */
+}
+
+/* Ensure labels and form text are visible */
+label {
+  color: #e5e7eb !important;
+}
+
+/* Fix placeholder text */
+::placeholder {
+  color: #6b7280 !important; /* gray-500 */
+  opacity: 1 !important;
+}
+
+/* Ensure all paragraph and span text in dark containers is readable */
+.bg-feedgod-dark-secondary p,
+.bg-feedgod-dark-secondary span,
+.bg-feedgod-dark-secondary div,
+[class*="bg-feedgod-dark"] p,
+[class*="bg-feedgod-dark"] span {
+  color: inherit;
+}
+
+/* Override any text that became invisible due to color conflicts */
+p:not([class*="text-white"]):not([class*="text-gray"]):not([class*="text-feedgod-primary"]) {
+  color: #9ca3af; /* Default to gray-400 for readable muted text */
+}
+
+/* Ensure description text is always visible */
+.description,
+[class*="description"],
+p.text-sm {
+  color: #9ca3af !important;
+}
+
+/* Force small text to be visible */
+.text-xs:not([class*="text-white"]):not([class*="text-feedgod-primary"]):not([class*="text-green"]):not([class*="text-red"]):not([class*="text-yellow"]) {
+  color: #9ca3af !important;
+}
+
+/* Fix ring colors */
+[class*="ring-white"],
+[class*="ring-gray-100"],
+[class*="ring-gray-200"] {
+  --tw-ring-color: #3a3b35 !important;
+}
+
+/* Web3Modal custom overrides - theme set in config */
 * {
   box-sizing: border-box;
   padding: 0;
@@ -39,28 +274,57 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
-  background: #FFF1F2;
-  color: #1F2937;
+  background: #1D1E19;
+  color: #E5E7EB;
 }
 
 body {
   background: 
-    radial-gradient(ellipse at top left, rgba(236, 72, 153, 0.15) 0%, transparent 50%),
-    radial-gradient(ellipse at bottom right, rgba(244, 114, 182, 0.2) 0%, transparent 50%),
-    radial-gradient(ellipse at center, rgba(249, 168, 212, 0.1) 0%, transparent 70%),
-    linear-gradient(135deg, #FFF1F2 0%, #FCE7F3 50%, #FFF1F2 100%);
+    radial-gradient(ellipse at top left, rgba(255, 13, 110, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(255, 61, 138, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at center, rgba(255, 13, 110, 0.03) 0%, transparent 70%),
+    #1D1E19;
   background-attachment: fixed;
   min-height: 100vh;
-  transition: background 0.3s ease;
 }
 
-.dark body {
-  background: 
-    radial-gradient(ellipse at top left, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
-    radial-gradient(ellipse at bottom right, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
-    radial-gradient(ellipse at center, rgba(157, 78, 221, 0.08) 0%, transparent 70%),
-    linear-gradient(135deg, #0A0E27 0%, #1A1F3A 50%, #0A0E27 100%);
-  color: #E5E7EB;
+/* Subtle Switchboard logo pattern overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background-image: url('/switchboard-pattern.svg');
+  background-repeat: repeat;
+  background-size: 35px 35px;
+  opacity: 0.007;
+  pointer-events: none;
+  z-index: 0;
+  transform: rotate(15deg);
+}
+
+/* High-quality crispy film grain overlay */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.06;
+  pointer-events: none;
+  z-index: 1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 150px 150px;
+}
+
+/* Ensure main content is above the pattern and grain */
+body > * {
+  position: relative;
+  z-index: 10;
 }
 
 .pixel-font {
@@ -84,35 +348,23 @@ body {
   }
 }
 
-/* Custom scrollbar - pink theme */
+/* Custom scrollbar - red theme on dark background */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #FCE7F3;
-}
-
-.dark ::-webkit-scrollbar-track {
-  background: #1A1F3A;
+  background: #252620;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #F472B6;
+  background: #4a4b45;
   border-radius: 4px;
 }
 
-.dark ::-webkit-scrollbar-thumb {
-  background: #9D4EDD;
-}
-
 ::-webkit-scrollbar-thumb:hover {
-  background: #EC4899;
-}
-
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: #FF00FF;
+  background: #ff0d6e;
 }
 
 /* Animations */
@@ -129,15 +381,15 @@ body {
   animation: shimmer 2s infinite linear;
   background: linear-gradient(
     to right,
-    #FCE7F3 0%,
-    #F9A8D4 20%,
-    #FCE7F3 40%,
-    #FCE7F3 100%
+    #2a2b25 0%,
+    #3a3b35 20%,
+    #2a2b25 40%,
+    #2a2b25 100%
   );
   background-size: 1000px 100%;
 }
 
-/* Star glow animation */
+/* Star glow animation - red on dark olive */
 .star-glow,
 .star-glow-on-hover {
   position: relative;
@@ -147,9 +399,9 @@ body {
 
 .star-glow:hover {
   animation: starGlow 1.5s ease-in-out infinite;
-  filter: drop-shadow(0 0 8px rgba(236, 72, 153, 0.6))
-          drop-shadow(0 0 12px rgba(244, 114, 182, 0.4))
-          drop-shadow(0 0 16px rgba(249, 168, 212, 0.3));
+  filter: drop-shadow(0 0 8px rgba(255, 13, 110, 0.6))
+          drop-shadow(0 0 12px rgba(255, 61, 138, 0.4))
+          drop-shadow(0 0 16px rgba(255, 107, 138, 0.3));
 }
 
 .star-glow-on-hover {
@@ -159,9 +411,9 @@ body {
 
 .star-glow-on-hover:hover {
   animation: starGlow 1.5s ease-in-out infinite;
-  filter: drop-shadow(0 0 8px rgba(236, 72, 153, 0.6))
-          drop-shadow(0 0 12px rgba(244, 114, 182, 0.4))
-          drop-shadow(0 0 16px rgba(249, 168, 212, 0.3));
+  filter: drop-shadow(0 0 8px rgba(255, 13, 110, 0.6))
+          drop-shadow(0 0 12px rgba(255, 61, 138, 0.4))
+          drop-shadow(0 0 16px rgba(255, 107, 138, 0.3));
 }
 
 .star-glow-on-hover::before {
@@ -170,9 +422,9 @@ body {
   inset: -6px;
   border-radius: 12px;
   background: radial-gradient(circle at center, 
-    rgba(236, 72, 153, 0.4) 0%, 
-    rgba(244, 114, 182, 0.3) 30%, 
-    rgba(249, 168, 212, 0.2) 60%, 
+    rgba(255, 13, 110, 0.4) 0%, 
+    rgba(255, 61, 138, 0.3) 30%, 
+    rgba(255, 107, 138, 0.2) 60%, 
     transparent 100%);
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -185,44 +437,17 @@ body {
   opacity: 1;
 }
 
-.dark .star-glow-on-hover::before {
-  background: radial-gradient(circle at center, 
-    rgba(255, 0, 255, 0.5) 0%, 
-    rgba(0, 255, 255, 0.4) 30%, 
-    rgba(157, 78, 221, 0.3) 60%, 
-    transparent 100%);
-}
-
 @keyframes starGlow {
   0%, 100% {
-    box-shadow: 0 0 5px rgba(236, 72, 153, 0.5),
-                0 0 10px rgba(244, 114, 182, 0.3),
-                0 0 15px rgba(249, 168, 212, 0.2);
+    box-shadow: 0 0 5px rgba(255, 13, 110, 0.5),
+                0 0 10px rgba(255, 61, 138, 0.3),
+                0 0 15px rgba(255, 107, 138, 0.2);
   }
   50% {
-    box-shadow: 0 0 10px rgba(236, 72, 153, 0.8),
-                0 0 20px rgba(244, 114, 182, 0.6),
-                0 0 30px rgba(249, 168, 212, 0.4),
-                0 0 40px rgba(236, 72, 153, 0.2);
-  }
-}
-
-.dark .star-glow:hover,
-.dark .star-glow-on-hover:hover {
-  animation: starGlowDark 1.5s ease-in-out infinite;
-}
-
-@keyframes starGlowDark {
-  0%, 100% {
-    box-shadow: 0 0 5px rgba(255, 0, 255, 0.6),
-                0 0 10px rgba(0, 255, 255, 0.4),
-                0 0 15px rgba(157, 78, 221, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 10px rgba(255, 0, 255, 0.9),
-                0 0 20px rgba(0, 255, 255, 0.7),
-                0 0 30px rgba(157, 78, 221, 0.5),
-                0 0 40px rgba(255, 0, 255, 0.3);
+    box-shadow: 0 0 10px rgba(255, 13, 110, 0.8),
+                0 0 20px rgba(255, 61, 138, 0.6),
+                0 0 30px rgba(255, 107, 138, 0.4),
+                0 0 40px rgba(255, 13, 110, 0.2);
   }
 }
 
@@ -283,4 +508,65 @@ body {
 
 .typewriter-cursor {
   animation: cursorBlink 1s infinite;
+}
+
+/* AppKit/Web3Modal - Force modal to be fixed overlay */
+w3m-modal,
+appkit-modal,
+wcm-modal,
+wui-flex,
+wui-card,
+[data-w3m-overlay],
+[data-appkit-overlay] {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 99999 !important;
+}
+
+/* AppKit modal backdrop and container */
+w3m-modal::part(modal),
+appkit-modal::part(modal),
+w3m-modal *,
+appkit-modal * {
+  z-index: 99999 !important;
+}
+
+/* Ensure modal container is above everything */
+.w3m-overlay,
+.appkit-overlay,
+[class*="w3m-modal"],
+[class*="appkit-modal"],
+[class*="wui-"],
+div[data-testid="w3m-modal"] {
+  z-index: 99999 !important;
+  position: fixed !important;
+}
+
+/* AppKit uses shadow DOM, target the host */
+:host {
+  z-index: 99999 !important;
+}
+
+/* Ensure body pseudo-elements don't cover modal */
+body::before,
+body::after {
+  z-index: 0 !important;
+}
+
+/* Main content should be below modal */
+body > div:first-child,
+#__next,
+main {
+  z-index: 1;
+  position: relative;
+}
+
+/* Fix for any parent transforms breaking fixed positioning */
+body.modal-open {
+  overflow: hidden;
 }

@@ -37,6 +37,41 @@ const MODULES = [
     backgroundIcon: Scale,
   },
   {
+    id: 'sports' as BuilderType,
+    title: 'Sports',
+    description: 'Create oracles for sports match outcomes. Soccer, NBA, NFL, and esports supported.',
+    icon: Trophy,
+    backgroundIcon: Gamepad2,
+  },
+  {
+    id: 'ai-judge' as BuilderType,
+    title: 'AI Judge',
+    description: 'Any question → on-chain answer. AI resolves real-world events without custom code.',
+    icon: Brain,
+    backgroundIcon: Zap,
+  },
+  {
+    id: 'weather' as BuilderType,
+    title: 'Weather',
+    description: 'Deploy real-time weather data oracles for any city. Power insurance, gaming, and DeFi.',
+    icon: Cloud,
+    backgroundIcon: Thermometer,
+  },
+  {
+    id: 'custom-api' as BuilderType,
+    title: 'Custom API',
+    description: 'Turn any JSON API into an on-chain oracle. Click to select values, auto-generate paths.',
+    icon: Globe,
+    backgroundIcon: Link2,
+  },
+  {
+    id: 'social' as BuilderType,
+    title: 'Social Media',
+    description: 'Track Twitter, YouTube, and TikTok metrics on-chain. Followers, engagement, viral content.',
+    icon: Users,
+    backgroundIcon: Heart,
+  },
+  {
     id: 'function' as BuilderType,
     title: 'Functions',
     description: 'Run custom off-chain computation and push results on-chain with verifiable execution.',
@@ -56,41 +91,6 @@ const MODULES = [
     description: 'Securely store and manage API keys and sensitive data for your oracle functions.',
     icon: Key,
     backgroundIcon: Shield,
-  },
-  {
-    id: 'weather' as BuilderType,
-    title: 'Weather',
-    description: 'Deploy real-time weather data oracles for any city. Power insurance, gaming, and DeFi.',
-    icon: Cloud,
-    backgroundIcon: Thermometer,
-  },
-  {
-    id: 'sports' as BuilderType,
-    title: 'Sports',
-    description: 'Create oracles for sports match outcomes. Soccer, NBA, NFL, and esports supported.',
-    icon: Trophy,
-    backgroundIcon: Gamepad2,
-  },
-  {
-    id: 'social' as BuilderType,
-    title: 'Social Media',
-    description: 'Track Twitter, YouTube, and TikTok metrics on-chain. Followers, engagement, viral content.',
-    icon: Users,
-    backgroundIcon: Heart,
-  },
-  {
-    id: 'ai-judge' as BuilderType,
-    title: 'AI Judge',
-    description: 'Any question → on-chain answer. AI resolves real-world events without custom code.',
-    icon: Brain,
-    backgroundIcon: Zap,
-  },
-  {
-    id: 'custom-api' as BuilderType,
-    title: 'Custom API',
-    description: 'Turn any JSON API into an on-chain oracle. Click to select values, auto-generate paths.',
-    icon: Globe,
-    backgroundIcon: Link2,
   },
 ]
 
@@ -270,7 +270,7 @@ export default function Home() {
           
           {/* Module Selection Grid */}
           <div className="pb-20">
-            <h2 className="text-center text-sm font-medium text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 uppercase tracking-wider mb-8">
+            <h2 className="text-center text-sm font-medium text-gray-400 uppercase tracking-wider mb-8">
               Choose a module to get started
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
@@ -294,7 +294,7 @@ export default function Home() {
           <div className="flex items-center justify-between mb-6">
             <button
               onClick={handleBack}
-              className="inline-flex items-center gap-2 text-feedgod-pink-500 dark:text-feedgod-neon-cyan/80 hover:text-feedgod-primary dark:hover:text-feedgod-neon-pink transition-colors"
+              className="inline-flex items-center gap-2 text-gray-400 hover:text-feedgod-primary transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               <span className="text-sm font-medium">Back to modules</span>
@@ -304,7 +304,7 @@ export default function Home() {
               {activeModule === 'feed' && (
                 <button
                   onClick={() => setShowBulkCreator(true)}
-                  className="px-4 py-2 bg-feedgod-pink-100 dark:bg-feedgod-dark-secondary hover:bg-feedgod-pink-200 dark:hover:bg-feedgod-dark-accent rounded-lg text-feedgod-dark dark:text-feedgod-neon-cyan text-sm font-medium transition-colors flex items-center gap-2"
+                  className="px-4 py-2 bg-feedgod-dark-secondary hover:bg-feedgod-dark-accent border border-feedgod-dark-accent rounded-lg text-white text-sm font-medium transition-colors flex items-center gap-2"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Bulk Create</span>
@@ -315,7 +315,7 @@ export default function Home() {
 
           {/* Module Title */}
           <div className="mb-6">
-            <h1 className="text-2xl font-bold text-feedgod-dark dark:text-white">
+            <h1 className="text-2xl font-bold text-white">
               {getModuleTitle()}
             </h1>
           </div>
@@ -333,7 +333,7 @@ export default function Home() {
           </div>
 
           {/* Builder Content */}
-          <div className="bg-white/40 dark:bg-feedgod-dark-secondary/30 rounded-2xl border border-feedgod-pink-200/50 dark:border-feedgod-dark-accent/30 backdrop-blur-sm p-6">
+          <div className="bg-feedgod-dark-secondary/50 rounded-2xl border border-feedgod-dark-accent backdrop-blur-sm p-6">
             {renderBuilder()}
           </div>
         </div>

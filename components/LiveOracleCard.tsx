@@ -65,18 +65,18 @@ export default function LiveOracleCard({
 
   if (compact) {
     return (
-      <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-4 backdrop-blur-sm hover:border-feedgod-primary/50 transition-all">
+      <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-purple-200 dark:border-feedgod-dark-accent dark:border-feedgod-purple-200 dark:border-feedgod-dark-accent p-4 backdrop-blur-sm hover:border-feedgod-primary dark:text-feedgod-primary/50 transition-all">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
             <span className="text-lg">{getTypeIcon(oracle.type)}</span>
-            <span className="font-medium text-feedgod-dark dark:text-white text-sm truncate">
+            <span className="font-medium text-white text-sm truncate">
               {oracle.symbol}
             </span>
           </div>
           <div className={`w-2 h-2 rounded-full ${getStatusBg(oracle.status)} animate-pulse`} />
         </div>
         <div className="flex items-end justify-between">
-          <span className="text-xl font-bold text-feedgod-dark dark:text-white">
+          <span className="text-xl font-bold text-white">
             {formattedValue}
           </span>
           <div className={`flex items-center gap-1 text-xs ${changeColor}`}>
@@ -89,10 +89,10 @@ export default function LiveOracleCard({
   }
 
   return (
-    <div className={`relative bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-xl border backdrop-blur-sm transition-all hover:shadow-lg ${
+    <div className={`relative bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-xl border backdrop-blur-sm transition-all hover:shadow-lg ${
       oracle.status === 'error' ? 'border-red-300 dark:border-red-700/50' :
       oracle.status === 'stale' ? 'border-amber-300 dark:border-amber-700/50' :
-      'border-feedgod-pink-200 dark:border-feedgod-dark-accent hover:border-feedgod-primary/50'
+      'border-feedgod-purple-200 dark:border-feedgod-dark-accent dark:border-feedgod-purple-200 dark:border-feedgod-dark-accent hover:border-feedgod-primary dark:text-feedgod-primary/50'
     }`}>
       {/* Alert badge */}
       {hasAlerts && (
@@ -112,15 +112,15 @@ export default function LiveOracleCard({
               oracle.type === 'prediction' ? 'bg-purple-100 dark:bg-purple-900/30' :
               oracle.type === 'weather' ? 'bg-cyan-100 dark:bg-cyan-900/30' :
               oracle.type === 'social' ? 'bg-pink-100 dark:bg-pink-900/30' :
-              'bg-feedgod-pink-100 dark:bg-feedgod-dark-accent'
+              'bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent'
             }`}>
               <span className="text-xl">{getTypeIcon(oracle.type)}</span>
             </div>
             <div>
-              <h3 className="font-semibold text-feedgod-dark dark:text-white text-sm">
+              <h3 className="font-semibold text-white text-sm">
                 {oracle.name}
               </h3>
-              <div className="flex items-center gap-2 text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+              <div className="flex items-center gap-2 text-xs text-gray-400 /70">
                 <img 
                   src={CHAIN_LOGOS[oracle.blockchain]} 
                   alt={oracle.blockchain}
@@ -141,23 +141,23 @@ export default function LiveOracleCard({
             <div className="relative">
               <button
                 onClick={() => setShowMenu(!showMenu)}
-                className="p-1 hover:bg-feedgod-pink-100 dark:hover:bg-feedgod-dark-accent rounded transition-colors"
+                className="p-1 hover:bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded transition-colors"
               >
-                <MoreVertical className="w-4 h-4 text-feedgod-pink-400" />
+                <MoreVertical className="w-4 h-4 text-gray-400 dark:text-feedgod-secondary/70" />
               </button>
               
               {showMenu && (
-                <div className="absolute right-0 top-full mt-1 w-40 bg-white dark:bg-feedgod-dark-secondary rounded-lg shadow-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent z-10">
+                <div className="absolute right-0 top-full mt-1 w-40 bg-feedgod-dark-secondary dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary rounded-lg shadow-lg border border-feedgod-purple-200 dark:border-feedgod-dark-accent dark:border-feedgod-purple-200 dark:border-feedgod-dark-accent z-10">
                   <button
                     onClick={() => { onRefresh?.(); setShowMenu(false); }}
-                    className="w-full px-3 py-2 text-left text-sm text-feedgod-dark dark:text-white hover:bg-feedgod-pink-50 dark:hover:bg-feedgod-dark-accent flex items-center gap-2"
+                    className="w-full px-3 py-2 text-left text-sm text-white hover:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent flex items-center gap-2"
                   >
                     <RefreshCw className="w-4 h-4" />
                     Refresh
                   </button>
                   <button
                     onClick={() => { onSetAlert?.(); setShowMenu(false); }}
-                    className="w-full px-3 py-2 text-left text-sm text-feedgod-dark dark:text-white hover:bg-feedgod-pink-50 dark:hover:bg-feedgod-dark-accent flex items-center gap-2"
+                    className="w-full px-3 py-2 text-left text-sm text-white hover:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent flex items-center gap-2"
                   >
                     <Bell className="w-4 h-4" />
                     Set Alert
@@ -166,7 +166,7 @@ export default function LiveOracleCard({
                     href={`https://solscan.io/account/${oracle.publicKey}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full px-3 py-2 text-left text-sm text-feedgod-dark dark:text-white hover:bg-feedgod-pink-50 dark:hover:bg-feedgod-dark-accent flex items-center gap-2"
+                    className="w-full px-3 py-2 text-left text-sm text-white hover:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent flex items-center gap-2"
                   >
                     <ExternalLink className="w-4 h-4" />
                     View on Solscan
@@ -180,7 +180,7 @@ export default function LiveOracleCard({
         {/* Value & Sparkline */}
         <div className="flex items-end justify-between mb-4">
           <div>
-            <p className="text-3xl font-bold text-feedgod-dark dark:text-white">
+            <p className="text-3xl font-bold text-white">
               {formattedValue}
             </p>
             <div className={`flex items-center gap-1 mt-1 ${changeColor}`}>
@@ -188,7 +188,7 @@ export default function LiveOracleCard({
               <span className="text-sm font-medium">
                 {oracle.change24h >= 0 ? '+' : ''}{oracle.change24h.toFixed(2)}%
               </span>
-              <span className="text-xs text-feedgod-pink-400 dark:text-feedgod-neon-cyan/50 ml-1">
+              <span className="text-xs text-gray-400 dark:text-feedgod-secondary/70 /50 ml-1">
                 24h
               </span>
             </div>
@@ -202,15 +202,15 @@ export default function LiveOracleCard({
         </div>
         
         {/* Footer */}
-        <div className="flex items-center justify-between pt-3 border-t border-feedgod-pink-100 dark:border-feedgod-dark-accent">
-          <div className="flex items-center gap-1 text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+        <div className="flex items-center justify-between pt-3 border-t border-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:border-feedgod-purple-200 dark:border-feedgod-dark-accent">
+          <div className="flex items-center gap-1 text-xs text-gray-400 /70">
             <Clock className="w-3 h-3" />
             <span>{getTimeSinceUpdate(oracle.lastUpdate)}</span>
           </div>
           
           <button
             onClick={handleCopyKey}
-            className="flex items-center gap-1 px-2 py-1 text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 hover:text-feedgod-primary hover:bg-feedgod-pink-50 dark:hover:bg-feedgod-dark-accent rounded transition-colors"
+            className="flex items-center gap-1 px-2 py-1 text-xs text-gray-400 /70 hover:text-feedgod-primary dark:text-feedgod-primary hover:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded transition-colors"
           >
             {copied ? (
               <>
@@ -239,11 +239,12 @@ export default function LiveOracleCard({
       
       {/* Source badge */}
       {oracle.source && (
-        <div className="px-5 py-2 bg-feedgod-pink-50/50 dark:bg-feedgod-dark-accent/50 border-t border-feedgod-pink-100 dark:border-feedgod-dark-accent text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/60 rounded-b-xl">
+        <div className="px-5 py-2 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/50 dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent/50 border-t border-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:border-feedgod-purple-200 dark:border-feedgod-dark-accent text-xs text-gray-400 /60 rounded-b-xl">
           Source: {oracle.source}
         </div>
       )}
     </div>
   )
 }
+
 

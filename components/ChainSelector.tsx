@@ -50,7 +50,7 @@ export default function ChainSelector({
   return (
     <div className="space-y-3">
       <div>
-        <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2 flex items-center gap-2">
+        <label className="block text-sm font-medium text-white mb-2 flex items-center gap-2">
           <NetworkIcon className="w-4 h-4" />
           Chain
         </label>
@@ -70,8 +70,8 @@ export default function ChainSelector({
               }}
               className={`p-3 rounded-lg border-2 transition-colors text-left cursor-pointer relative z-10 overflow-hidden group ${
                 blockchain === chain.value
-                  ? 'border-feedgod-primary dark:border-feedgod-neon-pink bg-feedgod-pink-50 dark:bg-feedgod-dark-accent'
-                  : 'border-feedgod-pink-200 dark:border-feedgod-dark-accent bg-white dark:bg-feedgod-dark-secondary hover:border-feedgod-pink-300 dark:hover:border-feedgod-neon-cyan'
+                  ? 'border-feedgod-primary dark:text-feedgod-primary dark:border-feedgod-primary dark:text-feedgod-primary bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent'
+                  : 'border-feedgod-purple-200 dark:border-feedgod-dark-accent dark:border-feedgod-purple-200 dark:border-feedgod-dark-accent bg-feedgod-dark-secondary dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary hover:border-feedgod-purple-300 dark:border-feedgod-dark-accent dark:hover:border-feedgod-feedgod-primary dark:text-feedgod-secondary'
               }`}
             >
               {/* Background logo watermark */}
@@ -89,9 +89,9 @@ export default function ChainSelector({
                   alt={chain.label} 
                   className="w-5 h-5 object-contain"
                 />
-                <div className="font-medium text-feedgod-dark dark:text-feedgod-neon-cyan text-sm">{chain.label}</div>
+                <div className="font-medium text-white text-sm">{chain.label}</div>
               </div>
-              <div className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mt-1 relative z-10">
+              <div className="text-xs text-gray-400 mt-1 relative z-10">
                 {chain.networks.length} network{chain.networks.length !== 1 ? 's' : ''}
               </div>
             </button>
@@ -100,7 +100,7 @@ export default function ChainSelector({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2">
+        <label className="block text-sm font-medium text-white mb-2">
           Network
         </label>
         <div className="flex gap-2 flex-wrap">
@@ -118,8 +118,8 @@ export default function ChainSelector({
               }}
               className={`px-4 py-2 rounded-lg border-2 transition-colors text-sm font-medium cursor-pointer relative z-10 ${
                 network === net
-                  ? 'border-feedgod-primary dark:border-feedgod-neon-pink bg-feedgod-primary dark:bg-feedgod-neon-pink text-white'
-                  : 'border-feedgod-pink-200 dark:border-feedgod-dark-accent bg-white dark:bg-feedgod-dark-secondary text-feedgod-dark dark:text-feedgod-neon-cyan hover:border-feedgod-pink-300 dark:hover:border-feedgod-neon-cyan'
+                  ? 'border-feedgod-primary dark:text-feedgod-primary dark:border-feedgod-primary dark:text-feedgod-primary bg-feedgod-primary dark:text-feedgod-primary dark:bg-feedgod-primary dark:text-feedgod-primary text-white'
+                  : 'border-feedgod-dark-accent bg-feedgod-dark-secondary text-white hover:border-feedgod-primary/50'
               } star-glow-on-hover`}
             >
               {NETWORK_LABELS[net]}
@@ -127,7 +127,7 @@ export default function ChainSelector({
           ))}
         </div>
         {network === 'testnet' || network === 'devnet' ? (
-          <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mt-2">
+          <p className="text-xs text-gray-400 mt-2">
             ⚠️ {network === 'testnet' ? 'Testnet' : 'Devnet'} is for testing only. Use mainnet for production.
           </p>
         ) : null}

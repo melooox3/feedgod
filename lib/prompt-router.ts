@@ -347,3 +347,4 @@ export const EXAMPLE_PROMPTS = [
   { text: 'Any API endpoint', module: 'custom-api' as BuilderType, icon: '🌐' },
 ]
 
+

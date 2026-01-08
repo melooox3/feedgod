@@ -251,3 +251,4 @@ export function formatWeatherValue(value: number, metric: WeatherMetric): string
   return `${value}${unit}`
 }
 
+

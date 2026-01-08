@@ -17,9 +17,9 @@ const TypeIcon = ({ type }: { type: string }) => {
     case 'string':
       return <Type className="w-3 h-3 text-emerald-500" />
     case 'number':
-      return <Hash className="w-3 h-3 text-blue-500" />
+      return <Hash className="w-3 h-3 text-feedgod-primary" />
     case 'boolean':
-      return <ToggleLeft className="w-3 h-3 text-purple-500" />
+      return <ToggleLeft className="w-3 h-3 text-feedgod-primary" />
     case 'array':
       return <List className="w-3 h-3 text-amber-500" />
     case 'object':
@@ -104,8 +104,8 @@ function TreeNode({
       <div 
         className={`flex items-center gap-1 py-1 px-2 rounded cursor-pointer transition-colors ${
           isSelected 
-            ? 'bg-feedgod-primary/20 border border-feedgod-primary' 
-            : 'hover:bg-feedgod-pink-100 dark:hover:bg-feedgod-dark-accent'
+            ? 'bg-feedgod-primary dark:text-feedgod-primary/20 border border-feedgod-primary dark:text-feedgod-primary' 
+            : 'hover:bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent'
         }`}
         style={{ paddingLeft: `${depth * 16 + 8}px` }}
         onClick={handleSelect}
@@ -114,7 +114,7 @@ function TreeNode({
         {isExpandable ? (
           <button 
             onClick={handleToggle}
-            className="w-4 h-4 flex items-center justify-center text-feedgod-pink-400 hover:text-feedgod-primary"
+            className="w-4 h-4 flex items-center justify-center text-gray-400 dark:text-feedgod-secondary/70 hover:text-feedgod-primary dark:text-feedgod-primary"
           >
             {isExpanded ? (
               <ChevronDown className="w-3 h-3" />
@@ -130,26 +130,26 @@ function TreeNode({
         <TypeIcon type={valueType} />
         
         {/* Key name */}
-        <span className="font-mono text-sm text-feedgod-dark dark:text-white">
+        <span className="font-mono text-sm text-white">
           {typeof keyName === 'number' ? `[${keyName}]` : keyName}
         </span>
         
-        <span className="text-feedgod-pink-400 dark:text-feedgod-neon-cyan/50">:</span>
+        <span className="text-gray-400 dark:text-feedgod-secondary/70 /50">:</span>
         
         {/* Value */}
         <span className={`font-mono text-sm truncate max-w-[300px] ${
           valueType === 'string' ? 'text-emerald-600 dark:text-emerald-400' :
-          valueType === 'number' ? 'text-blue-600 dark:text-blue-400' :
-          valueType === 'boolean' ? 'text-purple-600 dark:text-purple-400' :
+          valueType === 'number' ? 'text-feedgod-primary dark:text-blue-400' :
+          valueType === 'boolean' ? 'text-feedgod-primary dark:text-feedgod-secondary' :
           valueType === 'null' ? 'text-gray-500' :
-          'text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70'
+          'text-gray-400 /70'
         }`}>
           {displayValue}
         </span>
         
         {/* Selection indicator */}
         {isSelected && (
-          <Check className="w-4 h-4 text-feedgod-primary ml-auto" />
+          <Check className="w-4 h-4 text-feedgod-primary dark:text-feedgod-primary ml-auto" />
         )}
       </div>
       
@@ -169,7 +169,7 @@ function TreeNode({
           ))}
           {Array.isArray(value) && value.length > 50 && (
             <div 
-              className="text-xs text-feedgod-pink-400 italic py-1"
+              className="text-xs text-gray-400 dark:text-feedgod-secondary/70 italic py-1"
               style={{ paddingLeft: `${(depth + 1) * 16 + 8}px` }}
             >
               ...and {value.length - 50} more items
@@ -197,7 +197,7 @@ export default function JSONPathSelector({ data, selectedPath, onSelectPath }: J
   
   if (!data) {
     return (
-      <div className="p-8 text-center text-feedgod-pink-400 dark:text-feedgod-neon-cyan/50">
+      <div className="p-8 text-center text-gray-400 dark:text-feedgod-secondary/70 /50">
         <Braces className="w-12 h-12 mx-auto mb-3 opacity-50" />
         <p>No data to display</p>
         <p className="text-xs mt-1">Fetch an API to see the response</p>
@@ -209,45 +209,45 @@ export default function JSONPathSelector({ data, selectedPath, onSelectPath }: J
     <div className="space-y-4">
       {/* Selected path display */}
       {selectedPath && (
-        <div className="flex items-center gap-2 p-3 bg-feedgod-primary/10 border border-feedgod-primary/30 rounded-lg">
-          <span className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Selected:</span>
-          <code className="flex-1 font-mono text-sm text-feedgod-primary dark:text-feedgod-neon-pink font-bold">
+        <div className="flex items-center gap-2 p-3 bg-feedgod-primary dark:text-feedgod-primary/10 border border-feedgod-primary dark:text-feedgod-primary/30 rounded-lg">
+          <span className="text-xs text-gray-400 /70">Selected:</span>
+          <code className="flex-1 font-mono text-sm gradient-text font-bold">
             {selectedPath}
           </code>
           <button
             onClick={handleCopyPath}
-            className="p-1 hover:bg-feedgod-primary/20 rounded transition-colors"
+            className="p-1 hover:bg-feedgod-primary dark:text-feedgod-primary/20 rounded transition-colors"
             title="Copy path"
           >
             {copied ? (
               <Check className="w-4 h-4 text-emerald-500" />
             ) : (
-              <Copy className="w-4 h-4 text-feedgod-primary" />
+              <Copy className="w-4 h-4 text-feedgod-primary dark:text-feedgod-primary" />
             )}
           </button>
         </div>
       )}
       
       {/* Instruction */}
-      <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+      <p className="text-xs text-gray-400 /70">
         Click on any value to select it for your oracle
       </p>
       
       {/* Tree view */}
-      <div className="max-h-[400px] overflow-auto bg-white/60 dark:bg-feedgod-dark-secondary/60 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent">
+      <div className="max-h-[400px] overflow-auto bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/60 rounded-lg border border-feedgod-purple-200 dark:border-feedgod-dark-accent dark:border-feedgod-purple-200 dark:border-feedgod-dark-accent">
         {isRawText ? (
           <div 
             className={`p-4 cursor-pointer rounded transition-colors ${
               selectedPath === '$._raw' 
-                ? 'bg-feedgod-primary/20 border border-feedgod-primary' 
-                : 'hover:bg-feedgod-pink-100 dark:hover:bg-feedgod-dark-accent'
+                ? 'bg-feedgod-primary dark:text-feedgod-primary/20 border border-feedgod-primary dark:text-feedgod-primary' 
+                : 'hover:bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent'
             }`}
             onClick={() => { playPickupSound(); onSelectPath('$._raw', data._raw); }}
           >
             <div className="flex items-center gap-2 mb-2">
               <Type className="w-4 h-4 text-emerald-500" />
-              <span className="font-mono text-sm text-feedgod-dark dark:text-white">Plain Text Response</span>
-              {selectedPath === '$._raw' && <Check className="w-4 h-4 text-feedgod-primary ml-auto" />}
+              <span className="font-mono text-sm text-white">Plain Text Response</span>
+              {selectedPath === '$._raw' && <Check className="w-4 h-4 text-feedgod-primary dark:text-feedgod-primary ml-auto" />}
             </div>
             <pre className="font-mono text-sm text-emerald-600 dark:text-emerald-400 whitespace-pre-wrap break-all">
               {data._raw}
@@ -268,4 +268,5 @@ export default function JSONPathSelector({ data, selectedPath, onSelectPath }: J
     </div>
   )
 }
+
 

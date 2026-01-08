@@ -124,3 +124,4 @@ export const POPULAR_ACCOUNTS: { platform: SocialPlatform; username: string; dis
   { platform: 'tiktok', username: 'bellapoarch', displayName: 'Bella Poarch', category: 'Entertainment' },
 ]
 
+

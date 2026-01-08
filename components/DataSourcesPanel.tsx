@@ -66,7 +66,7 @@ export default function DataSourcesPanel({ config, onUpdate }: DataSourcesPanelP
         <button
           onClick={() => setShowAddModal(true)}
           disabled={availableToAdd.length === 0}
-          className="px-4 py-2 bg-switchboard-primary hover:bg-switchboard-primary/80 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-white text-sm font-medium transition-colors flex items-center gap-2"
+          className="px-4 py-2 bg-feedgod-primary dark:text-feedgod-primary hover:bg-feedgod-primary dark:text-feedgod-primary/80 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-white text-sm font-medium transition-colors flex items-center gap-2"
         >
           <Plus className="w-4 h-4" />
           Add Source
@@ -74,7 +74,7 @@ export default function DataSourcesPanel({ config, onUpdate }: DataSourcesPanelP
       </div>
 
       {config.dataSources.length === 0 ? (
-        <div className="text-center py-12 bg-switchboard-dark-lighter/50 rounded-lg border border-dashed border-switchboard-dark-lighter">
+        <div className="text-center py-12 bg-feedgod-dark-secondaryer/50 rounded-lg border border-dashed border-feedgod-dark-secondaryer">
           <p className="text-gray-400">No data sources added yet</p>
           <p className="text-sm text-gray-500 mt-1">Add at least one source to get started</p>
         </div>
@@ -83,12 +83,12 @@ export default function DataSourcesPanel({ config, onUpdate }: DataSourcesPanelP
           {config.dataSources.map((source) => (
             <div
               key={source.id}
-              className="bg-switchboard-dark-lighter rounded-lg p-4 border border-switchboard-dark-lighter"
+              className="bg-feedgod-dark-secondaryer rounded-lg p-4 border border-feedgod-dark-secondaryer"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className={`w-3 h-3 rounded-full ${
-                    source.enabled ? 'bg-green-500' : 'bg-gray-500'
+                    source.enabled ? 'bg-green-500' : 'bg-feedgod-dark-accent'
                   }`} />
                   <div>
                     <h4 className="text-white font-medium">{source.name}</h4>
@@ -97,7 +97,7 @@ export default function DataSourcesPanel({ config, onUpdate }: DataSourcesPanelP
                 </div>
                 <button
                   onClick={() => removeDataSource(source.id)}
-                  className="p-2 hover:bg-switchboard-dark-lighter rounded-lg transition-colors"
+                  className="p-2 hover:bg-feedgod-dark-secondaryer rounded-lg transition-colors"
                 >
                   <Trash2 className="w-4 h-4 text-red-400" />
                 </button>
@@ -110,7 +110,7 @@ export default function DataSourcesPanel({ config, onUpdate }: DataSourcesPanelP
                     type="number"
                     value={source.weight || 1}
                     onChange={(e) => updateDataSource(source.id, { weight: parseFloat(e.target.value) || 1 })}
-                    className="w-full bg-switchboard-dark border border-switchboard-dark-lighter rounded px-3 py-1.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-switchboard-primary"
+                    className="w-full bg-feedgod-dark-bg border border-feedgod-dark-secondaryer rounded px-3 py-1.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary"
                     min="0"
                     step="0.1"
                   />
@@ -121,7 +121,7 @@ export default function DataSourcesPanel({ config, onUpdate }: DataSourcesPanelP
                       type="checkbox"
                       checked={source.enabled}
                       onChange={(e) => updateDataSource(source.id, { enabled: e.target.checked })}
-                      className="w-4 h-4 rounded border-switchboard-dark-lighter bg-switchboard-dark text-switchboard-primary focus:ring-switchboard-primary"
+                      className="w-4 h-4 rounded border-feedgod-dark-secondaryer bg-feedgod-dark-bg text-feedgod-primary dark:text-feedgod-primary focus:ring-feedgod-primary dark:text-feedgod-primary"
                     />
                     <span className="text-xs text-gray-400">Enabled</span>
                   </label>
@@ -134,14 +134,14 @@ export default function DataSourcesPanel({ config, onUpdate }: DataSourcesPanelP
 
       {showAddModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-switchboard-dark-light rounded-lg border border-switchboard-dark-lighter p-6 max-w-md w-full mx-4">
+          <div className="bg-feedgod-dark-secondary rounded-lg border border-feedgod-dark-secondaryer p-6 max-w-md w-full mx-4">
             <h3 className="text-lg font-semibold text-white mb-4">Add Data Source</h3>
             <div className="space-y-2 max-h-96 overflow-y-auto">
               {availableToAdd.map((source) => (
                 <button
                   key={source.id}
                   onClick={() => addDataSource(source)}
-                  className="w-full text-left p-3 bg-switchboard-dark-lighter hover:bg-switchboard-dark-lighter/80 rounded-lg transition-colors"
+                  className="w-full text-left p-3 bg-feedgod-dark-secondaryer hover:bg-feedgod-dark-secondaryer/80 rounded-lg transition-colors"
                 >
                   <div className="font-medium text-white">{source.name}</div>
                   <div className="text-xs text-gray-400 capitalize mt-1">{source.type}</div>
@@ -150,7 +150,7 @@ export default function DataSourcesPanel({ config, onUpdate }: DataSourcesPanelP
             </div>
             <button
               onClick={() => setShowAddModal(false)}
-              className="mt-4 w-full px-4 py-2 bg-switchboard-dark-lighter hover:bg-switchboard-dark-lighter/80 rounded-lg text-white text-sm font-medium transition-colors"
+              className="mt-4 w-full px-4 py-2 bg-feedgod-dark-secondaryer hover:bg-feedgod-dark-secondaryer/80 rounded-lg text-white text-sm font-medium transition-colors"
             >
               Cancel
             </button>

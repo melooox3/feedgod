@@ -28,14 +28,12 @@ export default function HeroSection() {
 
   const currentPrompt = prompts[promptIndex]
 
-  // Typing speed with slight variation for natural feel
   const getTypingDelay = useCallback(() => {
     const base = 40
     const variance = 20
-    return base + Math.random() * variance // 40-60ms
+    return base + Math.random() * variance
   }, [])
 
-  // Erasing is faster
   const getErasingDelay = useCallback(() => {
     return 30
   }, [])
@@ -51,7 +49,6 @@ export default function HeroSection() {
             setCharIndex(prev => prev + 1)
           }, getTypingDelay())
         } else {
-          // Done typing, pause
           setState('pausing')
         }
         break
@@ -59,7 +56,7 @@ export default function HeroSection() {
       case 'pausing':
         timeoutId = setTimeout(() => {
           setState('erasing')
-        }, 2000) // 2 second pause
+        }, 2000)
         break
 
       case 'erasing':
@@ -68,19 +65,17 @@ export default function HeroSection() {
             setDisplayText(prev => prev.slice(0, -1))
           }, getErasingDelay())
         } else {
-          // Done erasing, wait before next prompt
           setState('waiting')
         }
         break
 
       case 'waiting':
         timeoutId = setTimeout(() => {
-          // Move to next prompt
           const nextIndex = (promptIndex + 1) % prompts.length
           setPromptIndex(nextIndex)
           setCharIndex(0)
           setState('typing')
-        }, 500) // 500ms wait
+        }, 500)
         break
     }
 
@@ -93,7 +88,7 @@ export default function HeroSection() {
     <section className="text-center py-16 md:py-24 px-4">
       <div className="min-h-[120px] md:min-h-[160px] flex items-center justify-center mb-6">
         <h1 
-          className="text-3xl md:text-5xl lg:text-6xl text-feedgod-primary dark:text-feedgod-neon-pink lowercase"
+          className="text-3xl md:text-5xl lg:text-6xl gradient-text lowercase"
           style={{ 
             fontFamily: 'Arial, sans-serif', 
             fontWeight: 900, 
@@ -103,13 +98,13 @@ export default function HeroSection() {
         >
           <span className="inline">{displayText}</span>
           <span 
-            className="typewriter-cursor inline-block w-[3px] md:w-[4px] h-[0.9em] bg-feedgod-primary dark:bg-feedgod-neon-cyan ml-1 align-middle"
+            className="typewriter-cursor inline-block w-[3px] md:w-[4px] h-[0.9em] bg-feedgod-primary ml-1 align-middle"
             style={{ marginBottom: '-0.1em' }}
           />
         </h1>
       </div>
-      <p className="text-sm md:text-base text-feedgod-pink-500 dark:text-feedgod-neon-cyan/80 max-w-2xl mx-auto leading-relaxed">
-        <span className="text-feedgod-dark dark:text-white font-medium">Any data. Any chain. No code.</span>
+      <p className="text-sm md:text-base text-gray-400 max-w-2xl mx-auto leading-relaxed">
+        <span className="text-white font-medium">Any data. Any chain. No code.</span>
       </p>
     </section>
   )

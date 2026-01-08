@@ -57,8 +57,8 @@ function CostEstimateDisplay({ blockchain, network }: { blockchain: string; netw
 
   if (isLoading || !estimate) {
     return (
-      <div className="px-4 py-3 bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent">
-        <div className="flex items-center gap-2 text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+      <div className="px-4 py-3 bg-[#252620] rounded-lg border border-[#3a3b35]">
+        <div className="flex items-center gap-2 text-sm text-gray-400">
           <DollarSign className="w-4 h-4 animate-pulse" />
           <span>Calculating cost...</span>
         </div>
@@ -67,14 +67,14 @@ function CostEstimateDisplay({ blockchain, network }: { blockchain: string; netw
   }
 
   return (
-    <div className="px-4 py-3 bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent">
+    <div className="px-4 py-3 bg-[#252620] rounded-lg border border-[#3a3b35]">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+        <div className="flex items-center gap-2 text-sm text-gray-400">
           <DollarSign className="w-4 h-4" />
           <span>Estimated Cost:</span>
         </div>
         <div className="text-right">
-          <div className="text-lg font-bold text-feedgod-primary dark:text-feedgod-neon-pink">
+          <div className="text-lg font-bold gradient-text">
             {estimate.estimatedCost} {estimate.currency}
           </div>
         </div>
@@ -254,17 +254,17 @@ export default function CustomAPIBuilder() {
   return (
     <div className="space-y-6">
       {/* Module Header */}
-      <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
+      <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 via-blue-500 to-purple-500 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 via-feedgod-primary to-feedgod-primary flex items-center justify-center">
               <Globe className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-feedgod-primary dark:text-feedgod-neon-pink">
+              <h2 className="text-xl font-bold gradient-text">
                 Custom API Oracle Builder
               </h2>
-              <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+              <p className="text-sm text-gray-400">
                 Turn any JSON API into an on-chain oracle
               </p>
             </div>
@@ -273,25 +273,25 @@ export default function CustomAPIBuilder() {
           {/* Step indicator */}
           <div className="flex items-center gap-2">
             <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-              step === 'fetch' ? 'bg-feedgod-primary text-white' : 'bg-feedgod-pink-100 dark:bg-feedgod-dark-accent text-feedgod-pink-500'
+              step === 'fetch' ? 'bg-feedgod-primary dark:text-feedgod-primary text-white' : 'bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent text-gray-400'
             }`}>
               1. Fetch
             </div>
-            <ChevronRight className="w-4 h-4 text-feedgod-pink-300" />
+            <ChevronRight className="w-4 h-4 text-feedgod-purple-300 dark:border-feedgod-dark-accent" />
             <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-              step === 'select' ? 'bg-feedgod-primary text-white' : 'bg-feedgod-pink-100 dark:bg-feedgod-dark-accent text-feedgod-pink-500'
+              step === 'select' ? 'bg-feedgod-primary dark:text-feedgod-primary text-white' : 'bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent text-gray-400'
             }`}>
               2. Select
             </div>
-            <ChevronRight className="w-4 h-4 text-feedgod-pink-300" />
+            <ChevronRight className="w-4 h-4 text-feedgod-purple-300 dark:border-feedgod-dark-accent" />
             <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-              step === 'configure' ? 'bg-feedgod-primary text-white' : 'bg-feedgod-pink-100 dark:bg-feedgod-dark-accent text-feedgod-pink-500'
+              step === 'configure' ? 'bg-feedgod-primary dark:text-feedgod-primary text-white' : 'bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent text-gray-400'
             }`}>
               3. Transform
             </div>
-            <ChevronRight className="w-4 h-4 text-feedgod-pink-300" />
+            <ChevronRight className="w-4 h-4 text-feedgod-purple-300 dark:border-feedgod-dark-accent" />
             <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-              step === 'preview' ? 'bg-feedgod-primary text-white' : 'bg-feedgod-pink-100 dark:bg-feedgod-dark-accent text-feedgod-pink-500'
+              step === 'preview' ? 'bg-feedgod-primary dark:text-feedgod-primary text-white' : 'bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent text-gray-400'
             }`}>
               4. Deploy
             </div>
@@ -302,26 +302,26 @@ export default function CustomAPIBuilder() {
       {step === 'fetch' && (
         <div className="space-y-6">
           {/* URL Input */}
-          <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-            <h3 className="text-lg font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+          <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+            <h3 className="text-lg font-semibold gradient-text mb-4">
               Enter API URL
             </h3>
             
             <div className="flex gap-3">
               <div className="flex-1 relative">
-                <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-feedgod-pink-400" />
+                <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-feedgod-secondary/70" />
                 <input
                   type="url"
                   value={config.url || ''}
                   onChange={(e) => handleUrlChange(e.target.value)}
                   placeholder="https://api.example.com/data"
-                  className="w-full pl-10 pr-4 py-3 bg-feedgod-pink-50 dark:bg-feedgod-dark-accent border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg text-feedgod-dark dark:text-white placeholder-feedgod-pink-400 focus:outline-none focus:ring-2 focus:ring-feedgod-primary font-mono text-sm"
+                  className="w-full pl-10 pr-4 py-3 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent border border-[#3a3b35] rounded-lg text-white placeholder-feedgod-feedgod-secondary dark:text-feedgod-secondary/70 focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary font-mono text-sm"
                 />
               </div>
               <select
                 value={config.method || 'GET'}
                 onChange={(e) => setConfig(prev => ({ ...prev, method: e.target.value as 'GET' | 'POST' }))}
-                className="px-4 py-3 bg-feedgod-pink-50 dark:bg-feedgod-dark-accent border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg text-feedgod-dark dark:text-white font-medium"
+                className="px-4 py-3 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent border border-[#3a3b35] rounded-lg text-white font-medium"
               >
                 <option value="GET">GET</option>
                 <option value="POST">POST</option>
@@ -329,7 +329,7 @@ export default function CustomAPIBuilder() {
               <button
                 onClick={handleTest}
                 disabled={isTesting || !config.url}
-                className="px-6 py-3 bg-feedgod-primary hover:bg-feedgod-secondary disabled:opacity-50 rounded-lg text-white font-medium transition-colors flex items-center gap-2"
+                className="px-6 py-3 gradient-bg hover:opacity-90 disabled:opacity-50 rounded-lg text-white font-medium transition-all flex items-center gap-2"
               >
                 {isTesting ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -343,12 +343,12 @@ export default function CustomAPIBuilder() {
             {/* Headers toggle */}
             <button
               onClick={() => setShowHeaders(!showHeaders)}
-              className="mt-4 flex items-center gap-2 text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 hover:text-feedgod-primary transition-colors"
+              className="mt-4 flex items-center gap-2 text-sm text-gray-400 hover:text-feedgod-primary dark:text-feedgod-primary transition-colors"
             >
               <Settings className="w-4 h-4" />
               {showHeaders ? 'Hide' : 'Show'} Headers
               {(config.headers?.length || 0) > 0 && (
-                <span className="px-2 py-0.5 bg-feedgod-primary/20 rounded-full text-xs">
+                <span className="px-2 py-0.5 bg-feedgod-primary dark:text-feedgod-primary/20 rounded-full text-xs">
                   {config.headers?.length}
                 </span>
               )}
@@ -356,7 +356,7 @@ export default function CustomAPIBuilder() {
             
             {/* Headers editor */}
             {showHeaders && (
-              <div className="mt-4 space-y-2 p-4 bg-feedgod-pink-50 dark:bg-feedgod-dark-accent rounded-lg">
+              <div className="mt-4 space-y-2 p-4 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg">
                 {config.headers?.map((header, index) => (
                   <div key={index} className="flex gap-2 items-center">
                     <input
@@ -364,14 +364,14 @@ export default function CustomAPIBuilder() {
                       value={header.key}
                       onChange={(e) => handleUpdateHeader(index, 'key', e.target.value)}
                       placeholder="Header name"
-                      className="flex-1 px-3 py-2 bg-white dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded text-sm font-mono"
+                      className="flex-1 px-3 py-2 bg-feedgod-dark-secondary dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary border border-[#3a3b35] rounded text-sm font-mono"
                     />
                     <input
                       type="text"
                       value={header.value}
                       onChange={(e) => handleUpdateHeader(index, 'value', e.target.value)}
                       placeholder="Value"
-                      className="flex-1 px-3 py-2 bg-white dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded text-sm font-mono"
+                      className="flex-1 px-3 py-2 bg-feedgod-dark-secondary dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary border border-[#3a3b35] rounded text-sm font-mono"
                     />
                     <button
                       onClick={() => handleRemoveHeader(index)}
@@ -383,7 +383,7 @@ export default function CustomAPIBuilder() {
                 ))}
                 <button
                   onClick={handleAddHeader}
-                  className="flex items-center gap-2 text-sm text-feedgod-primary hover:underline"
+                  className="flex items-center gap-2 text-sm text-feedgod-primary dark:text-feedgod-primary hover:underline"
                 >
                   <Plus className="w-4 h-4" />
                   Add Header
@@ -419,8 +419,8 @@ export default function CustomAPIBuilder() {
           )}
 
           {/* API Templates */}
-          <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-            <h3 className="text-lg font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+          <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+            <h3 className="text-lg font-semibold gradient-text mb-4">
               Quick Templates
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -428,15 +428,15 @@ export default function CustomAPIBuilder() {
                 <button
                   key={template.name}
                   onClick={() => handleTemplateSelect(template)}
-                  className={`p-4 rounded-lg border transition-all text-left hover:border-feedgod-primary/50 ${
+                  className={`p-4 rounded-lg border transition-all text-left hover:border-feedgod-primary dark:text-feedgod-primary/50 ${
                     config.url === template.url 
-                      ? 'border-feedgod-primary bg-feedgod-primary/5' 
-                      : 'border-feedgod-pink-200 dark:border-feedgod-dark-accent bg-white/60 dark:bg-feedgod-dark-secondary/60'
+                      ? 'border-feedgod-primary dark:text-feedgod-primary bg-feedgod-primary dark:text-feedgod-primary/5' 
+                      : 'border-[#3a3b35] bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/60'
                   }`}
                 >
                   <span className="text-2xl mb-2 block">{template.icon}</span>
-                  <h4 className="font-medium text-feedgod-dark dark:text-white text-sm">{template.name}</h4>
-                  <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mt-1 truncate">
+                  <h4 className="font-medium text-white text-sm">{template.name}</h4>
+                  <p className="text-xs text-gray-400 mt-1 truncate">
                     {template.description}
                   </p>
                 </button>
@@ -448,8 +448,8 @@ export default function CustomAPIBuilder() {
 
       {step === 'select' && testResult?.success && (
         <div className="space-y-6">
-          <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-            <h3 className="text-lg font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+          <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+            <h3 className="text-lg font-semibold gradient-text mb-4">
               Select Value to Track
             </h3>
             
@@ -462,21 +462,21 @@ export default function CustomAPIBuilder() {
 
           {/* Selected value preview */}
           {config.jsonPath && selectedValue !== undefined && (
-            <div className="bg-gradient-to-br from-cyan-500/10 to-purple-500/10 rounded-lg border border-cyan-400/30 p-6">
-              <h4 className="text-sm font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-3">
+            <div className="bg-gradient-to-br from-cyan-500/10 to-feedgod-primary/10 rounded-lg border border-cyan-400/30 p-6">
+              <h4 className="text-sm font-semibold gradient-text mb-3">
                 Selected Value Preview
               </h4>
               <div className="flex items-center gap-4">
                 <div className="flex-1">
-                  <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mb-1">Path:</p>
-                  <code className="font-mono text-sm text-feedgod-dark dark:text-white bg-white/50 dark:bg-black/20 px-2 py-1 rounded">
+                  <p className="text-xs text-gray-400 mb-1">Path:</p>
+                  <code className="font-mono text-sm text-white bg-feedgod-dark-secondary/50 dark:bg-black/20 px-2 py-1 rounded">
                     {config.jsonPath}
                   </code>
                 </div>
-                <ArrowRight className="w-5 h-5 text-feedgod-pink-400" />
+                <ArrowRight className="w-5 h-5 text-gray-400 dark:text-feedgod-secondary/70" />
                 <div className="flex-1">
-                  <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mb-1">Current Value:</p>
-                  <span className="text-2xl font-bold text-feedgod-primary dark:text-feedgod-neon-pink">
+                  <p className="text-xs text-gray-400 mb-1">Current Value:</p>
+                  <span className="text-2xl font-bold gradient-text">
                     {formatValue(selectedValue)}
                   </span>
                 </div>
@@ -487,14 +487,14 @@ export default function CustomAPIBuilder() {
           <div className="flex gap-3">
             <button
               onClick={handleBack}
-              className="px-4 py-3 text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 hover:text-feedgod-primary transition-colors"
+              className="px-4 py-3 text-gray-400 hover:text-feedgod-primary dark:text-feedgod-primary transition-colors"
             >
               ← Back
             </button>
             <button
               onClick={handleContinueToConfig}
               disabled={!config.jsonPath}
-              className="flex-1 px-4 py-3 bg-feedgod-primary hover:bg-feedgod-secondary disabled:opacity-50 rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2"
+              className="flex-1 px-4 py-3 gradient-bg hover:opacity-90 disabled:opacity-50 rounded-lg text-white font-medium transition-all flex items-center justify-center gap-2"
             >
               Continue to Transform
               <ChevronRight className="w-4 h-4" />
@@ -507,15 +507,15 @@ export default function CustomAPIBuilder() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             {/* Oracle Settings */}
-            <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h3 className="text-lg font-semibold gradient-text mb-4">
                 Oracle Settings
               </h3>
               
               <div className="space-y-4">
                 {/* Oracle Name */}
                 <div>
-                  <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2">
+                  <label className="block text-sm font-medium text-white mb-2">
                     Oracle Name
                   </label>
                   <input
@@ -523,20 +523,20 @@ export default function CustomAPIBuilder() {
                     value={config.name || ''}
                     onChange={(e) => setConfig(prev => ({ ...prev, name: e.target.value }))}
                     placeholder={`Custom API: ${config.url ? new URL(config.url).hostname : 'example.com'}`}
-                    className="w-full bg-feedgod-pink-50 dark:bg-feedgod-dark-accent border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg px-4 py-2 text-feedgod-dark dark:text-white"
+                    className="w-full bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent border border-[#3a3b35] rounded-lg px-4 py-2 text-white"
                   />
                 </div>
                 
                 {/* Update Interval */}
                 <div>
-                  <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2 flex items-center gap-2">
+                  <label className="block text-sm font-medium text-white mb-2 flex items-center gap-2">
                     <Clock className="w-4 h-4" />
                     Update Interval
                   </label>
                   <select
                     value={config.updateInterval}
                     onChange={(e) => setConfig(prev => ({ ...prev, updateInterval: parseInt(e.target.value) }))}
-                    className="w-full bg-feedgod-pink-50 dark:bg-feedgod-dark-accent border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg px-4 py-2 text-feedgod-dark dark:text-white"
+                    className="w-full bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent border border-[#3a3b35] rounded-lg px-4 py-2 text-white"
                   >
                     <option value="10">Every 10 seconds</option>
                     <option value="30">Every 30 seconds</option>
@@ -558,8 +558,8 @@ export default function CustomAPIBuilder() {
             </div>
 
             {/* Value Transforms */}
-            <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h3 className="text-lg font-semibold gradient-text mb-4">
                 Value Transforms (Optional)
               </h3>
               
@@ -569,8 +569,8 @@ export default function CustomAPIBuilder() {
                   {config.transforms.map((transform, index) => {
                     const transformInfo = TRANSFORM_TYPES.find(t => t.value === transform.type)
                     return (
-                      <div key={index} className="flex items-center gap-2 p-3 bg-feedgod-pink-50 dark:bg-feedgod-dark-accent rounded-lg">
-                        <span className="text-sm font-medium text-feedgod-dark dark:text-white">
+                      <div key={index} className="flex items-center gap-2 p-3 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg">
+                        <span className="text-sm font-medium text-white">
                           {transformInfo?.label}
                         </span>
                         {transformInfo?.requiresValue && (
@@ -582,7 +582,7 @@ export default function CustomAPIBuilder() {
                               transform.type === 'round' ? 'decimals' : 'value', 
                               parseFloat(e.target.value)
                             )}
-                            className="w-20 px-2 py-1 bg-white dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded text-sm"
+                            className="w-20 px-2 py-1 bg-feedgod-dark-secondary dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary border border-[#3a3b35] rounded text-sm"
                           />
                         )}
                         <button
@@ -603,7 +603,7 @@ export default function CustomAPIBuilder() {
                   <button
                     key={transform.value}
                     onClick={() => handleAddTransform(transform.value)}
-                    className="px-3 py-1.5 bg-feedgod-pink-100 dark:bg-feedgod-dark-accent hover:bg-feedgod-pink-200 rounded-lg text-sm text-feedgod-dark dark:text-white transition-colors"
+                    className="px-3 py-1.5 bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg text-sm text-white transition-colors"
                   >
                     + {transform.label}
                   </button>
@@ -615,25 +615,25 @@ export default function CustomAPIBuilder() {
           {/* Right sidebar */}
           <div className="space-y-4">
             {/* Live Preview */}
-            <div className="bg-gradient-to-br from-cyan-400/10 via-blue-500/10 to-purple-500/10 rounded-lg border border-cyan-400/20 p-6">
-              <h4 className="text-sm font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+            <div className="bg-gradient-to-br from-cyan-400/10 via-feedgod-primary/10 to-feedgod-primary/10 rounded-lg border border-cyan-400/20 p-6">
+              <h4 className="text-sm font-semibold gradient-text mb-4">
                 Live Value Preview
               </h4>
               
               <div className="space-y-3">
                 <div>
-                  <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mb-1">Raw Value:</p>
-                  <span className="text-lg font-mono text-feedgod-dark dark:text-white">
+                  <p className="text-xs text-gray-400 mb-1">Raw Value:</p>
+                  <span className="text-lg font-mono text-white">
                     {formatValue(selectedValue)}
                   </span>
                 </div>
                 
                 {config.transforms && config.transforms.length > 0 && (
                   <>
-                    <ArrowRight className="w-4 h-4 text-feedgod-pink-400 mx-auto" />
+                    <ArrowRight className="w-4 h-4 text-gray-400 dark:text-feedgod-secondary/70 mx-auto" />
                     <div>
-                      <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mb-1">After Transforms:</p>
-                      <span className="text-2xl font-bold text-feedgod-primary dark:text-feedgod-neon-pink">
+                      <p className="text-xs text-gray-400 mb-1">After Transforms:</p>
+                      <span className="text-2xl font-bold gradient-text">
                         {formatValue(transformedValue)}
                       </span>
                     </div>
@@ -650,14 +650,14 @@ export default function CustomAPIBuilder() {
             <div className="flex flex-col gap-3">
               <button
                 onClick={handlePreview}
-                className="w-full px-4 py-3 bg-feedgod-primary hover:bg-feedgod-secondary rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2"
+                className="w-full px-4 py-3 gradient-bg hover:opacity-90 rounded-lg text-white font-medium transition-all flex items-center justify-center gap-2"
               >
                 Preview & Deploy
                 <ChevronRight className="w-4 h-4" />
               </button>
               <button
                 onClick={handleBack}
-                className="w-full px-4 py-2 text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 hover:text-feedgod-primary transition-colors"
+                className="w-full px-4 py-2 text-sm text-gray-400 hover:text-feedgod-primary dark:text-feedgod-primary transition-colors"
               >
                 Back to Select
               </button>
@@ -670,12 +670,12 @@ export default function CustomAPIBuilder() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Config Preview */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h3 className="text-lg font-semibold gradient-text mb-4">
                 Switchboard Job Definition
               </h3>
               
-              <div className="bg-feedgod-dark dark:bg-black rounded-lg p-4 overflow-x-auto">
+              <div className="bg-feedgod-dark-secondary dark:bg-black rounded-lg p-4 overflow-x-auto">
                 <pre className="text-sm text-green-400 font-mono">
                   {JSON.stringify(generateJobDefinition({
                     url: config.url || '',
@@ -689,8 +689,8 @@ export default function CustomAPIBuilder() {
             </div>
 
             {/* What you're creating */}
-            <div className="bg-gradient-to-br from-cyan-500/10 to-purple-500/10 rounded-lg border border-cyan-400/30 p-6">
-              <h4 className="text-sm font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+            <div className="bg-gradient-to-br from-cyan-500/10 to-feedgod-primary/10 rounded-lg border border-cyan-400/30 p-6">
+              <h4 className="text-sm font-semibold gradient-text mb-4">
                 Oracle Summary
               </h4>
               
@@ -698,26 +698,26 @@ export default function CustomAPIBuilder() {
                 <div className="flex items-start gap-3">
                   <Globe className="w-5 h-5 text-cyan-500 mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium text-feedgod-dark dark:text-white">API Endpoint</p>
-                    <code className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 font-mono break-all">
+                    <p className="text-sm font-medium text-white">API Endpoint</p>
+                    <code className="text-xs text-gray-400 font-mono break-all">
                       {config.url}
                     </code>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <Code className="w-5 h-5 text-blue-500 mt-0.5" />
+                  <Code className="w-5 h-5 text-feedgod-primary mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium text-feedgod-dark dark:text-white">JSONPath</p>
-                    <code className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 font-mono">
+                    <p className="text-sm font-medium text-white">JSONPath</p>
+                    <code className="text-xs text-gray-400 font-mono">
                       {config.jsonPath}
                     </code>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <RefreshCw className="w-5 h-5 text-purple-500 mt-0.5" />
+                  <RefreshCw className="w-5 h-5 text-feedgod-primary mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium text-feedgod-dark dark:text-white">Update Frequency</p>
-                    <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                    <p className="text-sm font-medium text-white">Update Frequency</p>
+                    <p className="text-xs text-gray-400">
                       Every {config.updateInterval} seconds
                     </p>
                   </div>
@@ -726,33 +726,33 @@ export default function CustomAPIBuilder() {
             </div>
 
             {/* Power examples */}
-            <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-              <h4 className="text-sm font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h4 className="text-sm font-semibold gradient-text mb-4">
                 The Power of Custom API Oracles
               </h4>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <div className="p-3 bg-feedgod-pink-50 dark:bg-feedgod-dark-accent rounded-lg">
-                  <p className="font-medium text-feedgod-dark dark:text-white">📈 Any data source</p>
-                  <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                <div className="p-3 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg">
+                  <p className="font-medium text-white">📈 Any data source</p>
+                  <p className="text-xs text-gray-400">
                     Stock prices, game stats, IoT sensors
                   </p>
                 </div>
-                <div className="p-3 bg-feedgod-pink-50 dark:bg-feedgod-dark-accent rounded-lg">
-                  <p className="font-medium text-feedgod-dark dark:text-white">⚡ Real-time updates</p>
-                  <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                <div className="p-3 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg">
+                  <p className="font-medium text-white">⚡ Real-time updates</p>
+                  <p className="text-xs text-gray-400">
                     As frequent as every 10 seconds
                   </p>
                 </div>
-                <div className="p-3 bg-feedgod-pink-50 dark:bg-feedgod-dark-accent rounded-lg">
-                  <p className="font-medium text-feedgod-dark dark:text-white">🔗 Chain-agnostic</p>
-                  <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                <div className="p-3 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg">
+                  <p className="font-medium text-white">🔗 Chain-agnostic</p>
+                  <p className="text-xs text-gray-400">
                     Deploy to Solana, Ethereum, Monad
                   </p>
                 </div>
-                <div className="p-3 bg-feedgod-pink-50 dark:bg-feedgod-dark-accent rounded-lg">
-                  <p className="font-medium text-feedgod-dark dark:text-white">🛠️ Transforms built-in</p>
-                  <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                <div className="p-3 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg">
+                  <p className="font-medium text-white">🛠️ Transforms built-in</p>
+                  <p className="text-xs text-gray-400">
                     Math operations, formatting, precision
                   </p>
                 </div>
@@ -762,33 +762,33 @@ export default function CustomAPIBuilder() {
 
           {/* Right - Actions */}
           <div className="space-y-4">
-            <div className="bg-gradient-to-br from-cyan-400/10 via-blue-500/10 to-purple-500/10 rounded-lg border border-cyan-400/20 p-6">
-              <h4 className="text-sm font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+            <div className="bg-gradient-to-br from-cyan-400/10 via-feedgod-primary/10 to-feedgod-primary/10 rounded-lg border border-cyan-400/20 p-6">
+              <h4 className="text-sm font-semibold gradient-text mb-4">
                 Final Preview
               </h4>
               
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Name</span>
-                  <span className="text-feedgod-dark dark:text-white font-medium truncate max-w-[150px]">
+                  <span className="text-gray-400">Name</span>
+                  <span className="text-white font-medium truncate max-w-[150px]">
                     {config.name || 'Custom API Oracle'}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Current Value</span>
-                  <span className="text-feedgod-primary dark:text-feedgod-neon-pink font-bold">
+                  <span className="text-gray-400">Current Value</span>
+                  <span className="gradient-text font-bold">
                     {formatValue(transformedValue)}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Chain</span>
+                  <span className="text-gray-400">Chain</span>
                   <div className="flex items-center gap-1.5">
                     <img 
                       src={CHAIN_LOGOS[config.blockchain || 'solana']}
                       alt={config.blockchain}
                       className="w-4 h-4 object-contain"
                     />
-                    <span className="text-feedgod-dark dark:text-white font-medium capitalize">
+                    <span className="text-white font-medium capitalize">
                       {config.blockchain}
                     </span>
                   </div>
@@ -804,21 +804,21 @@ export default function CustomAPIBuilder() {
             <div className="flex flex-col gap-3">
               <button
                 onClick={handleDeploy}
-                className="w-full px-4 py-3 bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 rounded-lg text-white font-medium transition-all flex items-center justify-center gap-2"
+                className="w-full px-4 py-3 bg-gradient-to-r from-cyan-500 to-feedgod-primary hover:from-cyan-600 hover:to-feedgod-primary rounded-lg text-white font-medium transition-all flex items-center justify-center gap-2"
               >
                 <Play className="w-4 h-4" />
                 Deploy Oracle
               </button>
               <button
                 onClick={handleSave}
-                className="w-full px-4 py-3 bg-feedgod-pink-100 dark:bg-feedgod-dark-accent hover:bg-feedgod-pink-200 rounded-lg text-feedgod-dark dark:text-white font-medium transition-colors flex items-center justify-center gap-2"
+                className="w-full px-4 py-3 bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2"
               >
                 <Save className="w-4 h-4" />
                 Save Configuration
               </button>
               <button
                 onClick={handleBack}
-                className="w-full px-4 py-2 text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 hover:text-feedgod-primary transition-colors"
+                className="w-full px-4 py-2 text-sm text-gray-400 hover:text-feedgod-primary dark:text-feedgod-primary transition-colors"
               >
                 Back to Configure
               </button>
@@ -829,4 +829,5 @@ export default function CustomAPIBuilder() {
     </div>
   )
 }
+
 

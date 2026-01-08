@@ -16,7 +16,7 @@ export default function OracleSparkline({
   data,
   width = 120,
   height = 40,
-  color = '#ec4899', // feedgod pink
+  color = '#ff0d6e', // feedgod pink
   showArea = true,
   className = '',
 }: OracleSparklineProps) {
@@ -61,7 +61,7 @@ export default function OracleSparkline({
   if (data.length < 2) {
     return (
       <div 
-        className={`flex items-center justify-center text-feedgod-pink-400 text-xs ${className}`}
+        className={`flex items-center justify-center text-gray-500 text-xs ${className}`}
         style={{ width, height }}
       >
         No data
@@ -113,4 +113,5 @@ export default function OracleSparkline({
     </svg>
   )
 }
+
 
