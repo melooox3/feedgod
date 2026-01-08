@@ -9,7 +9,6 @@ import { useCostEstimate } from '@/lib/use-cost-estimate'
 import ChainSelector from './ChainSelector'
 import CustomSourceModal from './CustomSourceModal'
 import { 
-  createPriceFeed, 
   DeploymentResult, 
   getSolscanLink, 
   generateIntegrationCode,
@@ -496,12 +495,6 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
       return
     }
     
-    // Check if Solana is selected (only Solana supported for now)
-    if (localConfig.blockchain !== 'solana') {
-      alert('Currently, only Solana deployment is supported. Please select Solana as the blockchain.')
-      return
-    }
-    
     setIsDeploying(true)
     setShowDeploymentModal(true)
     setDeploymentResult(null)
@@ -515,8 +508,18 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
         dataSources: localConfig.dataSources.filter(s => s.enabled),
       }
       
-      // Call the Switchboard deployment function
-      const result = await createPriceFeed(deployConfig, wallet)
+      // Demo mode - simulate deployment
+      // In production, this would call the actual Switchboard SDK
+      await new Promise(resolve => setTimeout(resolve, 2000)) // Simulate network delay
+      
+      // Generate a demo public key
+      const demoPublicKey = `Demo${Math.random().toString(36).substring(2, 10)}...${localConfig.symbol.replace('/', '')}`
+      
+      const result: DeploymentResult = {
+        success: true,
+        publicKey: demoPublicKey,
+        signature: `demo_sig_${Date.now()}`,
+      }
       
       console.log('[FeedBuilder] Deployment result:', result)
       
