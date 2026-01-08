@@ -11,7 +11,7 @@ const prompts = [
   "build CS2 match outcome resolver",
   "aggregate 5 exchanges with median pricing",
   "pipe Kalshi odds into smart contracts",
-  "stream Twitter followers on-chain",
+  "stream X followers on-chain",
   "monitor NBA game outcomes",
   "build YouTube subscriber tracker",
   "oracle any API endpoint",

@@ -253,16 +253,16 @@ const oracleMetadata: Omit<Oracle, 'currentValue'>[] = [
   // Functions
   {
     id: '16',
-    name: 'Twitter Follower Count',
+    name: 'X Follower Count',
     type: 'function',
-    symbol: 'FUNC-TWTR',
+    symbol: 'FUNC-X',
     network: 'solana-mainnet',
     publicKey: 'SWBfuncTWTRfeedTUV678WXYza901BCDef234GHI',
     lastUpdate: new Date().toISOString(),
     sources: ['twitter-api'],
     creator: '4hIJkl789MNOpqr012STUvwx345YZAbcd678',
     createdAt: '2024-11-01T00:00:00Z',
-    description: 'Fetch and verify Twitter follower counts on-chain',
+    description: 'Fetch and verify X follower counts on-chain',
     updateInterval: 3600,
     decimals: 0,
     status: 'active'

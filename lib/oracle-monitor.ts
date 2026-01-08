@@ -191,7 +191,7 @@ const oracleMetadata: Omit<MonitoredOracle, 'history' | 'change24h' | 'changeDir
     lastUpdate: new Date(),
     updateInterval: 3600,
     alerts: [],
-    source: 'Twitter/X',
+    source: 'X',
   },
   {
     id: 'github-stars-1',
@@ -463,17 +463,19 @@ export function getTimeSinceUpdate(lastUpdate: Date): string {
   return `${Math.floor(seconds / 86400)}d ago`
 }
 
-// Get type icon
-export function getTypeIcon(type: MonitoredOracle['type']): string {
+// Get type icon name (Lucide icon name)
+export type OracleIconName = 'BarChart3' | 'Target' | 'Cloud' | 'Trophy' | 'Users' | 'Brain' | 'Globe' | 'TrendingUp'
+
+export function getTypeIconName(type: MonitoredOracle['type']): OracleIconName {
   switch (type) {
-    case 'feed': return '📊'
-    case 'prediction': return '🎯'
-    case 'weather': return '🌤️'
-    case 'sports': return '🏆'
-    case 'social': return '👥'
-    case 'ai-judge': return '🧠'
-    case 'custom-api': return '🌐'
-    default: return '📈'
+    case 'feed': return 'BarChart3'
+    case 'prediction': return 'Target'
+    case 'weather': return 'Cloud'
+    case 'sports': return 'Trophy'
+    case 'social': return 'Users'
+    case 'ai-judge': return 'Brain'
+    case 'custom-api': return 'Globe'
+    default: return 'TrendingUp'
   }
 }
 

@@ -18,16 +18,38 @@ import {
   AlertCircle,
   ArrowRight,
   Code,
-  RefreshCw
+  RefreshCw,
+  Bitcoin,
+  Coins,
+  Thermometer,
+  Star,
+  Smartphone,
+  ArrowLeftRight,
+  Dices,
+  TrendingUp,
+  LucideIcon
 } from 'lucide-react'
 import { 
   CustomAPIConfig,
   APIHeader,
   APITestResult,
   TransformStep,
+  APIIconName,
   API_TEMPLATES,
   TRANSFORM_TYPES
 } from '@/types/custom-api'
+
+// API template icon mapping
+const API_ICON_MAP: Record<APIIconName, LucideIcon> = {
+  Bitcoin,
+  Coins,
+  Thermometer,
+  Star,
+  Smartphone,
+  ArrowLeftRight,
+  Globe,
+  Dices,
+}
 import { Blockchain, Network } from '@/types/feed'
 import { 
   testEndpoint, 
@@ -424,23 +446,31 @@ export default function CustomAPIBuilder() {
               Quick Templates
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {API_TEMPLATES.map((template) => (
-                <button
-                  key={template.name}
-                  onClick={() => handleTemplateSelect(template)}
-                  className={`p-4 rounded-lg border transition-all text-left hover:border-feedgod-primary dark:text-feedgod-primary/50 ${
-                    config.url === template.url 
-                      ? 'border-feedgod-primary dark:text-feedgod-primary bg-feedgod-primary dark:text-feedgod-primary/5' 
-                      : 'border-[#3a3b35] bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/60'
-                  }`}
-                >
-                  <span className="text-2xl mb-2 block">{template.icon}</span>
-                  <h4 className="font-medium text-white text-sm">{template.name}</h4>
-                  <p className="text-xs text-gray-400 mt-1 truncate">
-                    {template.description}
-                  </p>
-                </button>
-              ))}
+              {API_TEMPLATES.map((template) => {
+                const TemplateIcon = API_ICON_MAP[template.iconName]
+                return (
+                  <button
+                    key={template.name}
+                    onClick={() => handleTemplateSelect(template)}
+                    className={`p-4 rounded-lg border transition-all text-left hover:border-feedgod-primary dark:text-feedgod-primary/50 ${
+                      config.url === template.url 
+                        ? 'border-feedgod-primary dark:text-feedgod-primary bg-feedgod-primary dark:text-feedgod-primary/5' 
+                        : 'border-[#3a3b35] bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/60'
+                    }`}
+                  >
+                    <div className="mb-2 flex items-center gap-2">
+                      <TemplateIcon className="w-6 h-6 text-feedgod-primary" />
+                      {template.symbol && (
+                        <span className="text-lg font-bold text-white">{template.symbol}</span>
+                      )}
+                    </div>
+                    <h4 className="font-medium text-white text-sm">{template.name}</h4>
+                    <p className="text-xs text-gray-400 mt-1 truncate">
+                      {template.description}
+                    </p>
+                  </button>
+                )
+              })}
             </div>
           </div>
         </div>
@@ -732,29 +762,41 @@ export default function CustomAPIBuilder() {
               </h4>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <div className="p-3 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg">
-                  <p className="font-medium text-white">📈 Any data source</p>
-                  <p className="text-xs text-gray-400">
-                    Stock prices, game stats, IoT sensors
-                  </p>
+                <div className="p-3 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg flex items-start gap-2">
+                  <TrendingUp className="w-4 h-4 text-feedgod-primary flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-medium text-white">Any data source</p>
+                    <p className="text-xs text-gray-400">
+                      Stock prices, game stats, IoT sensors
+                    </p>
+                  </div>
                 </div>
-                <div className="p-3 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg">
-                  <p className="font-medium text-white">⚡ Real-time updates</p>
-                  <p className="text-xs text-gray-400">
-                    As frequent as every 10 seconds
-                  </p>
+                <div className="p-3 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg flex items-start gap-2">
+                  <Zap className="w-4 h-4 text-feedgod-primary flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-medium text-white">Real-time updates</p>
+                    <p className="text-xs text-gray-400">
+                      As frequent as every 10 seconds
+                    </p>
+                  </div>
                 </div>
-                <div className="p-3 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg">
-                  <p className="font-medium text-white">🔗 Chain-agnostic</p>
-                  <p className="text-xs text-gray-400">
-                    Deploy to Solana, Ethereum, Monad
-                  </p>
+                <div className="p-3 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg flex items-start gap-2">
+                  <Link2 className="w-4 h-4 text-feedgod-primary flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-medium text-white">Chain-agnostic</p>
+                    <p className="text-xs text-gray-400">
+                      Deploy to Solana, Ethereum, Monad
+                    </p>
+                  </div>
                 </div>
-                <div className="p-3 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg">
-                  <p className="font-medium text-white">🛠️ Transforms built-in</p>
-                  <p className="text-xs text-gray-400">
-                    Math operations, formatting, precision
-                  </p>
+                <div className="p-3 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg flex items-start gap-2">
+                  <Settings className="w-4 h-4 text-feedgod-primary flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-medium text-white">Transforms built-in</p>
+                    <p className="text-xs text-gray-400">
+                      Math operations, formatting, precision
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

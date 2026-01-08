@@ -206,20 +206,23 @@ export function getWeatherDescription(code: number): string {
   return descriptions[code] || 'Unknown'
 }
 
+// Weather icon names for Lucide
+export type WeatherIconType = 'Sun' | 'CloudSun' | 'CloudFog' | 'CloudRain' | 'Snowflake' | 'CloudSnow' | 'CloudLightning' | 'Thermometer'
+
 /**
- * Get weather icon based on code
+ * Get weather icon name based on code
  */
-export function getWeatherIcon(code: number): string {
-  if (code === 0) return '☀️'
-  if (code <= 3) return '⛅'
-  if (code <= 48) return '🌫️'
-  if (code <= 55) return '🌧️'
-  if (code <= 65) return '🌧️'
-  if (code <= 77) return '❄️'
-  if (code <= 82) return '🌧️'
-  if (code <= 86) return '🌨️'
-  if (code >= 95) return '⛈️'
-  return '🌡️'
+export function getWeatherIconName(code: number): WeatherIconType {
+  if (code === 0) return 'Sun'
+  if (code <= 3) return 'CloudSun'
+  if (code <= 48) return 'CloudFog'
+  if (code <= 55) return 'CloudRain'
+  if (code <= 65) return 'CloudRain'
+  if (code <= 77) return 'Snowflake'
+  if (code <= 82) return 'CloudRain'
+  if (code <= 86) return 'CloudSnow'
+  if (code >= 95) return 'CloudLightning'
+  return 'Thermometer'
 }
 
 /**

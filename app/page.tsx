@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Database, Code, Dice6, Key, ArrowLeft, Plus, Target, TrendingUp, Scale, Terminal, Sparkles, Shield, Cloud, Thermometer, Trophy, Gamepad2, Users, Heart, AtSign, Brain, Zap, Globe, Link2 } from 'lucide-react'
+import { Database, Code, Dice6, Key, ArrowLeft, Plus, Target, TrendingUp, Scale, Terminal, Sparkles, Shield, Cloud, Thermometer, Trophy, Gamepad2, Users, Heart, AtSign, Brain, Zap, Globe, Link2, Landmark, Vote } from 'lucide-react'
 import FeedBuilder from '@/components/FeedBuilder'
 import FunctionBuilder from '@/components/FunctionBuilder'
 import VRFBuilder from '@/components/VRFBuilder'
@@ -12,6 +12,7 @@ import SportsBuilder from '@/components/SportsBuilder'
 import SocialBuilder from '@/components/SocialBuilder'
 import AIJudgeBuilder from '@/components/AIJudgeBuilder'
 import CustomAPIBuilder from '@/components/CustomAPIBuilder'
+import GovernanceBuilder from '@/components/GovernanceBuilder'
 import CommandBar from '@/components/CommandBar'
 import Header from '@/components/Header'
 import HeroSection from '@/components/HeroSection'
@@ -44,6 +45,13 @@ const MODULES = [
     backgroundIcon: Gamepad2,
   },
   {
+    id: 'governance' as BuilderType,
+    title: 'Governance Oracle',
+    description: 'Create oracles that trigger DAO actions based on real-world data. If this, then DAO.',
+    icon: Landmark,
+    backgroundIcon: Vote,
+  },
+  {
     id: 'ai-judge' as BuilderType,
     title: 'AI Judge',
     description: 'Any question → on-chain answer. AI resolves real-world events without custom code.',
@@ -67,7 +75,7 @@ const MODULES = [
   {
     id: 'social' as BuilderType,
     title: 'Social Media',
-    description: 'Track Twitter, YouTube, and TikTok metrics on-chain. Followers, engagement, viral content.',
+    description: 'Track X, YouTube, and TikTok metrics on-chain. Followers, engagement, viral content.',
     icon: Users,
     backgroundIcon: Heart,
   },
@@ -239,6 +247,8 @@ export default function Home() {
         return <AIJudgeBuilder />
       case 'custom-api':
         return <CustomAPIBuilder />
+      case 'governance':
+        return <GovernanceBuilder />
       default:
         return null
     }

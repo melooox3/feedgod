@@ -20,18 +20,53 @@ import {
   Plus,
   X,
   Zap,
-  Target
+  Target,
+  Scale,
+  Hash,
+  ListChecks,
+  FileText,
+  Newspaper,
+  BookOpen,
+  Cloud,
+  Trophy,
+  TrendingUp,
+  Landmark,
+  Link,
+  LucideIcon
 } from 'lucide-react'
+import XLogo from './XLogo'
 import { 
   AIJudgeConfig,
   AIResolutionRequest,
   AIResolutionResponse,
   ResolutionType,
   TrustedSource,
+  ResolutionIconName,
+  SourceIconName,
   RESOLUTION_TYPES,
   TRUSTED_SOURCES,
   EXAMPLE_QUESTIONS
 } from '@/types/ai-judge'
+
+// Resolution type icon mapping
+const RESOLUTION_ICON_MAP: Record<ResolutionIconName, LucideIcon> = {
+  Scale,
+  Hash,
+  ListChecks,
+  FileText,
+}
+
+// Source icon mapping (XLogo is custom for X/Twitter, others from Lucide)
+const SOURCE_ICON_MAP: Record<SourceIconName, LucideIcon | typeof XLogo> = {
+  Newspaper,
+  XLogo,
+  BookOpen,
+  Cloud,
+  Trophy,
+  TrendingUp,
+  Landmark,
+  Link,
+}
 import { Blockchain, Network } from '@/types/feed'
 import { playPickupSound } from '@/lib/sound-utils'
 import { useCostEstimate } from '@/lib/use-cost-estimate'
@@ -109,23 +144,28 @@ function ResolutionTypeSelector({
 }) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-      {RESOLUTION_TYPES.map((type) => (
-        <button
-          key={type.value}
-          onClick={() => { playPickupSound(); onSelect(type.value); }}
-          className={`p-4 rounded-xl border-2 transition-all text-left ${
-            selected === type.value
-              ? 'border-feedgod-primary dark:text-feedgod-primary dark:border-feedgod-primary dark:text-feedgod-primary bg-feedgod-primary dark:text-feedgod-primary/5'
-              : 'border-[#3a3b35] bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 hover:border-feedgod-primary dark:text-feedgod-primary/50'
-          }`}
-        >
-          <span className="text-2xl mb-2 block">{type.icon}</span>
-          <h4 className="font-semibold text-white text-sm">{type.label}</h4>
-          <p className="text-xs text-gray-400 mt-1">
-            {type.description}
-          </p>
-        </button>
-      ))}
+      {RESOLUTION_TYPES.map((type) => {
+        const TypeIcon = RESOLUTION_ICON_MAP[type.iconName]
+        return (
+          <button
+            key={type.value}
+            onClick={() => { playPickupSound(); onSelect(type.value); }}
+            className={`p-4 rounded-xl border-2 transition-all text-left ${
+              selected === type.value
+                ? 'border-feedgod-primary dark:text-feedgod-primary dark:border-feedgod-primary dark:text-feedgod-primary bg-feedgod-primary dark:text-feedgod-primary/5'
+                : 'border-[#3a3b35] bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 hover:border-feedgod-primary dark:text-feedgod-primary/50'
+            }`}
+          >
+            <div className="mb-2">
+              <TypeIcon className="w-7 h-7 text-feedgod-primary" />
+            </div>
+            <h4 className="font-semibold text-white text-sm">{type.label}</h4>
+            <p className="text-xs text-gray-400 mt-1">
+              {type.description}
+            </p>
+          </button>
+        )
+      })}
     </div>
   )
 }
@@ -140,20 +180,23 @@ function SourceSelector({
 }) {
   return (
     <div className="flex flex-wrap gap-2">
-      {TRUSTED_SOURCES.map((source) => (
-        <button
-          key={source.value}
-          onClick={() => { playPickupSound(); onToggle(source.value); }}
-          className={`px-3 py-2 rounded-lg border transition-all flex items-center gap-2 ${
-            selected.includes(source.value)
-              ? 'border-feedgod-primary dark:text-feedgod-primary dark:border-feedgod-primary dark:text-feedgod-primary bg-feedgod-primary dark:text-feedgod-primary/10 gradient-text'
-              : 'border-[#3a3b35] bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 text-white hover:border-feedgod-primary dark:text-feedgod-primary/50'
-          }`}
-        >
-          <span>{source.icon}</span>
-          <span className="text-sm font-medium">{source.label}</span>
-        </button>
-      ))}
+      {TRUSTED_SOURCES.map((source) => {
+        const SourceIcon = SOURCE_ICON_MAP[source.iconName]
+        return (
+          <button
+            key={source.value}
+            onClick={() => { playPickupSound(); onToggle(source.value); }}
+            className={`px-3 py-2 rounded-lg border transition-all flex items-center gap-2 ${
+              selected.includes(source.value)
+                ? 'border-feedgod-primary dark:text-feedgod-primary dark:border-feedgod-primary dark:text-feedgod-primary bg-feedgod-primary dark:text-feedgod-primary/10 gradient-text'
+                : 'border-[#3a3b35] bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 text-white hover:border-feedgod-primary dark:text-feedgod-primary/50'
+            }`}
+          >
+            <SourceIcon className="w-4 h-4" />
+            <span className="text-sm font-medium">{source.label}</span>
+          </button>
+        )
+      })}
     </div>
   )
 }
@@ -728,14 +771,26 @@ export default function AIJudgeBuilder() {
                 "{config.question}"
               </p>
               <div className="mt-4 flex flex-wrap gap-2 text-xs">
-                <span className="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded">
-                  {RESOLUTION_TYPES.find(t => t.value === config.resolutionType)?.icon} {config.resolutionType}
-                </span>
-                {config.trustedSources?.map(source => (
-                  <span key={source} className="px-2 py-1 bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent text-white rounded">
-                    {TRUSTED_SOURCES.find(s => s.value === source)?.icon} {source}
-                  </span>
-                ))}
+                {(() => {
+                  const resType = RESOLUTION_TYPES.find(t => t.value === config.resolutionType)
+                  if (!resType) return null
+                  const ResIcon = RESOLUTION_ICON_MAP[resType.iconName]
+                  return (
+                    <span className="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded flex items-center gap-1">
+                      <ResIcon className="w-3 h-3" /> {config.resolutionType}
+                    </span>
+                  )
+                })()}
+                {config.trustedSources?.map(source => {
+                  const sourceInfo = TRUSTED_SOURCES.find(s => s.value === source)
+                  if (!sourceInfo) return null
+                  const SrcIcon = SOURCE_ICON_MAP[sourceInfo.iconName]
+                  return (
+                    <span key={source} className="px-2 py-1 bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent text-white rounded flex items-center gap-1">
+                      <SrcIcon className="w-3 h-3" /> {source}
+                    </span>
+                  )
+                })}
               </div>
             </div>
           </div>

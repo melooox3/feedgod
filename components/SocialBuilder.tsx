@@ -19,17 +19,29 @@ import {
   AtSign,
   Link as LinkIcon,
   TrendingUp,
-  Zap
+  Zap,
+  Youtube,
+  Music,
+  LucideIcon
 } from 'lucide-react'
+import XLogo from './XLogo'
 import { 
   SocialPlatform, 
   SocialProfile,
   SocialOracleConfig,
   SocialMetric,
+  SocialIconName,
   SOCIAL_PLATFORMS,
   POPULAR_ACCOUNTS,
   getMetricsForPlatform
 } from '@/types/social'
+
+// Social platform icon mapping (XLogo is custom for X/Twitter, others from Lucide)
+const SOCIAL_ICON_MAP: Record<SocialIconName, LucideIcon | typeof XLogo> = {
+  XLogo,
+  Youtube,
+  Music,
+}
 import { Blockchain, Network } from '@/types/feed'
 import { 
   fetchSocialProfile, 
@@ -103,11 +115,10 @@ function PlatformCard({
       }`}
     >
       <div className={`w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br ${platform.color} flex items-center justify-center mb-3 shadow-lg`}>
-        {platform.value === 'twitter' ? (
-          <span className="text-3xl font-black text-white drop-shadow-md">𝕏</span>
-        ) : (
-          <span className="text-3xl">{platform.icon}</span>
-        )}
+        {(() => {
+          const PlatformIcon = SOCIAL_ICON_MAP[platform.iconName]
+          return <PlatformIcon className="w-8 h-8 text-white" />
+        })()}
       </div>
       <h3 className="font-bold text-white">{platform.label}</h3>
       <p className="text-xs text-gray-400 mt-1">
@@ -145,10 +156,13 @@ function ProfilePreview({ profile, selectedMetric }: { profile: SocialProfile; s
         <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${platformInfo?.color || 'from-gray-400 to-gray-600'} flex items-center justify-center flex-shrink-0 shadow-lg`}>
           {profile.profileImage ? (
             <img src={profile.profileImage} alt="" className="w-full h-full object-cover rounded-xl" />
-          ) : profile.platform === 'twitter' ? (
-            <span className="text-2xl font-black text-white drop-shadow-md">𝕏</span>
+          ) : platformInfo?.iconName ? (
+            (() => {
+              const PlatformIcon = SOCIAL_ICON_MAP[platformInfo.iconName]
+              return <PlatformIcon className="w-7 h-7 text-white" />
+            })()
           ) : (
-            <span className="text-2xl">{platformInfo?.icon}</span>
+            <User className="w-7 h-7 text-white" />
           )}
         </div>
         <div className="flex-1 min-w-0">
@@ -383,7 +397,7 @@ export default function SocialBuilder() {
                 Social Media Oracle Builder
               </h2>
               <p className="text-sm text-gray-400">
-                Track Twitter, YouTube, and TikTok metrics on-chain
+                Track X, YouTube, and TikTok metrics on-chain
               </p>
             </div>
           </div>

@@ -17,19 +17,47 @@ import {
   Sun,
   CloudRain,
   Snowflake,
-  DollarSign
+  DollarSign,
+  ThermometerSnowflake,
+  CloudSun,
+  CloudFog,
+  CloudSnow,
+  CloudLightning,
+  LucideIcon
 } from 'lucide-react'
-import { City, WeatherMetric, WeatherOracleConfig, WEATHER_METRICS, WeatherData } from '@/types/weather'
+import { City, WeatherMetric, WeatherOracleConfig, WEATHER_METRICS, WeatherData, WeatherIconName } from '@/types/weather'
+
+// Weather metric icon mapping
+const WEATHER_ICON_MAP: Record<WeatherIconName, LucideIcon> = {
+  Thermometer,
+  ThermometerSnowflake,
+  CloudRain,
+  Droplets,
+  Wind,
+}
 import { Blockchain, Network } from '@/types/feed'
 import { SORTED_CITIES } from '@/data/cities'
 import { 
   fetchCurrentWeather, 
   fetchForecast, 
   fetchHistoricalWeather,
-  getWeatherIcon,
+  getWeatherIconName,
+  WeatherIconType,
   formatWeatherValue,
   formatTemperature
 } from '@/lib/weather-api'
+
+// Weather condition icon mapping (for weather codes)
+const WEATHER_CONDITION_ICONS: Record<WeatherIconType, LucideIcon> = {
+  Sun,
+  CloudSun,
+  CloudFog,
+  CloudRain,
+  Snowflake,
+  CloudSnow,
+  CloudLightning,
+  Thermometer,
+}
 import { playPickupSound } from '@/lib/sound-utils'
 import { useCostEstimate } from '@/lib/use-cost-estimate'
 import ChainSelector from './ChainSelector'
@@ -77,9 +105,10 @@ function CostEstimateDisplay({ blockchain, network }: { blockchain: string; netw
 
 // Weather icon component
 function WeatherIcon({ code, size = 'md' }: { code?: number; size?: 'sm' | 'md' | 'lg' }) {
-  const sizeClasses = { sm: 'text-2xl', md: 'text-4xl', lg: 'text-6xl' }
-  const icon = code !== undefined ? getWeatherIcon(code) : '🌡️'
-  return <span className={sizeClasses[size]}>{icon}</span>
+  const sizeClasses = { sm: 'w-6 h-6', md: 'w-10 h-10', lg: 'w-16 h-16' }
+  const iconName = code !== undefined ? getWeatherIconName(code) : 'Thermometer'
+  const IconComponent = WEATHER_CONDITION_ICONS[iconName]
+  return <IconComponent className={`${sizeClasses[size]} text-feedgod-primary`} />
 }
 
 // Metric icon
@@ -382,24 +411,29 @@ export default function WeatherBuilder() {
               </h3>
               
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {WEATHER_METRICS.map((metric) => (
-                  <button
-                    key={metric.value}
-                    onClick={() => {
-                      playPickupSound()
-                      setSelectedMetric(metric.value)
-                    }}
-                    className={`p-4 rounded-lg border transition-all ${
-                      selectedMetric === metric.value
-                        ? 'bg-feedgod-primary dark:text-feedgod-primary/10 border-feedgod-primary dark:text-feedgod-primary dark:border-feedgod-primary dark:text-feedgod-primary'
-                        : 'bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent border-[#3a3b35] hover:border-feedgod-primary dark:text-feedgod-primary/50'
-                    }`}
-                  >
-                    <div className="text-2xl mb-2">{metric.icon}</div>
-                    <p className="text-sm font-medium text-white">{metric.label}</p>
-                    <p className="text-xs text-gray-400">{metric.unit}</p>
-                  </button>
-                ))}
+                {WEATHER_METRICS.map((metric) => {
+                  const MetricIcon = WEATHER_ICON_MAP[metric.iconName] || Thermometer
+                  return (
+                    <button
+                      key={metric.value}
+                      onClick={() => {
+                        playPickupSound()
+                        setSelectedMetric(metric.value)
+                      }}
+                      className={`p-4 rounded-lg border transition-all ${
+                        selectedMetric === metric.value
+                          ? 'bg-feedgod-primary dark:text-feedgod-primary/10 border-feedgod-primary dark:text-feedgod-primary dark:border-feedgod-primary dark:text-feedgod-primary'
+                          : 'bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent border-[#3a3b35] hover:border-feedgod-primary dark:text-feedgod-primary/50'
+                      }`}
+                    >
+                      <div className="mb-2">
+                        <MetricIcon className="w-8 h-8 text-feedgod-primary" />
+                      </div>
+                      <p className="text-sm font-medium text-white">{metric.label}</p>
+                      <p className="text-xs text-gray-400">{metric.unit}</p>
+                    </button>
+                  )
+                })}
               </div>
             </div>
 

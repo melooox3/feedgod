@@ -8,7 +8,7 @@ import Footer from '@/components/Footer'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Feedgod - Omnipotent Data Feeds for Mere Mortals',
+  title: 'feedgod - by Switchboard',
   description: 'Build custom Switchboard oracle feeds with AI assistance. Simple, fast, and intuitive.',
 }
 

@@ -4,6 +4,9 @@ export type HttpMethod = 'GET' | 'POST'
 
 export type TransformType = 'none' | 'multiply' | 'divide' | 'round' | 'floor' | 'ceil' | 'abs' | 'percentage'
 
+// Icon names from Lucide
+export type APIIconName = 'Bitcoin' | 'Coins' | 'Thermometer' | 'Star' | 'Smartphone' | 'ArrowLeftRight' | 'Globe' | 'Dices'
+
 export interface APIHeader {
   key: string
   value: string
@@ -60,7 +63,8 @@ export interface APITemplate {
   headers: APIHeader[]
   suggestedPath: string
   category: string
-  icon: string
+  iconName: APIIconName
+  symbol?: string // Optional text symbol like ₿ or Ξ
 }
 
 export const API_TEMPLATES: APITemplate[] = [
@@ -72,7 +76,8 @@ export const API_TEMPLATES: APITemplate[] = [
     headers: [],
     suggestedPath: '$.bitcoin.usd',
     category: 'Crypto',
-    icon: '₿',
+    iconName: 'Bitcoin',
+    symbol: '₿',
   },
   {
     name: 'CoinGecko ETH Price',
@@ -82,7 +87,8 @@ export const API_TEMPLATES: APITemplate[] = [
     headers: [],
     suggestedPath: '$.ethereum.usd',
     category: 'Crypto',
-    icon: 'Ξ',
+    iconName: 'Coins',
+    symbol: 'Ξ',
   },
   {
     name: 'Open-Meteo Weather',
@@ -92,7 +98,7 @@ export const API_TEMPLATES: APITemplate[] = [
     headers: [],
     suggestedPath: '$.current_weather.temperature',
     category: 'Weather',
-    icon: '🌡️',
+    iconName: 'Thermometer',
   },
   {
     name: 'GitHub Repo Stars',
@@ -102,7 +108,7 @@ export const API_TEMPLATES: APITemplate[] = [
     headers: [],
     suggestedPath: '$.stargazers_count',
     category: 'Social',
-    icon: '⭐',
+    iconName: 'Star',
   },
   {
     name: 'Reddit Subreddit Subscribers',
@@ -112,7 +118,7 @@ export const API_TEMPLATES: APITemplate[] = [
     headers: [{ key: 'User-Agent', value: 'FeedGod/1.0', enabled: true }],
     suggestedPath: '$.data.subscribers',
     category: 'Social',
-    icon: '📱',
+    iconName: 'Smartphone',
   },
   {
     name: 'Exchange Rate (USD/EUR)',
@@ -122,7 +128,7 @@ export const API_TEMPLATES: APITemplate[] = [
     headers: [],
     suggestedPath: '$.rates.EUR',
     category: 'Finance',
-    icon: '💱',
+    iconName: 'ArrowLeftRight',
   },
   {
     name: 'IP Geolocation',
@@ -132,7 +138,7 @@ export const API_TEMPLATES: APITemplate[] = [
     headers: [],
     suggestedPath: '$.country_name',
     category: 'Utility',
-    icon: '🌍',
+    iconName: 'Globe',
   },
   {
     name: 'Random Number (1-100)',
@@ -142,7 +148,7 @@ export const API_TEMPLATES: APITemplate[] = [
     headers: [],
     suggestedPath: '$', // Plain text response
     category: 'Utility',
-    icon: '🎲',
+    iconName: 'Dices',
   },
 ]
 
@@ -161,5 +167,4 @@ export const TRANSFORM_TYPES: {
   { value: 'abs', label: 'Absolute', description: 'Convert to positive', requiresValue: false },
   { value: 'percentage', label: 'To Percentage', description: 'Multiply by 100', requiresValue: false },
 ]
-
 

@@ -22,7 +22,13 @@ import {
   BarChart3,
   ArrowUp,
   ArrowDown,
-  BellOff
+  BellOff,
+  Trophy,
+  Users,
+  Brain,
+  Globe,
+  TrendingUp,
+  LucideIcon
 } from 'lucide-react'
 import Header from '@/components/Header'
 import OracleCard from '@/components/OracleCard'
@@ -38,7 +44,8 @@ import {
   calculateDashboardStats,
   formatOracleValue,
   getStatusBg,
-  getTypeIcon,
+  getTypeIconName,
+  OracleIconName,
   getTimeSinceUpdate,
   getMonitoredPriceSymbols,
   updateOraclesWithRealPrices
@@ -101,12 +108,27 @@ function StatCard({
   )
 }
 
+// Map oracle icon names to Lucide components
+const ORACLE_ICON_MAP: Record<OracleIconName, LucideIcon> = {
+  BarChart3,
+  Target,
+  Cloud,
+  Trophy,
+  Users,
+  Brain,
+  Globe,
+  TrendingUp,
+}
+
 // Compact list row for dashboard
 function OracleListRow({ oracle, onRefresh }: { oracle: MonitoredOracle; onRefresh: () => void }) {
   const changeColor = oracle.changeDirection === 'up' ? 'text-emerald-500' : 
                       oracle.changeDirection === 'down' ? 'text-red-500' : 'text-gray-400'
   const ChangeIcon = oracle.changeDirection === 'up' ? ArrowUp : 
                      oracle.changeDirection === 'down' ? ArrowDown : null
+  
+  const iconName = getTypeIconName(oracle.type)
+  const TypeIcon = ORACLE_ICON_MAP[iconName]
 
   return (
     <div className="flex items-center gap-4 px-4 py-3 hover:bg-feedgod-dark-accent/50 transition-colors border-b border-feedgod-dark-accent last:border-0">
@@ -115,7 +137,9 @@ function OracleListRow({ oracle, onRefresh }: { oracle: MonitoredOracle; onRefre
       
       {/* Icon & Name */}
       <div className="flex items-center gap-2 min-w-[200px]">
-        <span className="text-lg">{getTypeIcon(oracle.type)}</span>
+        <div className="w-8 h-8 rounded-lg bg-feedgod-dark-accent flex items-center justify-center">
+          <TypeIcon className="w-4 h-4 text-feedgod-primary" />
+        </div>
         <div>
           <p className="font-medium text-white text-sm">{oracle.symbol}</p>
           <p className="text-xs text-gray-500 truncate max-w-[150px]">{oracle.name}</p>
@@ -431,9 +455,9 @@ export default function ExplorePage() {
                 <div className="flex items-center gap-2 flex-wrap">
                   {[
                     { value: 'all', label: 'All' },
-                    { value: 'feed', label: '📊 Feeds' },
-                    { value: 'prediction', label: '🎯 Prediction' },
-                    { value: 'weather', label: '🌤️ Weather' },
+                    { value: 'feed', label: 'Feeds' },
+                    { value: 'prediction', label: 'Prediction' },
+                    { value: 'weather', label: 'Weather' },
                   ].map((option) => (
                     <button
                       key={option.value}

@@ -15,7 +15,17 @@ import {
   DollarSign,
   Zap,
   List,
-  Grid
+  Grid,
+  Circle,
+  Dribbble,
+  Goal,
+  Flag,
+  Gamepad2,
+  Target,
+  Crosshair,
+  Swords,
+  Medal,
+  LucideIcon
 } from 'lucide-react'
 import { 
   Match, 
@@ -31,12 +41,36 @@ import {
   fetchUpcomingMatches, 
   fetchPastMatches,
   formatMatchTime, 
-  getSportIcon,
+  getSportIconName,
+  SportIconName,
   generateMockEsportsMatches 
 } from '@/lib/sports-api'
 import { playPickupSound } from '@/lib/sound-utils'
 import { useCostEstimate } from '@/lib/use-cost-estimate'
 import ChainSelector from './ChainSelector'
+import { SportIconName, LeagueIconName } from '@/data/leagues'
+
+// Sport icon mapping
+const SPORT_ICON_MAP: Record<SportIconName, LucideIcon> = {
+  Circle,
+  Dribbble,
+  Goal,
+  Flag,
+  Gamepad2,
+}
+
+// League icon mapping
+const LEAGUE_ICON_MAP: Record<LeagueIconName, LucideIcon> = {
+  Flag,
+  Trophy,
+  Medal,
+  MapPin,
+  Circle,
+  Gamepad2,
+  Crosshair,
+  Swords,
+  Target,
+}
 
 type BuilderStep = 'browse' | 'configure' | 'preview'
 type ViewMode = 'list' | 'grid'
@@ -106,7 +140,11 @@ function MatchCard({
       {/* League & Status */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <span className="text-lg">{getSportIcon(match.league.sport)}</span>
+          {(() => {
+            const sportIconName = getSportIconName(match.league.sport) as keyof typeof SPORT_ICON_MAP
+            const SportIcon = SPORT_ICON_MAP[sportIconName] || Trophy
+            return <SportIcon className="w-5 h-5 text-feedgod-primary" />
+          })()}
           <span className="text-xs text-gray-400 font-medium">
             {match.league.shortName || match.league.name}
           </span>
@@ -442,20 +480,23 @@ export default function SportsBuilder() {
             <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-4">
               <h4 className="text-sm font-semibold gradient-text mb-3">Sport</h4>
               <div className="space-y-2">
-                {SPORT_CATEGORIES.map((sport) => (
-                  <button
-                    key={sport.value}
-                    onClick={() => { playPickupSound(); setSelectedSport(sport.value); }}
-                    className={`w-full px-3 py-2 rounded-lg text-left transition-all flex items-center gap-2 ${
-                      selectedSport === sport.value
-                        ? 'gradient-bg text-white border border-feedgod-primary/50'
-                        : 'bg-[#1D1E19] border border-[#3a3b35] text-white hover:bg-[#2a2b25] hover:border-feedgod-primary/30'
-                    }`}
-                  >
-                    <span className="text-lg">{sport.icon}</span>
-                    <span className="text-sm font-medium">{sport.label}</span>
-                  </button>
-                ))}
+                {SPORT_CATEGORIES.map((sport) => {
+                  const SportIcon = SPORT_ICON_MAP[sport.iconName] || Circle
+                  return (
+                    <button
+                      key={sport.value}
+                      onClick={() => { playPickupSound(); setSelectedSport(sport.value); }}
+                      className={`w-full px-3 py-2 rounded-lg text-left transition-all flex items-center gap-2 ${
+                        selectedSport === sport.value
+                          ? 'gradient-bg text-white border border-feedgod-primary/50'
+                          : 'bg-[#1D1E19] border border-[#3a3b35] text-white hover:bg-[#2a2b25] hover:border-feedgod-primary/30'
+                      }`}
+                    >
+                      <SportIcon className="w-5 h-5" />
+                      <span className="text-sm font-medium">{sport.label}</span>
+                    </button>
+                  )
+                })}
               </div>
             </div>
             
@@ -463,27 +504,37 @@ export default function SportsBuilder() {
             <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-4">
               <h4 className="text-sm font-semibold gradient-text mb-3">League</h4>
               <div className="space-y-2 max-h-64 overflow-y-auto">
-                {availableLeagues.map((league) => (
-                  <button
-                    key={league.id}
-                    onClick={() => { playPickupSound(); setSelectedLeague(league); }}
-                    className={`w-full px-3 py-2 rounded-lg text-left transition-all ${
-                      selectedLeague?.id === league.id
-                        ? 'gradient-bg text-white border border-feedgod-primary/50'
-                        : 'bg-[#1D1E19] border border-[#3a3b35] text-white hover:bg-[#2a2b25] hover:border-feedgod-primary/30'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className="text-lg flex-shrink-0">{league.icon || '🏆'}</span>
-                      <span className="text-sm font-medium truncate">{league.name}</span>
-                    </div>
-                    {league.country && (
-                      <span className={`text-xs ml-7 ${selectedLeague?.id === league.id ? 'text-white/70' : 'text-gray-500'}`}>
-                        {league.country}
-                      </span>
-                    )}
-                  </button>
-                ))}
+                {availableLeagues.map((league) => {
+                  const LeagueIcon = league.iconName ? LEAGUE_ICON_MAP[league.iconName as LeagueIconName] || Trophy : Trophy
+                  return (
+                    <button
+                      key={league.id}
+                      onClick={() => { playPickupSound(); setSelectedLeague(league); }}
+                      className={`w-full px-3 py-2 rounded-lg text-left transition-all ${
+                        selectedLeague?.id === league.id
+                          ? 'gradient-bg text-white border border-feedgod-primary/50'
+                          : 'bg-[#1D1E19] border border-[#3a3b35] text-white hover:bg-[#2a2b25] hover:border-feedgod-primary/30'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 rounded bg-feedgod-dark-accent flex items-center justify-center flex-shrink-0">
+                          <LeagueIcon className="w-3.5 h-3.5 text-feedgod-primary" />
+                        </div>
+                        <span className="text-sm font-medium truncate">{league.name}</span>
+                        {league.countryCode && (
+                          <span className="text-xs text-gray-500 bg-feedgod-dark-secondary px-1.5 py-0.5 rounded">
+                            {league.countryCode}
+                          </span>
+                        )}
+                      </div>
+                      {league.country && (
+                        <span className={`text-xs ml-8 ${selectedLeague?.id === league.id ? 'text-white/70' : 'text-gray-500'}`}>
+                          {league.country}
+                        </span>
+                      )}
+                    </button>
+                  )
+                })}
               </div>
             </div>
             

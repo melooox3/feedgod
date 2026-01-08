@@ -30,7 +30,8 @@ export interface League {
   shortName?: string
   country?: string
   logo?: string
-  icon?: string
+  iconName?: string // Lucide icon name
+  countryCode?: string // ISO country code
   sport: SportCategory
   currentSeason?: string
 }

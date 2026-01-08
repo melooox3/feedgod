@@ -1,12 +1,47 @@
 'use client'
 
 import { useState, useRef, useEffect, useMemo } from 'react'
-import { Search, Loader2, X, Sparkles, ChevronRight } from 'lucide-react'
+import { 
+  Search, 
+  Loader2, 
+  X, 
+  Sparkles, 
+  ChevronRight,
+  BarChart3,
+  Target,
+  Cloud,
+  Trophy,
+  Users,
+  Globe,
+  Brain,
+  Code,
+  Dices,
+  Key,
+  TrendingUp,
+  Landmark,
+  LucideIcon
+} from 'lucide-react'
 import { FeedConfig } from '@/types/feed'
 import { BuilderType } from '@/types/switchboard'
 import { generateFromPrompt } from '@/lib/ai-assistant-extended'
-import { detectIntent, EXAMPLE_PROMPTS, DetectedIntent } from '@/lib/prompt-router'
+import { detectIntent, EXAMPLE_PROMPTS, DetectedIntent, ModuleIconName } from '@/lib/prompt-router'
 import { playPickupSound } from '@/lib/sound-utils'
+
+// Module icon mapping
+const MODULE_ICON_MAP: Record<ModuleIconName, LucideIcon> = {
+  BarChart3,
+  Target,
+  Cloud,
+  Trophy,
+  Users,
+  Globe,
+  Brain,
+  Code,
+  Dices,
+  Key,
+  TrendingUp,
+  Landmark,
+}
 
 interface CommandBarProps {
   onFeedGenerated?: (config: FeedConfig) => void
@@ -188,7 +223,10 @@ export default function CommandBar({
           
           {detectedIntent && input.length >= 2 && !isLoading && (
             <div className="absolute right-16 flex items-center gap-1.5 px-2.5 py-1 bg-feedgod-primary/10 border border-feedgod-primary/30 rounded-full">
-              <span className="text-sm">{detectedIntent.icon}</span>
+              {(() => {
+                const DetectedIcon = MODULE_ICON_MAP[detectedIntent.iconName]
+                return <DetectedIcon className="w-4 h-4 text-feedgod-primary" />
+              })()}
               <span className="text-xs font-medium text-feedgod-primary">
                 {detectedIntent.label}
               </span>
@@ -222,24 +260,30 @@ export default function CommandBar({
             {getLoadingMessage()}
           </span>
           {detectedIntent && (
-            <span className="text-lg">{detectedIntent.icon}</span>
+            (() => {
+              const DetectedIcon = MODULE_ICON_MAP[detectedIntent.iconName]
+              return <DetectedIcon className="w-5 h-5 text-feedgod-primary" />
+            })()
           )}
         </div>
       )}
       
       {(showExamples || isHomepage) && !isLoading && (
         <div className="mt-4 flex flex-wrap gap-2 justify-center">
-          {EXAMPLE_PROMPTS.map((example, i) => (
-            <button
-              key={i}
-              onClick={() => handleExampleClick(example)}
-              className="group flex items-center gap-1.5 px-3 py-1.5 bg-feedgod-dark-secondary/60 hover:bg-feedgod-primary/10 border border-feedgod-dark-accent hover:border-feedgod-primary/50 rounded-full text-xs text-gray-300 transition-all"
-            >
-              <span>{example.icon}</span>
-              <span>{example.text}</span>
-              <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-feedgod-primary" />
-            </button>
-          ))}
+          {EXAMPLE_PROMPTS.map((example, i) => {
+            const ExampleIcon = MODULE_ICON_MAP[example.iconName]
+            return (
+              <button
+                key={i}
+                onClick={() => handleExampleClick(example)}
+                className="group flex items-center gap-1.5 px-3 py-1.5 bg-feedgod-dark-secondary/60 hover:bg-feedgod-primary/10 border border-feedgod-dark-accent hover:border-feedgod-primary/50 rounded-full text-xs text-gray-300 transition-all"
+              >
+                <ExampleIcon className="w-3.5 h-3.5" />
+                <span>{example.text}</span>
+                <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-feedgod-primary" />
+              </button>
+            )
+          })}
         </div>
       )}
       
