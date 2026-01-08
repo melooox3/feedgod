@@ -191,7 +191,7 @@ export default function ExplorePage() {
   const allPriceSymbols = useMemo(() => {
     const monitoredSymbols = getMonitoredPriceSymbols()
     const exploreSymbols = getPriceFeedSymbols()
-    return [...new Set([...monitoredSymbols, ...exploreSymbols])]
+    return Array.from(new Set([...monitoredSymbols, ...exploreSymbols]))
   }, [])
   
   // Fetch real prices from CoinGecko
