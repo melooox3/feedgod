@@ -17,7 +17,7 @@ async function resolveWithOpenAI(request: AIResolutionRequest): Promise<AIResolu
   if (!openaiKey) {
     return {
       success: false,
-      answer: null,
+      answer: '',
       reasoning: 'OpenAI API key not configured. Please add OPENAI_API_KEY to your environment variables.',
       sources: [],
       confidence: 0,
@@ -107,7 +107,7 @@ Today's date is ${new Date().toLocaleDateString()}.`
       
       return {
         success: false,
-        answer: null,
+        answer: '',
         reasoning: `OpenAI API error: ${response.status}. ${errorData.error?.message || 'Unknown error'}`,
         sources: [],
         confidence: 0,
@@ -122,7 +122,7 @@ Today's date is ${new Date().toLocaleDateString()}.`
     if (!content) {
       return {
         success: false,
-        answer: null,
+        answer: '',
         reasoning: 'No response content from AI',
         sources: [],
         confidence: 0,
@@ -150,7 +150,7 @@ Today's date is ${new Date().toLocaleDateString()}.`
     
     return {
       success: false,
-      answer: null,
+      answer: '',
       reasoning: `Error processing AI request: ${error instanceof Error ? error.message : 'Unknown error'}`,
       sources: [],
       confidence: 0,
@@ -190,7 +190,7 @@ export async function POST(request: NextRequest) {
       { 
         success: false, 
         error: 'Failed to process AI resolution',
-        answer: null,
+        answer: '',
         reasoning: 'An error occurred during resolution',
         sources: [],
         confidence: 0,
