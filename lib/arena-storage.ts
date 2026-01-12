@@ -201,12 +201,13 @@ function generateMockLeaderboard(): LeaderboardEntry[] {
   ]
   
   return mockNames.map((name, i) => ({
+    id: `mock-${i + 1}`,
     rank: i + 1,
     nickname: name,
     points: Math.floor(10000 - (i * 400) + Math.random() * 100),
     totalVolume: Math.floor(5000 - (i * 200) + Math.random() * 500),
     winRate: Math.floor(70 - i * 2 + Math.random() * 10),
-    isCurrentUser: false,
+    longestStreak: Math.floor(10 - i * 0.4 + Math.random() * 3),
   }))
 }
 
@@ -218,6 +219,7 @@ function updateLeaderboard(user: ArenaUser): void {
   // Find or add current user
   const existingIndex = leaderboard.findIndex(e => e.nickname === user.nickname)
   const userEntry: LeaderboardEntry = {
+    id: user.id || `user-${Date.now()}`,
     rank: 0,
     nickname: user.nickname,
     points: user.points,
@@ -225,7 +227,7 @@ function updateLeaderboard(user: ArenaUser): void {
     winRate: user.totalWins + user.totalLosses > 0 
       ? Math.round((user.totalWins / (user.totalWins + user.totalLosses)) * 100)
       : 0,
-    isCurrentUser: true,
+    longestStreak: user.currentStreak || 0,
   }
   
   if (existingIndex >= 0) {
