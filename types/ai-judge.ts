@@ -47,7 +47,8 @@ export interface AIResolutionRequest {
   trustedSources: TrustedSource[]
   customSources?: string[]
   categories?: string[]
-  currentDate: string
+  additionalContext?: string
+  currentDate?: string
 }
 
 export interface AIResolutionResponse {
