@@ -86,7 +86,7 @@ function CostEstimateDisplay({ blockchain, network }: { blockchain: string; netw
           <span>Estimated Cost:</span>
         </div>
         <div className="text-right">
-          <div className="text-lg font-bold gradient-text">
+          <div className="text-base font-semibold text-white">
             {estimate.estimatedCost} {estimate.currency}
           </div>
         </div>
@@ -111,7 +111,7 @@ function PlatformCard({
       className={`p-6 rounded-xl border-2 transition-all text-center ${
         isSelected
           ? 'border-feedgod-primary dark:text-feedgod-primary dark:border-feedgod-primary dark:text-feedgod-primary bg-feedgod-primary dark:text-feedgod-primary/5'
-          : 'border-[#3a3b35] bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 hover:border-feedgod-primary dark:text-feedgod-primary/50'
+          : 'border-[#3a3b35] bg-[#252620]/80 hover:border-feedgod-primary dark:text-feedgod-primary/50'
       }`}
     >
       <div className={`w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br ${platform.color} flex items-center justify-center mb-3 shadow-lg`}>
@@ -147,7 +147,7 @@ function ProfilePreview({ profile, selectedMetric }: { profile: SocialProfile; s
   const platformInfo = SOCIAL_PLATFORMS.find(p => p.value === profile.platform)
   
   return (
-    <div className="relative bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-xl border border-[#3a3b35] p-6 backdrop-blur-sm">
+    <div className="relative bg-[#252620]/80 rounded-xl border border-[#3a3b35] p-6 backdrop-blur-sm">
       {/* Demo badge on card */}
       <div className="absolute top-3 right-3 z-10">
         <span className="px-2 py-0.5 bg-amber-400 text-amber-900 text-[10px] font-bold rounded shadow-sm">DEMO</span>
@@ -349,7 +349,7 @@ export default function SocialBuilder() {
     const oracles = saved ? JSON.parse(saved) : []
     oracles.push(config)
     localStorage.setItem('savedSocialOracles', JSON.stringify(oracles))
-    alert('Social Oracle configuration saved!')
+    alert('Social Oracle saved! View it in your Profile tab.')
   }
   
   const handleRefresh = async () => {
@@ -386,14 +386,14 @@ export default function SocialBuilder() {
   return (
     <div className="space-y-6">
       {/* Module Header */}
-      <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+      <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-feedgod-primary via-feedgod-primary to-pink-500 flex items-center justify-center">
-              <Users className="w-5 h-5 text-white" />
+            <div className="w-9 h-9 rounded-lg bg-[#ff0d6e] flex items-center justify-center">
+              <Users className="w-4 h-4 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-bold gradient-text">
+              <h2 className="text-lg font-semibold text-white">
                 Social Media Oracle Builder
               </h2>
               <p className="text-sm text-gray-400">
@@ -428,8 +428,8 @@ export default function SocialBuilder() {
       {step === 'select' && (
         <div className="space-y-6">
           {/* Platform Selection */}
-          <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
-            <h3 className="text-lg font-semibold gradient-text mb-4">
+          <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+            <h3 className="text-sm font-medium text-gray-300 mb-4">
               Select Platform
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -446,8 +446,8 @@ export default function SocialBuilder() {
 
           {/* Username/URL Input */}
           {selectedPlatform && (
-            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold gradient-text mb-4">
+            <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h3 className="text-sm font-medium text-gray-300 mb-4">
                 Enter Username or URL
               </h3>
               
@@ -516,8 +516,8 @@ export default function SocialBuilder() {
               
               <div className="space-y-4">
                 {/* Metric Selection */}
-                <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-4 backdrop-blur-sm">
-                  <h4 className="text-sm font-semibold gradient-text mb-3">
+                <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-4 backdrop-blur-sm">
+                  <h4 className="text-sm font-medium text-gray-400 mb-3">
                     Select Metric to Track
                   </h4>
                   <div className="space-y-2">
@@ -573,8 +573,8 @@ export default function SocialBuilder() {
             <ProfilePreview profile={profile} selectedMetric={selectedMetric || undefined} />
 
             {/* Oracle Settings */}
-            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold gradient-text mb-4">
+            <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h3 className="text-sm font-medium text-gray-300 mb-4">
                 Oracle Settings
               </h3>
               
@@ -625,8 +625,8 @@ export default function SocialBuilder() {
 
           {/* Right - Summary & Actions */}
           <div className="space-y-4">
-            <div className="bg-gradient-to-br from-blue-400/10 via-feedgod-primary/10 to-pink-500/10 rounded-lg border border-feedgod-secondary/20 p-6">
-              <h4 className="text-sm font-semibold gradient-text mb-4">
+            <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-6">
+              <h4 className="text-sm font-medium text-gray-400 mb-4">
                 Oracle Summary
               </h4>
               
@@ -699,8 +699,8 @@ export default function SocialBuilder() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Config Preview */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold gradient-text mb-4">
+            <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h3 className="text-sm font-medium text-gray-300 mb-4">
                 Switchboard Oracle Configuration
               </h3>
               
@@ -712,8 +712,8 @@ export default function SocialBuilder() {
             </div>
 
             {/* Use Cases */}
-            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
-              <h4 className="text-sm font-semibold gradient-text mb-4">
+            <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h4 className="text-sm font-medium text-gray-400 mb-4">
                 Use Cases for This Oracle
               </h4>
               
@@ -760,8 +760,8 @@ export default function SocialBuilder() {
 
           {/* Right - Actions */}
           <div className="space-y-4">
-            <div className="bg-gradient-to-br from-blue-400/10 via-feedgod-primary/10 to-pink-500/10 rounded-lg border border-feedgod-secondary/20 p-6">
-              <h4 className="text-sm font-semibold gradient-text mb-4">
+            <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-6">
+              <h4 className="text-sm font-medium text-gray-400 mb-4">
                 Final Summary
               </h4>
               

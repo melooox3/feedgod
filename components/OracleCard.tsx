@@ -78,7 +78,7 @@ export default function OracleCard({ oracle, onClick, isInUse }: OracleCardProps
   return (
     <div
       onClick={onClick}
-      className={`group bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-xl border transition-all duration-300 backdrop-blur-sm cursor-pointer hover:shadow-lg overflow-hidden ${
+      className={`group bg-[#252620]/80 rounded-xl border transition-all duration-300 backdrop-blur-sm cursor-pointer hover:shadow-lg overflow-hidden ${
         isInUse 
           ? 'border-emerald-500/50 hover:border-emerald-400 hover:shadow-emerald-500/10 ring-1 ring-emerald-500/20' 
           : 'border-feedgod-purple-200 dark:border-feedgod-dark-accent hover:border-feedgod-primary hover:shadow-feedgod-primary/10'

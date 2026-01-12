@@ -37,10 +37,12 @@ export default function SecretBuilder({ config, onConfigChange }: SecretBuilderP
   }, [config, onConfigChange])
 
   const handleConfigUpdate = (updates: Partial<SecretConfig>) => {
-    if (!localConfig) return
-    const updated = { ...localConfig, ...updates }
-    setLocalConfig(updated)
-    onConfigChange(updated)
+    setLocalConfig(prev => {
+      if (!prev) return prev
+      const updated = { ...prev, ...updates }
+      onConfigChange(updated)
+      return updated
+    })
   }
 
   const handleSave = async () => {
@@ -77,7 +79,7 @@ export default function SecretBuilder({ config, onConfigChange }: SecretBuilderP
   if (!localConfig) {
     return (
       <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-12 text-center">
-        <div className="text-xl font-semibold text-feedgod-primary dark:text-feedgod-primary mb-2">Loading Secret Builder...</div>
+        <div className="text-xl font-semibold text-feedgod-primary dark:text-feedgod-primary mb-2">Loading Secrets...</div>
       </div>
     )
   }
@@ -85,14 +87,14 @@ export default function SecretBuilder({ config, onConfigChange }: SecretBuilderP
   return (
     <div className="space-y-6">
       {/* Module Header */}
-      <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+      <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-feedgod-primary to-feedgod-primary flex items-center justify-center">
-            <Key className="w-5 h-5 text-white" />
+          <div className="w-9 h-9 rounded-lg bg-[#ff0d6e] flex items-center justify-center">
+            <Key className="w-4 h-4 text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-bold gradient-text">
-              Secret Builder
+            <h2 className="text-lg font-semibold text-white">
+              Secrets
             </h2>
             <p className="text-sm text-gray-400">
               Securely store and manage API keys and sensitive data for your oracle functions
@@ -104,7 +106,7 @@ export default function SecretBuilder({ config, onConfigChange }: SecretBuilderP
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column - Configuration */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+          <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
             <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
               <Settings className="w-5 h-5 text-feedgod-primary dark:text-feedgod-primary" />
               Secret Configuration
@@ -198,7 +200,7 @@ export default function SecretBuilder({ config, onConfigChange }: SecretBuilderP
 
         {/* Right Column - Info & Actions */}
         <div className="space-y-6">
-          <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+          <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
             <h3 className="text-base font-semibold text-white mb-3 flex items-center gap-2">
               <Key className="w-5 h-5 text-feedgod-primary dark:text-feedgod-primary" />
               Secret Info

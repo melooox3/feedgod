@@ -299,10 +299,10 @@ export function getModuleInfo(module: BuilderType): { label: string; iconName: M
  */
 export const EXAMPLE_PROMPTS: { text: string; module: BuilderType; iconName: ModuleIconName }[] = [
   { text: 'BTC/USD price', module: 'feed', iconName: 'BarChart3' },
-  { text: 'Trump election odds', module: 'prediction', iconName: 'Target' },
+  { text: 'Champions League winner', module: 'sports', iconName: 'Trophy' },
   { text: 'Weather in Tokyo', module: 'weather', iconName: 'Cloud' },
   { text: '@elonmusk followers', module: 'social', iconName: 'Users' },
-  { text: 'Lakers vs Warriors', module: 'sports', iconName: 'Trophy' },
+  { text: 'Will ETH hit $10k?', module: 'prediction', iconName: 'Target' },
   { text: 'Any API endpoint', module: 'custom-api', iconName: 'Globe' },
 ]
 

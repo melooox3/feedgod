@@ -32,7 +32,8 @@ import {
   Send,
   Smile,
   GitCommit,
-  UserCheck
+  UserCheck,
+  Play
 } from 'lucide-react'
 import XLogo from './XLogo'
 import { 
@@ -213,7 +214,7 @@ export default function GovernanceBuilder() {
           <Landmark className="w-6 h-6 text-white" />
         </div>
         <div>
-          <h2 className="text-xl font-bold text-white">Governance Oracle</h2>
+          <h2 className="text-lg font-semibold text-white">Governance Oracle</h2>
           <p className="text-sm text-gray-400">
             Create oracles that trigger DAO actions based on real-world data
           </p>
@@ -301,7 +302,7 @@ export default function GovernanceBuilder() {
                     }`}
                   >
                     <div className="flex items-center gap-3 mb-3">
-                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-lg bg-purple-600 flex items-center justify-center">
                         <TemplateIcon className="w-5 h-5 text-white" />
                       </div>
                       <span className="text-xs text-gray-500 bg-feedgod-dark-secondary px-2 py-1 rounded">
@@ -506,7 +507,7 @@ export default function GovernanceBuilder() {
                         : 'bg-feedgod-dark-accent border-feedgod-dark-accent hover:border-feedgod-primary/50'
                     }`}
                   >
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-feedgod-primary to-feedgod-secondary flex items-center justify-center mb-3">
+                    <div className="w-8 h-8 rounded-lg bg-[#ff0d6e] flex items-center justify-center mb-3">
                       <Icon className="w-5 h-5 text-white" />
                     </div>
                     <h4 className="text-white font-semibold mb-1">{option.label}</h4>
@@ -621,7 +622,7 @@ export default function GovernanceBuilder() {
                         : 'bg-feedgod-dark-accent border-feedgod-dark-accent hover:border-feedgod-primary/50'
                     }`}
                   >
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center mb-3">
+                    <div className="w-8 h-8 rounded-lg bg-purple-600 flex items-center justify-center mb-3">
                       <DaoIcon className="w-5 h-5 text-white" />
                     </div>
                     <h4 className="text-white font-semibold mb-1">{dao.name}</h4>
@@ -694,11 +695,10 @@ export default function GovernanceBuilder() {
                   alert('Deployment functionality coming soon! Your config has been copied to clipboard.')
                   copyConfig()
                 }}
-                className="px-8 py-4 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 rounded-xl text-white font-semibold flex items-center gap-3 shadow-lg shadow-purple-500/25 transition-all hover:shadow-purple-500/40"
+                className="w-full px-4 py-3 gradient-bg hover:opacity-90 rounded-lg text-white font-medium transition-all flex items-center justify-center gap-2"
               >
-                <Rocket className="w-5 h-5" />
-                Deploy Governance Oracle
-                <ExternalLink className="w-4 h-4" />
+                <Play className="w-4 h-4" />
+                Deploy Oracle
               </button>
             </div>
           </div>

@@ -104,7 +104,7 @@ function CostEstimateDisplay({
           <span>Estimated Cost:</span>
         </div>
         <div className="text-right">
-          <div className="text-lg font-bold gradient-text">
+          <div className="text-base font-semibold text-white">
             {estimate.estimatedCost} {estimate.currency}
           </div>
           {estimate.usdEstimate && (
@@ -135,10 +135,10 @@ function MarketCard({
     <div
       onClick={onSelect}
       className={`
-        p-4 rounded-lg border cursor-pointer transition-all duration-200
+        p-4 rounded-lg border-2 cursor-pointer transition-all duration-200
         ${isSelected 
-          ? 'bg-feedgod-primary dark:text-feedgod-primary/10 dark:bg-feedgod-primary dark:text-feedgod-primary/10 border-feedgod-primary dark:text-feedgod-primary dark:border-feedgod-primary dark:text-feedgod-primary ring-2 ring-feedgod-primary dark:text-feedgod-primary/20 dark:ring-feedgod-primary dark:text-feedgod-primary/20' 
-          : 'bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 border-[#3a3b35] hover:border-feedgod-primary dark:text-feedgod-primary/50 dark:hover:border-feedgod-primary dark:text-feedgod-primary/50'
+          ? 'bg-[#2d2530] border-[#ff0d6e] ring-1 ring-[#ff0d6e]/30' 
+          : 'bg-[#252620]/80 border-transparent hover:border-[#ff0d6e]/50'
         }
       `}
     >
@@ -153,24 +153,24 @@ function MarketCard({
           <div className="flex items-center gap-3 mb-3">
             <div className="flex-1">
               <div className="flex items-center justify-between text-xs mb-1">
-                <span className="text-green-600 dark:text-green-400 font-medium">YES</span>
+                <span className="text-[#22c55e] font-medium">YES</span>
                 <span className="text-white font-bold">{formatProbability(yesPrice)}</span>
               </div>
-              <div className="h-1.5 bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-full overflow-hidden">
+              <div className="h-2 bg-[#1a1b16] rounded-full overflow-hidden">
                 <div 
-                  className="h-full bg-green-500 dark:bg-green-400 rounded-full transition-all duration-300"
+                  className="h-full bg-[#22c55e] rounded-full transition-all duration-300"
                   style={{ width: `${yesPrice * 100}%` }}
                 />
               </div>
             </div>
             <div className="flex-1">
               <div className="flex items-center justify-between text-xs mb-1">
-                <span className="text-red-500 dark:text-red-400 font-medium">NO</span>
+                <span className="text-[#ef4444] font-medium">NO</span>
                 <span className="text-white font-bold">{formatProbability(noPrice)}</span>
               </div>
-              <div className="h-1.5 bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-full overflow-hidden">
+              <div className="h-2 bg-[#1a1b16] rounded-full overflow-hidden">
                 <div 
-                  className="h-full bg-red-500 dark:bg-red-400 rounded-full transition-all duration-300"
+                  className="h-full bg-[#ef4444] rounded-full transition-all duration-300"
                   style={{ width: `${noPrice * 100}%` }}
                 />
               </div>
@@ -294,7 +294,7 @@ export default function PredictionMarketBuilder() {
       createdAt: new Date(),
     })
     localStorage.setItem('savedPredictionOracles', JSON.stringify(oracles))
-    alert('Oracle configuration saved!')
+    alert('Prediction Oracle saved! View it in your Profile tab.')
   }
 
   const handleRefresh = async () => {
@@ -353,14 +353,14 @@ export default function PredictionMarketBuilder() {
   return (
     <div className="space-y-6">
       {/* Header with step indicator */}
-      <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+      <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-feedgod-primary to-pink-500 flex items-center justify-center">
-              <Target className="w-5 h-5 text-white" />
+            <div className="w-9 h-9 rounded-lg bg-[#ff0d6e] flex items-center justify-center">
+              <Target className="w-4 h-4 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-bold gradient-text">
+              <h2 className="text-lg font-semibold text-white">
                 Prediction Market Oracle
               </h2>
               <p className="text-sm text-gray-400">
@@ -420,7 +420,7 @@ export default function PredictionMarketBuilder() {
           {/* Market list */}
           <div className="lg:col-span-2 space-y-4">
             {/* Search and filters */}
-            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-4 backdrop-blur-sm">
+            <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-4 backdrop-blur-sm">
               <div className="flex items-center gap-3">
                 <div className="flex-1 relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-feedgod-secondary/70 /50" />
@@ -500,12 +500,12 @@ export default function PredictionMarketBuilder() {
             {/* Markets list */}
             <div className="space-y-3">
               {isLoading ? (
-                <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-12 text-center">
-                  <RefreshCw className="w-8 h-8 animate-spin gradient-text mx-auto mb-4" />
+                <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-12 text-center">
+                  <RefreshCw className="w-5 h-5 animate-spin text-gray-400 mx-auto mb-3" />
                   <p className="text-gray-400">Loading markets...</p>
                 </div>
               ) : markets.length === 0 ? (
-                <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-12 text-center">
+                <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-12 text-center">
                   <Search className="w-8 h-8 text-gray-400 dark:text-feedgod-secondary/70 /50 mx-auto mb-4" />
                   <p className="text-gray-400">No markets found. Try adjusting your search.</p>
                 </div>
@@ -526,7 +526,7 @@ export default function PredictionMarketBuilder() {
           <div className="space-y-4">
             {selectedMarket ? (
               <>
-                <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+                <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
                   <div className="flex items-center gap-3 mb-4">
                     <PlatformLogo platform={selectedMarket.platform} />
                     <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">
@@ -564,10 +564,10 @@ export default function PredictionMarketBuilder() {
                   </div>
                   
                   {/* Oracle output preview */}
-                  <div className="bg-gradient-to-r from-feedgod-primary dark:text-feedgod-primary/10 to-feedgod-primary/10 dark:from-feedgod-primary dark:text-feedgod-primary/10 dark:to-feedgod-primary/10 rounded-lg p-4 border border-feedgod-primary dark:text-feedgod-primary/20 dark:border-feedgod-primary dark:text-feedgod-primary/20">
-                    <p className="text-xs gradient-text font-medium mb-2">Oracle Output</p>
+                  <div className="bg-[#2a2b25] rounded-lg p-4 border border-[#3a3b35]">
+                    <p className="text-xs text-gray-400 font-medium mb-2">Oracle Output</p>
                     <p className="text-sm text-white">
-                      Will resolve to <strong className="text-green-600 dark:text-green-400">1</strong> for YES or <strong className="text-red-500 dark:text-red-400">0</strong> for NO
+                      Will resolve to <strong className="text-[#22c55e]">1</strong> for YES or <strong className="text-[#ef4444]">0</strong> for NO
                     </p>
                   </div>
                   
@@ -610,7 +610,7 @@ export default function PredictionMarketBuilder() {
                 </button>
               </>
             ) : (
-              <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm text-center">
+              <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm text-center">
                 <Target className="w-12 h-12 text-feedgod-purple-300 dark:border-feedgod-dark-accent dark:text-feedgod-purple-200 dark:border-feedgod-dark-accent mx-auto mb-4" />
                 <h3 className="text-lg font-semibold text-white mb-2">
                   Select a Market
@@ -629,7 +629,7 @@ export default function PredictionMarketBuilder() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             {/* Selected market summary */}
-            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-4 backdrop-blur-sm">
+            <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-4 backdrop-blur-sm">
               <div className="flex items-center gap-3">
                 <PlatformLogo platform={selectedMarket.platform} />
                 <div className="flex-1">
@@ -650,8 +650,8 @@ export default function PredictionMarketBuilder() {
             </div>
 
             {/* Oracle configuration */}
-            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold gradient-text mb-6">
+            <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h3 className="text-sm font-medium text-gray-300 mb-6">
                 Oracle Configuration
               </h3>
               
@@ -748,8 +748,8 @@ export default function PredictionMarketBuilder() {
           {/* Right column - preview & actions */}
           <div className="space-y-4">
             {/* Quick preview */}
-            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
-              <h4 className="text-sm font-semibold gradient-text mb-4">
+            <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h4 className="text-sm font-medium text-gray-400 mb-4">
                 Oracle Preview
               </h4>
               
@@ -823,8 +823,8 @@ export default function PredictionMarketBuilder() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             {/* Config preview */}
-            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold gradient-text mb-4">
+            <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h3 className="text-sm font-medium text-gray-300 mb-4">
                 Switchboard Oracle Configuration
               </h3>
               
@@ -836,15 +836,15 @@ export default function PredictionMarketBuilder() {
             </div>
 
             {/* What happens next */}
-            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
-              <h4 className="text-sm font-semibold gradient-text mb-4">
+            <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h4 className="text-sm font-medium text-gray-400 mb-4">
                 What happens when you deploy?
               </h4>
               
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-feedgod-primary dark:text-feedgod-primary/10 dark:bg-feedgod-primary dark:text-feedgod-primary/10 flex items-center justify-center flex-shrink-0">
-                    <span className="text-xs font-bold gradient-text">1</span>
+                  <div className="w-6 h-6 rounded-full bg-[#ff0d6e] flex items-center justify-center flex-shrink-0">
+                    <span className="text-xs font-bold text-white">1</span>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-white">Oracle Created</p>
@@ -861,8 +861,8 @@ export default function PredictionMarketBuilder() {
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-feedgod-primary dark:text-feedgod-primary/10 dark:bg-feedgod-primary dark:text-feedgod-primary/10 flex items-center justify-center flex-shrink-0">
-                    <span className="text-xs font-bold gradient-text">2</span>
+                  <div className="w-6 h-6 rounded-full bg-[#ff0d6e] flex items-center justify-center flex-shrink-0">
+                    <span className="text-xs font-bold text-white">2</span>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-white">Monitoring Starts</p>
@@ -878,8 +878,8 @@ export default function PredictionMarketBuilder() {
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-feedgod-primary dark:text-feedgod-primary/10 dark:bg-feedgod-primary dark:text-feedgod-primary/10 flex items-center justify-center flex-shrink-0">
-                    <span className="text-xs font-bold gradient-text">3</span>
+                  <div className="w-6 h-6 rounded-full bg-[#ff0d6e] flex items-center justify-center flex-shrink-0">
+                    <span className="text-xs font-bold text-white">3</span>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-white">Resolution</p>
@@ -895,8 +895,8 @@ export default function PredictionMarketBuilder() {
           {/* Right column - final actions */}
           <div className="space-y-4">
             {/* Summary card */}
-            <div className="bg-gradient-to-br from-feedgod-primary dark:text-feedgod-primary/10 to-feedgod-primary/10 dark:from-feedgod-primary dark:text-feedgod-primary/10 dark:to-feedgod-primary/10 rounded-lg border border-feedgod-primary dark:text-feedgod-primary/20 dark:border-feedgod-primary dark:text-feedgod-primary/20 p-6">
-              <h4 className="text-sm font-semibold gradient-text mb-4">
+            <div className="bg-[#2a2b25] rounded-lg border border-[#ff0d6e]/30 p-6">
+              <h4 className="text-sm font-semibold text-white mb-4">
                 Ready to Deploy
               </h4>
               

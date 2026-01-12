@@ -26,11 +26,25 @@ const CACHE_DURATION = 30000 // 30 seconds
  * @param refreshInterval Refresh interval in ms (default: 30000)
  */
 export function usePrices(symbols: string[], refreshInterval: number = 30000) {
-  const [state, setState] = useState<PricesState>({
-    prices: {},
-    loading: true,
-    error: null,
-    lastFetch: null,
+  // Initialize with cached prices immediately for instant display
+  const [state, setState] = useState<PricesState>(() => {
+    // Check if we have cached prices
+    const cachedPrices: Record<string, PriceInfo> = {}
+    let hasCached = false
+    
+    for (const symbol of symbols) {
+      if (globalPriceCache[symbol]) {
+        cachedPrices[symbol] = globalPriceCache[symbol]
+        hasCached = true
+      }
+    }
+    
+    return {
+      prices: cachedPrices,
+      loading: !hasCached, // Only show loading if no cached data
+      error: null,
+      lastFetch: hasCached ? new Date(lastGlobalFetch) : null,
+    }
   })
   
   const isMounted = useRef(true)

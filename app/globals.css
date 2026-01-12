@@ -12,7 +12,12 @@
   font-display: swap;
 }
 
+/* ==========================================
+   DESIGN TOKENS - Spacing & Colors
+   ========================================== */
+
 :root {
+  /* Core palette - kept as requested */
   --feedgod-primary: #ff0d6e;
   --feedgod-secondary: #ff3d8a;
   --feedgod-accent: #ff6b8a;
@@ -21,45 +26,70 @@
   --feedgod-bg: #1D1E19;
   --feedgod-surface: #2a2b25;
   --feedgod-border: #3a3b35;
+  
+  /* Spacing scale (4/8/12/16/24/32/48/64) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  
+  /* Reduced glow intensities */
+  --glow-soft: rgba(255, 13, 110, 0.08);
+  --glow-medium: rgba(255, 13, 110, 0.15);
+  --glow-strong: rgba(255, 13, 110, 0.25);
+  
+  /* Timing */
+  --transition-fast: 120ms;
+  --transition-base: 180ms;
+  --transition-slow: 300ms;
+  
+  /* Font families from layout */
+  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
+  --font-serif: var(--font-serif), Georgia, serif;
 }
 
-/* Subtle gradient text - red to purple */
+/* ==========================================
+   GRADIENT TEXT - Refined, less screaming
+   ========================================== */
+
 .gradient-text {
-  background: linear-gradient(135deg, #ff0d6e 0%, #ff0d6e 60%, #e534a8 100%);
+  background: linear-gradient(135deg, #ff0d6e 0%, #ff0d6e 70%, #e534a8 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Gradient text hover variant */
 .gradient-text-hover:hover {
-  background: linear-gradient(135deg, #ff0d6e 0%, #ff0d6e 50%, #d946ef 100%);
+  background: linear-gradient(135deg, #ff3d8a 0%, #ff0d6e 60%, #d946ef 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Subtle gradient background for buttons/elements */
+/* Subtle gradient background for buttons */
 .gradient-bg {
-  background: linear-gradient(135deg, #ff0d6e 0%, #ff0d6e 70%, #d63384 100%);
+  background: linear-gradient(135deg, #ff0d6e 0%, #e534a8 100%);
 }
 
 .gradient-bg:hover {
-  background: linear-gradient(135deg, #ff3d8a 0%, #ff3d8a 60%, #e534a8 100%);
+  background: linear-gradient(135deg, #ff3d8a 0%, #e534a8 100%);
 }
 
 /* Gradient border effect */
 .gradient-border {
   border: 1px solid transparent;
   background: linear-gradient(#1D1E19, #1D1E19) padding-box,
-              linear-gradient(135deg, #ff0d6e 0%, #ff0d6e 70%, #d63384 100%) border-box;
+              linear-gradient(135deg, #ff0d6e 0%, #e534a8 100%) border-box;
 }
 
 /* ==========================================
-   DARK THEME - Form Elements & Global Fixes
+   DARK THEME - Form Elements
    ========================================== */
 
-/* Force dark inputs/textareas/selects */
 input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), 
 textarea, 
 select,
@@ -85,10 +115,9 @@ textarea:focus,
 select:focus {
   border-color: #ff0d6e !important;
   outline: none !important;
-  box-shadow: 0 0 0 2px rgba(255, 13, 110, 0.15) !important;
+  box-shadow: 0 0 0 3px var(--glow-soft) !important;
 }
 
-/* Fix autofill background color */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
@@ -98,19 +127,53 @@ input:-webkit-autofill:active {
   caret-color: #ffffff !important;
 }
 
-/* Checkbox and radio dark styling */
 input[type="checkbox"],
 input[type="radio"] {
   accent-color: #ff0d6e;
 }
 
-/* Range slider dark styling */
 input[type="range"] {
   accent-color: #ff0d6e;
   background: transparent;
 }
 
-/* Select dropdown dark styling */
+/* Date/time inputs - make calendar icon visible (white on dark background) */
+input[type="date"],
+input[type="datetime-local"],
+input[type="time"],
+input[type="month"],
+input[type="week"] {
+  color-scheme: dark !important;
+}
+
+/* Force calendar picker icon to be white */
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator,
+input[type="month"]::-webkit-calendar-picker-indicator,
+input[type="week"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(1.5) !important;
+  cursor: pointer !important;
+  opacity: 1 !important;
+}
+
+/* Firefox and other browsers */
+input[type="date"],
+input[type="datetime-local"],
+input[type="time"] {
+  -moz-appearance: textfield;
+}
+
+/* Ensure calendar icon is visible on all dark backgrounds */
+.dark input[type="date"]::-webkit-calendar-picker-indicator,
+.dark input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+[class*="bg-[#1"] input[type="date"]::-webkit-calendar-picker-indicator,
+[class*="bg-[#1"] input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+[class*="bg-[#2"] input[type="date"]::-webkit-calendar-picker-indicator,
+[class*="bg-[#2"] input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(1.5) !important;
+}
+
 select {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%236b6b6b' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
@@ -124,151 +187,13 @@ select option {
   color: #ffffff;
 }
 
-/* Global outline color */
 *:focus {
   outline-color: #ff0d6e;
 }
 
-/* Force dark backgrounds on white/light elements */
-.bg-white {
-  background-color: #252620 !important;
-}
-
-.bg-gray-50, .bg-gray-100 {
-  background-color: #2a2b25 !important;
-}
-
-/* Override any undefined/legacy purple backgrounds */
-[class*="bg-feedgod-purple-50"],
-[class*="bg-feedgod-purple-100"] {
-  background-color: #2a2b25 !important;
-}
-
-[class*="bg-feedgod-purple-200"] {
-  background-color: #3a3b35 !important;
-}
-
-/* Force dark borders */
-.border-white,
-.border-gray-100,
-.border-gray-200,
-.border-gray-300,
-.border-gray-400 {
-  border-color: #3a3b35 !important;
-}
-
-/* Override any undefined/legacy purple borders */
-[class*="border-feedgod-purple"] {
-  border-color: #3a3b35 !important;
-}
-
-/* Fix any border-2/border-4 that might have default colors */
-.border-2:not([class*="border-feedgod"]):not([class*="border-gray"]):not([class*="border-white"]),
-.border-4:not([class*="border-feedgod"]):not([class*="border-gray"]):not([class*="border-white"]) {
-  border-color: #3a3b35;
-}
-
-/* Ensure ring colors are dark */
-[class*="ring-"]:not([class*="ring-feedgod-primary"]):not([class*="ring-offset"]) {
-  --tw-ring-color: rgba(255, 13, 110, 0.3);
-}
-
 /* ==========================================
-   TEXT COLOR FIXES - Ensure readability
+   BACKGROUND - Depth & Texture
    ========================================== */
-
-/* Fix all invalid/typo text classes - make them readable */
-[class*="text-feedgod-feedgod"] {
-  color: #9ca3af !important; /* gray-400 - readable on dark */
-}
-
-/* Fix classes with typo "dark-secondary0" (with zero) */
-[class*="dark-secondary0"] {
-  color: #9ca3af !important;
-}
-
-/* Ensure text-feedgod-purple-50 is readable (light gray for text context) */
-.text-feedgod-purple-50 {
-  color: #9ca3af !important;
-}
-
-/* Make sure secondary text colors are visible */
-[class*="text-feedgod-secondary\\/70"],
-[class*="text-feedgod-secondary\\/60"],
-[class*="text-feedgod-secondary\\/50"],
-[class*="text-feedgod-secondary\\/80"] {
-  color: #d1d5db !important; /* gray-300 */
-}
-
-/* Ensure white text stays white */
-.text-white {
-  color: #ffffff !important;
-}
-
-/* Fix description/muted text to be readable gray */
-.text-muted,
-[class*="text-gray-500"],
-[class*="text-gray-600"] {
-  color: #9ca3af !important;
-}
-
-/* Fix any dark-on-dark text issues */
-.dark .text-feedgod-dark,
-.dark [class*="text-feedgod-dark-secondary"],
-.dark [class*="text-feedgod-dark-accent"] {
-  color: #e5e7eb !important; /* Make dark text classes light in dark mode */
-}
-
-/* Ensure labels and form text are visible */
-label {
-  color: #e5e7eb !important;
-}
-
-/* Fix placeholder text */
-::placeholder {
-  color: #6b7280 !important; /* gray-500 */
-  opacity: 1 !important;
-}
-
-/* Ensure all paragraph and span text in dark containers is readable */
-.bg-feedgod-dark-secondary p,
-.bg-feedgod-dark-secondary span,
-.bg-feedgod-dark-secondary div,
-[class*="bg-feedgod-dark"] p,
-[class*="bg-feedgod-dark"] span {
-  color: inherit;
-}
-
-/* Override any text that became invisible due to color conflicts */
-p:not([class*="text-white"]):not([class*="text-gray"]):not([class*="text-feedgod-primary"]) {
-  color: #9ca3af; /* Default to gray-400 for readable muted text */
-}
-
-/* Ensure description text is always visible */
-.description,
-[class*="description"],
-p.text-sm {
-  color: #9ca3af !important;
-}
-
-/* Force small text to be visible */
-.text-xs:not([class*="text-white"]):not([class*="text-feedgod-primary"]):not([class*="text-green"]):not([class*="text-red"]):not([class*="text-yellow"]) {
-  color: #9ca3af !important;
-}
-
-/* Fix ring colors */
-[class*="ring-white"],
-[class*="ring-gray-100"],
-[class*="ring-gray-200"] {
-  --tw-ring-color: #3a3b35 !important;
-}
-
-/* Web3Modal custom overrides - theme set in config */
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
 
 html,
 body {
@@ -279,53 +204,227 @@ body {
 }
 
 body {
+  /* Subtle gradient bloom - reduced intensity */
   background: 
-    radial-gradient(ellipse at top left, rgba(255, 13, 110, 0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at bottom right, rgba(255, 61, 138, 0.04) 0%, transparent 50%),
-    radial-gradient(ellipse at center, rgba(255, 13, 110, 0.03) 0%, transparent 70%),
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255, 13, 110, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(255, 61, 138, 0.025) 0%, transparent 50%),
     #1D1E19;
   background-attachment: fixed;
   min-height: 100vh;
 }
 
-/* Subtle Switchboard logo pattern overlay */
+/* Subtle vignette overlay */
 body::before {
   content: '';
   position: fixed;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background-image: url('/switchboard-pattern.svg');
-  background-repeat: repeat;
-  background-size: 35px 35px;
-  opacity: 0.007;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 0%, transparent 50%, rgba(0, 0, 0, 0.15) 100%);
   pointer-events: none;
   z-index: 0;
-  transform: rotate(15deg);
 }
 
-/* High-quality crispy film grain overlay */
+/* Refined noise texture - subtle grain */
 body::after {
   content: '';
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0.06;
+  inset: 0;
+  opacity: 0.035;
   pointer-events: none;
   z-index: 1;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
   background-repeat: repeat;
-  background-size: 150px 150px;
+  background-size: 200px 200px;
 }
 
-/* Ensure main content is above the pattern and grain */
 body > * {
   position: relative;
   z-index: 10;
 }
+
+/* ==========================================
+   TYPOGRAPHY HIERARCHY
+   ========================================== */
+
+/* Eyebrow label */
+.eyebrow {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #9ca3af;
+}
+
+/* Helper/caption text */
+.helper-text {
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+/* Card title */
+.card-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+/* Card description */
+.card-description {
+  font-size: 14px;
+  color: #9ca3af;
+  line-height: 1.55;
+}
+
+/* ==========================================
+   COMPONENT UTILITIES
+   ========================================== */
+
+/* Soft inner shadow for inputs */
+.input-inset {
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+/* Card hover lift */
+.card-lift {
+  transition: transform var(--transition-base) ease-out, 
+              box-shadow var(--transition-base) ease-out,
+              border-color var(--transition-base) ease-out;
+}
+
+.card-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 13, 110, 0.1);
+}
+
+/* Subtle focus ring */
+.focus-ring:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #1D1E19, 0 0 0 4px rgba(255, 13, 110, 0.4);
+}
+
+/* Brand signature element - small dot accent */
+.brand-dot::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  background: var(--feedgod-primary);
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+/* ==========================================
+   ANIMATIONS - Tasteful, not gimmicky
+   ========================================== */
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Page load stagger animation */
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeSlideIn 0.5s ease-out forwards;
+}
+
+.animate-delay-1 { animation-delay: 0.1s; opacity: 0; }
+.animate-delay-2 { animation-delay: 0.2s; opacity: 0; }
+.animate-delay-3 { animation-delay: 0.3s; opacity: 0; }
+.animate-delay-4 { animation-delay: 0.4s; opacity: 0; }
+
+/* Shimmer loading */
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
+  background: linear-gradient(to right, #2a2b25 0%, #3a3b35 20%, #2a2b25 40%, #2a2b25 100%);
+  background-size: 1000px 100%;
+}
+
+/* Typewriter cursor */
+@keyframes cursorBlink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.typewriter-cursor {
+  animation: cursorBlink 1s infinite;
+}
+
+/* Subtle pulse for active states */
+@keyframes subtlePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.animate-subtle-pulse {
+  animation: subtlePulse 2s ease-in-out infinite;
+}
+
+/* ==========================================
+   LEGACY SUPPORT - Star glow (toned down)
+   ========================================== */
+
+.star-glow,
+.star-glow-on-hover {
+  position: relative;
+  transition: all var(--transition-base) ease-out;
+  overflow: visible;
+}
+
+.star-glow:hover,
+.star-glow-on-hover:hover {
+  filter: drop-shadow(0 0 4px var(--glow-soft));
+}
+
+/* ==========================================
+   SCROLLBAR
+   ========================================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1D1E19;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3a3b35;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4a4b45;
+}
+
+/* ==========================================
+   PIXEL FONT (kept for header)
+   ========================================== */
 
 .pixel-font {
   font-family: 'Press Start 2P', monospace;
@@ -342,175 +441,93 @@ body > * {
   font-weight: 900;
 }
 
+/* ==========================================
+   OVERRIDES FOR DARK THEME CONSISTENCY
+   ========================================== */
+
+.bg-white { background-color: #252620 !important; }
+.bg-gray-50, .bg-gray-100 { background-color: #2a2b25 !important; }
+
+.border-white,
+.border-gray-100,
+.border-gray-200,
+.border-gray-300 {
+  border-color: #3a3b35 !important;
+}
+
+label { color: #e5e7eb !important; }
+
+::placeholder {
+  color: #6b7280 !important;
+  opacity: 1 !important;
+}
+
+/* Fix broken/legacy feedgod color classes - ensure dark backgrounds */
+[class*="bg-feedgod-purple-50"],
+[class*="bg-feedgod-purple-100"],
+[class*="bg-feedgod-purple-200"] {
+  background-color: #252620 !important;
+}
+
+/* Arena Market Card - guaranteed dark background */
+.arena-market-card {
+  background-color: #252620 !important;
+}
+
+/* Fix text colors on dark backgrounds */
+[class*="text-feedgod-feedgod"],
+[class*="placeholder-feedgod-feedgod"] {
+  color: #6b7280 !important;
+}
+
+/* Ensure text remains readable in dark containers */
+[class*="bg-feedgod-dark-secondary"] {
+  color: #e5e7eb;
+}
+
+[class*="bg-feedgod-dark-secondary"] input,
+[class*="bg-feedgod-dark-secondary"] textarea,
+[class*="bg-feedgod-dark-secondary"] select {
+  background-color: #1D1E19 !important;
+  color: #ffffff !important;
+}
+
+/* Fix buttons and interactive elements in dark theme */
+button[class*="bg-feedgod-purple"],
+[class*="bg-feedgod-purple-100"][class*="hover"],
+[class*="bg-feedgod-purple-200"][class*="hover"] {
+  background-color: #2a2b25 !important;
+}
+
+button[class*="bg-feedgod-purple"]:hover {
+  background-color: #323329 !important;
+}
+
+/* Ensure proper contrast for selected states */
+[class*="border-feedgod-primary"][class*="bg-feedgod-purple"] {
+  background-color: rgba(255, 13, 110, 0.1) !important;
+}
+
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .text-balance { text-wrap: balance; }
+  
+  /* White calendar icon utility class */
+  .date-input-white::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(1.5) !important;
+    cursor: pointer !important;
   }
 }
 
-/* Custom scrollbar - red theme on dark background */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+/* ==========================================
+   WEB3MODAL OVERRIDES
+   ========================================== */
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
-::-webkit-scrollbar-track {
-  background: #252620;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #4a4b45;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #ff0d6e;
-}
-
-/* Animations */
-@keyframes shimmer {
-  0% {
-    background-position: -1000px 0;
-  }
-  100% {
-    background-position: 1000px 0;
-  }
-}
-
-.animate-shimmer {
-  animation: shimmer 2s infinite linear;
-  background: linear-gradient(
-    to right,
-    #2a2b25 0%,
-    #3a3b35 20%,
-    #2a2b25 40%,
-    #2a2b25 100%
-  );
-  background-size: 1000px 100%;
-}
-
-/* Star glow animation - red on dark olive */
-.star-glow,
-.star-glow-on-hover {
-  position: relative;
-  transition: all 0.3s ease;
-  overflow: visible;
-}
-
-.star-glow:hover {
-  animation: starGlow 1.5s ease-in-out infinite;
-  filter: drop-shadow(0 0 8px rgba(255, 13, 110, 0.6))
-          drop-shadow(0 0 12px rgba(255, 61, 138, 0.4))
-          drop-shadow(0 0 16px rgba(255, 107, 138, 0.3));
-}
-
-.star-glow-on-hover {
-  overflow: visible;
-  isolation: isolate;
-}
-
-.star-glow-on-hover:hover {
-  animation: starGlow 1.5s ease-in-out infinite;
-  filter: drop-shadow(0 0 8px rgba(255, 13, 110, 0.6))
-          drop-shadow(0 0 12px rgba(255, 61, 138, 0.4))
-          drop-shadow(0 0 16px rgba(255, 107, 138, 0.3));
-}
-
-.star-glow-on-hover::before {
-  content: '';
-  position: absolute;
-  inset: -6px;
-  border-radius: 12px;
-  background: radial-gradient(circle at center, 
-    rgba(255, 13, 110, 0.4) 0%, 
-    rgba(255, 61, 138, 0.3) 30%, 
-    rgba(255, 107, 138, 0.2) 60%, 
-    transparent 100%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-  z-index: -1;
-  filter: blur(8px);
-}
-
-.star-glow-on-hover:hover::before {
-  opacity: 1;
-}
-
-@keyframes starGlow {
-  0%, 100% {
-    box-shadow: 0 0 5px rgba(255, 13, 110, 0.5),
-                0 0 10px rgba(255, 61, 138, 0.3),
-                0 0 15px rgba(255, 107, 138, 0.2);
-  }
-  50% {
-    box-shadow: 0 0 10px rgba(255, 13, 110, 0.8),
-                0 0 20px rgba(255, 61, 138, 0.6),
-                0 0 30px rgba(255, 107, 138, 0.4),
-                0 0 40px rgba(255, 13, 110, 0.2);
-  }
-}
-
-/* Stars floating out */
-.star-glow:hover::before,
-.star-glow:hover::after,
-.star-glow-on-hover:hover::before,
-.star-glow-on-hover:hover::after {
-  content: '✨';
-  position: absolute;
-  font-size: 14px;
-  pointer-events: none;
-  z-index: 1000;
-  top: 50%;
-  left: 50%;
-}
-
-.star-glow:hover::before,
-.star-glow-on-hover:hover::before {
-  animation: starFloat1 1s ease-out forwards;
-}
-
-.star-glow:hover::after,
-.star-glow-on-hover:hover::after {
-  content: '⭐';
-  font-size: 12px;
-  animation: starFloat2 1s ease-out forwards;
-  animation-delay: 0.2s;
-}
-
-@keyframes starFloat1 {
-  0% {
-    transform: translate(-50%, -50%) scale(0) rotate(0deg);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(-50%, -50%) translate(-40px, -40px) scale(1.8) rotate(360deg);
-    opacity: 0;
-  }
-}
-
-@keyframes starFloat2 {
-  0% {
-    transform: translate(-50%, -50%) scale(0) rotate(0deg);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(-50%, -50%) translate(40px, 40px) scale(1.8) rotate(-360deg);
-    opacity: 0;
-  }
-}
-
-/* Typewriter cursor blink animation */
-@keyframes cursorBlink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
-}
-
-.typewriter-cursor {
-  animation: cursorBlink 1s infinite;
-}
-
-/* AppKit/Web3Modal - Force modal to be fixed overlay */
 w3m-modal,
 appkit-modal,
 wcm-modal,
@@ -528,7 +545,6 @@ wui-card,
   z-index: 99999 !important;
 }
 
-/* AppKit modal backdrop and container */
 w3m-modal::part(modal),
 appkit-modal::part(modal),
 w3m-modal *,
@@ -536,7 +552,6 @@ appkit-modal * {
   z-index: 99999 !important;
 }
 
-/* Ensure modal container is above everything */
 .w3m-overlay,
 .appkit-overlay,
 [class*="w3m-modal"],
@@ -547,18 +562,11 @@ div[data-testid="w3m-modal"] {
   position: fixed !important;
 }
 
-/* AppKit uses shadow DOM, target the host */
-:host {
-  z-index: 99999 !important;
-}
+:host { z-index: 99999 !important; }
 
-/* Ensure body pseudo-elements don't cover modal */
 body::before,
-body::after {
-  z-index: 0 !important;
-}
+body::after { z-index: 0 !important; }
 
-/* Main content should be below modal */
 body > div:first-child,
 #__next,
 main {
@@ -566,7 +574,54 @@ main {
   position: relative;
 }
 
-/* Fix for any parent transforms breaking fixed positioning */
-body.modal-open {
-  overflow: hidden;
+body.modal-open { overflow: hidden; }
+
+/* ==========================================
+   FINAL OVERRIDE: Date Input Calendar Icons
+   Must be at the end to ensure highest priority
+   ========================================== */
+
+/* Force white calendar/clock icons on ALL date inputs */
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator,
+input[type="month"]::-webkit-calendar-picker-indicator,
+input[type="week"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) !important;
+  opacity: 0.8 !important;
+  cursor: pointer !important;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover,
+input[type="time"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1 !important;
+}
+
+/* ==========================================
+   NUCLEAR: Force ALL calendar icons to white
+   ========================================== */
+
+/* Target Lucide calendar icons */
+.lucide-calendar,
+[class*="lucide-calendar"],
+svg.lucide-calendar {
+  color: white !important;
+  stroke: white !important;
+}
+
+/* Target any SVG that might be a calendar icon */
+[class*="calendar"] svg,
+[class*="Calendar"] svg,
+label svg,
+.flex.items-center svg {
+  color: white !important;
+  stroke: white !important;
+}
+
+/* Force stroke on SVG paths in calendar contexts */
+[class*="calendar"] svg path,
+[class*="Calendar"] svg path,
+label svg path {
+  stroke: white !important;
 }

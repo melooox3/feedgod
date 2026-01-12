@@ -25,14 +25,14 @@ module.exports = {
           'red-400': '#ff6b8a',
           'red-500': '#ff0d6e',
           'red-600': '#e00b5f',
-          // Legacy purple shades - backgrounds stay dark, but 50 is light for text
-          'purple-50': '#9ca3af',  // gray-400 equivalent for readable text
-          'purple-100': '#3a3b35', // dark for backgrounds
-          'purple-200': '#3a3b35', // dark for borders
-          'purple-300': '#4a4b45', // slightly lighter dark
+          // Dark background shades (all dark for proper dark theme)
+          'purple-50': '#252620',   // darkest bg
+          'purple-100': '#2a2b25',  // dark bg
+          'purple-200': '#323329',  // slightly lighter
+          'purple-300': '#3a3b35',  // border color
           // Dark mode colors
           'dark-bg': '#1D1E19',
-          'dark-secondary': '#2a2b25',
+          'dark-secondary': '#252620',
           'dark-accent': '#3a3b35',
           'neon-red': '#ff3d8a',
           'neon-cyan': '#ff6b8a',

@@ -51,10 +51,12 @@ export default main`,
   }, [config, onConfigChange])
 
   const handleConfigUpdate = (updates: Partial<FunctionConfig>) => {
-    if (!localConfig) return
-    const updated = { ...localConfig, ...updates }
-    setLocalConfig(updated)
-    onConfigChange(updated)
+    setLocalConfig(prev => {
+      if (!prev) return prev
+      const updated = { ...prev, ...updates }
+      onConfigChange(updated)
+      return updated
+    })
   }
 
   const handleSave = async () => {
@@ -99,14 +101,14 @@ export default main`,
   return (
     <div className="space-y-6">
       {/* Module Header */}
-      <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+      <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-cyan-500 flex items-center justify-center">
-            <Code className="w-5 h-5 text-white" />
+          <div className="w-9 h-9 rounded-lg bg-emerald-500 flex items-center justify-center">
+            <Code className="w-4 h-4 text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-bold gradient-text">
-              Function Builder
+            <h2 className="text-lg font-semibold text-white">
+              Functions
             </h2>
             <p className="text-sm text-gray-400">
               Run custom off-chain computation and push results on-chain with verifiable execution
@@ -118,7 +120,7 @@ export default main`,
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column - Configuration */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+          <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
             <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
               <Settings className="w-5 h-5 text-feedgod-primary dark:text-feedgod-primary" />
               Function Configuration
@@ -234,7 +236,7 @@ export default main`,
           </div>
 
           {/* Code Editor */}
-          <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+          <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
             <h3 className="text-base font-semibold text-white mb-3 flex items-center gap-2">
               <Code2 className="w-5 h-5 text-feedgod-primary dark:text-feedgod-primary" />
               Function Code
@@ -250,7 +252,7 @@ export default main`,
 
         {/* Right Column - Info & Actions */}
         <div className="space-y-6">
-          <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+          <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
             <h3 className="text-lg font-semibold text-white mb-4">Function Info</h3>
             <div className="space-y-3">
               <div>

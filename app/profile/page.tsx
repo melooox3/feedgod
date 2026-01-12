@@ -3,20 +3,47 @@
 import { useState, useEffect } from 'react'
 import { useAppKitAccount } from '@reown/appkit/react'
 import { useRouter } from 'next/navigation'
-import { Heart, Trash2, Edit, ArrowLeft, Database, Code, Dice6, Key, Target, Cloud, Trophy, Users, Brain, Globe } from 'lucide-react'
+import { Heart, Trash2, Edit, ArrowLeft, Database, Code, Dice6, Key, Target, Cloud, Trophy, Users, Brain, Globe, LayoutGrid, LucideIcon } from 'lucide-react'
 import Header from '@/components/Header'
 import { FeedConfig } from '@/types/feed'
 import { FunctionConfig, VRFConfig, SecretConfig, BuilderType } from '@/types/switchboard'
 import { playPickupSound } from '@/lib/sound-utils'
 
-type ProfileTab = 'feed' | 'function' | 'vrf' | 'secret' | 'prediction' | 'weather' | 'sports' | 'social' | 'ai-judge' | 'custom-api'
+type ProfileTab = 'all' | 'feed' | 'function' | 'vrf' | 'secret' | 'prediction' | 'weather' | 'sports' | 'social' | 'ai-judge' | 'custom-api'
+
+// Category colors for visual differentiation
+const CATEGORY_COLORS: Record<string, { bg: string; border: string; text: string; badge: string }> = {
+  feed: { bg: 'bg-blue-500/10', border: 'border-blue-500/30', text: 'text-blue-400', badge: 'bg-blue-500' },
+  function: { bg: 'bg-purple-500/10', border: 'border-purple-500/30', text: 'text-purple-400', badge: 'bg-purple-500' },
+  vrf: { bg: 'bg-yellow-500/10', border: 'border-yellow-500/30', text: 'text-yellow-400', badge: 'bg-yellow-500' },
+  secret: { bg: 'bg-red-500/10', border: 'border-red-500/30', text: 'text-red-400', badge: 'bg-red-500' },
+  prediction: { bg: 'bg-pink-500/10', border: 'border-pink-500/30', text: 'text-pink-400', badge: 'bg-pink-500' },
+  weather: { bg: 'bg-cyan-500/10', border: 'border-cyan-500/30', text: 'text-cyan-400', badge: 'bg-cyan-500' },
+  sports: { bg: 'bg-green-500/10', border: 'border-green-500/30', text: 'text-green-400', badge: 'bg-green-500' },
+  social: { bg: 'bg-indigo-500/10', border: 'border-indigo-500/30', text: 'text-indigo-400', badge: 'bg-indigo-500' },
+  'ai-judge': { bg: 'bg-orange-500/10', border: 'border-orange-500/30', text: 'text-orange-400', badge: 'bg-orange-500' },
+  'custom-api': { bg: 'bg-teal-500/10', border: 'border-teal-500/30', text: 'text-teal-400', badge: 'bg-teal-500' },
+}
+
+const CATEGORY_LABELS: Record<string, string> = {
+  feed: 'Feed',
+  function: 'Function',
+  vrf: 'VRF',
+  secret: 'Secret',
+  prediction: 'Prediction',
+  weather: 'Weather',
+  sports: 'Sports',
+  social: 'Social',
+  'ai-judge': 'AI Judge',
+  'custom-api': 'Custom API',
+}
 
 export default function ProfilePage() {
   const { isConnected } = useAppKitAccount()
   const router = useRouter()
   
-  const connected = isConnected
-  const [activeTab, setActiveTab] = useState<ProfileTab>('feed')
+  const [mounted, setMounted] = useState(false)
+  const [activeTab, setActiveTab] = useState<ProfileTab>('all')
   const [feeds, setFeeds] = useState<FeedConfig[]>([])
   const [functions, setFunctions] = useState<FunctionConfig[]>([])
   const [vrfs, setVRFs] = useState<VRFConfig[]>([])
@@ -29,8 +56,16 @@ export default function ProfilePage() {
   const [customApi, setCustomApi] = useState<any[]>([])
   const [filter, setFilter] = useState<'all' | 'favorites'>('all')
 
+  // Wait for client-side mount before checking connection
   useEffect(() => {
-    if (!connected) {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    // Don't redirect until mounted (AppKit initialized)
+    if (!mounted) return
+    
+    if (!isConnected) {
       router.push('/')
       return
     }
@@ -92,7 +127,7 @@ export default function ProfilePage() {
       }
     }
 
-    const savedPredictions = localStorage.getItem('savedPredictions')
+    const savedPredictions = localStorage.getItem('savedPredictionOracles')
     if (savedPredictions) {
       try {
         const parsed = JSON.parse(savedPredictions)
@@ -106,7 +141,7 @@ export default function ProfilePage() {
       }
     }
 
-    const savedWeather = localStorage.getItem('savedWeather')
+    const savedWeather = localStorage.getItem('savedWeatherOracles')
     if (savedWeather) {
       try {
         const parsed = JSON.parse(savedWeather)
@@ -120,7 +155,7 @@ export default function ProfilePage() {
       }
     }
 
-    const savedSports = localStorage.getItem('savedSports')
+    const savedSports = localStorage.getItem('savedSportsOracles')
     if (savedSports) {
       try {
         const parsed = JSON.parse(savedSports)
@@ -134,7 +169,7 @@ export default function ProfilePage() {
       }
     }
 
-    const savedSocial = localStorage.getItem('savedSocial')
+    const savedSocial = localStorage.getItem('savedSocialOracles')
     if (savedSocial) {
       try {
         const parsed = JSON.parse(savedSocial)
@@ -148,7 +183,7 @@ export default function ProfilePage() {
       }
     }
 
-    const savedAiJudge = localStorage.getItem('savedAiJudge')
+    const savedAiJudge = localStorage.getItem('savedAIJudgeOracles')
     if (savedAiJudge) {
       try {
         const parsed = JSON.parse(savedAiJudge)
@@ -162,7 +197,7 @@ export default function ProfilePage() {
       }
     }
 
-    const savedCustomApi = localStorage.getItem('savedCustomApi')
+    const savedCustomApi = localStorage.getItem('savedCustomAPIOracles')
     if (savedCustomApi) {
       try {
         const parsed = JSON.parse(savedCustomApi)
@@ -175,7 +210,7 @@ export default function ProfilePage() {
         console.error('Error loading custom API:', e)
       }
     }
-  }, [connected, router])
+  }, [mounted, isConnected, router])
 
   const loadItem = (item: any, type: BuilderType) => {
     sessionStorage.setItem('loadConfig', JSON.stringify({ ...item, type }))
@@ -208,32 +243,32 @@ export default function ProfilePage() {
         case 'prediction':
           const updatedPredictions = predictions.filter(p => p.id !== id)
           setPredictions(updatedPredictions)
-          localStorage.setItem('savedPredictions', JSON.stringify(updatedPredictions))
+          localStorage.setItem('savedPredictionOracles', JSON.stringify(updatedPredictions))
           break
         case 'weather':
           const updatedWeather = weather.filter(w => w.id !== id)
           setWeather(updatedWeather)
-          localStorage.setItem('savedWeather', JSON.stringify(updatedWeather))
+          localStorage.setItem('savedWeatherOracles', JSON.stringify(updatedWeather))
           break
         case 'sports':
           const updatedSports = sports.filter(s => s.id !== id)
           setSports(updatedSports)
-          localStorage.setItem('savedSports', JSON.stringify(updatedSports))
+          localStorage.setItem('savedSportsOracles', JSON.stringify(updatedSports))
           break
         case 'social':
           const updatedSocial = social.filter(s => s.id !== id)
           setSocial(updatedSocial)
-          localStorage.setItem('savedSocial', JSON.stringify(updatedSocial))
+          localStorage.setItem('savedSocialOracles', JSON.stringify(updatedSocial))
           break
         case 'ai-judge':
           const updatedAiJudge = aiJudge.filter(a => a.id !== id)
           setAiJudge(updatedAiJudge)
-          localStorage.setItem('savedAiJudge', JSON.stringify(updatedAiJudge))
+          localStorage.setItem('savedAIJudgeOracles', JSON.stringify(updatedAiJudge))
           break
         case 'custom-api':
           const updatedCustomApi = customApi.filter(c => c.id !== id)
           setCustomApi(updatedCustomApi)
-          localStorage.setItem('savedCustomApi', JSON.stringify(updatedCustomApi))
+          localStorage.setItem('savedCustomAPIOracles', JSON.stringify(updatedCustomApi))
           break
       }
     }
@@ -264,64 +299,93 @@ export default function ProfilePage() {
       case 'prediction':
         const updatedPredictions = predictions.map(p => p.id === id ? { ...p, isFavorite: !p.isFavorite } : p)
         setPredictions(updatedPredictions)
-        localStorage.setItem('savedPredictions', JSON.stringify(updatedPredictions))
+        localStorage.setItem('savedPredictionOracles', JSON.stringify(updatedPredictions))
         break
       case 'weather':
         const updatedWeather = weather.map(w => w.id === id ? { ...w, isFavorite: !w.isFavorite } : w)
         setWeather(updatedWeather)
-        localStorage.setItem('savedWeather', JSON.stringify(updatedWeather))
+        localStorage.setItem('savedWeatherOracles', JSON.stringify(updatedWeather))
         break
       case 'sports':
         const updatedSports = sports.map(s => s.id === id ? { ...s, isFavorite: !s.isFavorite } : s)
         setSports(updatedSports)
-        localStorage.setItem('savedSports', JSON.stringify(updatedSports))
+        localStorage.setItem('savedSportsOracles', JSON.stringify(updatedSports))
         break
       case 'social':
         const updatedSocial = social.map(s => s.id === id ? { ...s, isFavorite: !s.isFavorite } : s)
         setSocial(updatedSocial)
-        localStorage.setItem('savedSocial', JSON.stringify(updatedSocial))
+        localStorage.setItem('savedSocialOracles', JSON.stringify(updatedSocial))
         break
       case 'ai-judge':
         const updatedAiJudge = aiJudge.map(a => a.id === id ? { ...a, isFavorite: !a.isFavorite } : a)
         setAiJudge(updatedAiJudge)
-        localStorage.setItem('savedAiJudge', JSON.stringify(updatedAiJudge))
+        localStorage.setItem('savedAIJudgeOracles', JSON.stringify(updatedAiJudge))
         break
       case 'custom-api':
         const updatedCustomApi = customApi.map(c => c.id === id ? { ...c, isFavorite: !c.isFavorite } : c)
         setCustomApi(updatedCustomApi)
-        localStorage.setItem('savedCustomApi', JSON.stringify(updatedCustomApi))
+        localStorage.setItem('savedCustomAPIOracles', JSON.stringify(updatedCustomApi))
         break
     }
   }
 
+  const getAllItems = () => {
+    const allItems = [
+      ...feeds.map(f => ({ ...f, _category: 'feed' as ProfileTab })),
+      ...functions.map(f => ({ ...f, _category: 'function' as ProfileTab })),
+      ...vrfs.map(v => ({ ...v, _category: 'vrf' as ProfileTab })),
+      ...secrets.map(s => ({ ...s, _category: 'secret' as ProfileTab })),
+      ...predictions.map(p => ({ ...p, _category: 'prediction' as ProfileTab })),
+      ...weather.map(w => ({ ...w, _category: 'weather' as ProfileTab })),
+      ...sports.map(s => ({ ...s, _category: 'sports' as ProfileTab })),
+      ...social.map(s => ({ ...s, _category: 'social' as ProfileTab })),
+      ...aiJudge.map(a => ({ ...a, _category: 'ai-judge' as ProfileTab })),
+      ...customApi.map(c => ({ ...c, _category: 'custom-api' as ProfileTab })),
+    ]
+    // Sort by createdAt descending (newest first)
+    return allItems.sort((a, b) => {
+      const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0
+      const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0
+      return dateB - dateA
+    })
+  }
+
   const getCurrentItems = () => {
+    if (activeTab === 'all') {
+      const all = getAllItems()
+      return filter === 'favorites' ? all.filter(item => item.isFavorite) : all
+    }
     switch (activeTab) {
       case 'feed':
-        return filter === 'favorites' ? feeds.filter(f => f.isFavorite) : feeds
+        return (filter === 'favorites' ? feeds.filter(f => f.isFavorite) : feeds).map(f => ({ ...f, _category: 'feed' as ProfileTab }))
       case 'function':
-        return filter === 'favorites' ? functions.filter(f => f.isFavorite) : functions
+        return (filter === 'favorites' ? functions.filter(f => f.isFavorite) : functions).map(f => ({ ...f, _category: 'function' as ProfileTab }))
       case 'vrf':
-        return filter === 'favorites' ? vrfs.filter(v => v.isFavorite) : vrfs
+        return (filter === 'favorites' ? vrfs.filter(v => v.isFavorite) : vrfs).map(v => ({ ...v, _category: 'vrf' as ProfileTab }))
       case 'secret':
-        return filter === 'favorites' ? secrets.filter(s => s.isFavorite) : secrets
+        return (filter === 'favorites' ? secrets.filter(s => s.isFavorite) : secrets).map(s => ({ ...s, _category: 'secret' as ProfileTab }))
       case 'prediction':
-        return filter === 'favorites' ? predictions.filter(p => p.isFavorite) : predictions
+        return (filter === 'favorites' ? predictions.filter(p => p.isFavorite) : predictions).map(p => ({ ...p, _category: 'prediction' as ProfileTab }))
       case 'weather':
-        return filter === 'favorites' ? weather.filter(w => w.isFavorite) : weather
+        return (filter === 'favorites' ? weather.filter(w => w.isFavorite) : weather).map(w => ({ ...w, _category: 'weather' as ProfileTab }))
       case 'sports':
-        return filter === 'favorites' ? sports.filter(s => s.isFavorite) : sports
+        return (filter === 'favorites' ? sports.filter(s => s.isFavorite) : sports).map(s => ({ ...s, _category: 'sports' as ProfileTab }))
       case 'social':
-        return filter === 'favorites' ? social.filter(s => s.isFavorite) : social
+        return (filter === 'favorites' ? social.filter(s => s.isFavorite) : social).map(s => ({ ...s, _category: 'social' as ProfileTab }))
       case 'ai-judge':
-        return filter === 'favorites' ? aiJudge.filter(a => a.isFavorite) : aiJudge
+        return (filter === 'favorites' ? aiJudge.filter(a => a.isFavorite) : aiJudge).map(a => ({ ...a, _category: 'ai-judge' as ProfileTab }))
       case 'custom-api':
-        return filter === 'favorites' ? customApi.filter(c => c.isFavorite) : customApi
+        return (filter === 'favorites' ? customApi.filter(c => c.isFavorite) : customApi).map(c => ({ ...c, _category: 'custom-api' as ProfileTab }))
       default:
         return []
     }
   }
 
   const getTotalCount = () => {
+    if (activeTab === 'all') {
+      return feeds.length + functions.length + vrfs.length + secrets.length + 
+        predictions.length + weather.length + sports.length + social.length + aiJudge.length + customApi.length
+    }
     switch (activeTab) {
       case 'feed': return feeds.length
       case 'function': return functions.length
@@ -338,6 +402,9 @@ export default function ProfilePage() {
   }
 
   const getFavoriteCount = () => {
+    if (activeTab === 'all') {
+      return getAllItems().filter(item => item.isFavorite).length
+    }
     switch (activeTab) {
       case 'feed': return feeds.filter(f => f.isFavorite).length
       case 'function': return functions.filter(f => f.isFavorite).length
@@ -355,43 +422,57 @@ export default function ProfilePage() {
 
   const currentItems = getCurrentItems()
 
-  if (!connected) {
-    return null
+  // Show nothing while mounting or if not connected
+  if (!mounted || !isConnected) {
+    return (
+      <main className="min-h-screen">
+        <Header />
+        <div className="max-w-6xl mx-auto px-4 py-6">
+          <div className="flex items-center justify-center h-48">
+            <div className="w-5 h-5 border-2 border-feedgod-primary border-t-transparent rounded-full animate-spin" />
+          </div>
+        </div>
+      </main>
+    )
   }
 
-  const TABS = [
-    { id: 'feed' as ProfileTab, label: 'Feeds', icon: Database, count: feeds.length },
-    { id: 'function' as ProfileTab, label: 'Functions', icon: Code, count: functions.length },
-    { id: 'vrf' as ProfileTab, label: 'VRF', icon: Dice6, count: vrfs.length },
-    { id: 'secret' as ProfileTab, label: 'Secrets', icon: Key, count: secrets.length },
-    { id: 'prediction' as ProfileTab, label: 'Predictions', icon: Target, count: predictions.length },
-    { id: 'weather' as ProfileTab, label: 'Weather', icon: Cloud, count: weather.length },
-    { id: 'sports' as ProfileTab, label: 'Sports', icon: Trophy, count: sports.length },
-    { id: 'social' as ProfileTab, label: 'Social', icon: Users, count: social.length },
-    { id: 'ai-judge' as ProfileTab, label: 'AI Judge', icon: Brain, count: aiJudge.length },
-    { id: 'custom-api' as ProfileTab, label: 'Custom API', icon: Globe, count: customApi.length },
+  const allItemsCount = feeds.length + functions.length + vrfs.length + secrets.length + 
+    predictions.length + weather.length + sports.length + social.length + aiJudge.length + customApi.length
+
+  const TABS: { id: ProfileTab; label: string; icon: LucideIcon; count: number }[] = [
+    { id: 'all', label: 'All', icon: LayoutGrid, count: allItemsCount },
+    { id: 'feed', label: 'Feeds', icon: Database, count: feeds.length },
+    { id: 'function', label: 'Functions', icon: Code, count: functions.length },
+    { id: 'vrf', label: 'VRF', icon: Dice6, count: vrfs.length },
+    { id: 'secret', label: 'Secrets', icon: Key, count: secrets.length },
+    { id: 'prediction', label: 'Predictions', icon: Target, count: predictions.length },
+    { id: 'weather', label: 'Weather', icon: Cloud, count: weather.length },
+    { id: 'sports', label: 'Sports', icon: Trophy, count: sports.length },
+    { id: 'social', label: 'Social', icon: Users, count: social.length },
+    { id: 'ai-judge', label: 'AI Judge', icon: Brain, count: aiJudge.length },
+    { id: 'custom-api', label: 'Custom API', icon: Globe, count: customApi.length },
   ]
 
   return (
     <main className="min-h-screen">
       <Header />
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-6">
+      <div className="max-w-6xl mx-auto px-4 py-6">
+        <div className="mb-5">
           <button
             onClick={() => router.push('/')}
-            className="flex items-center gap-2 text-gray-400 hover:text-feedgod-primary transition-colors mb-4 star-glow-on-hover"
+            className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-feedgod-primary transition-colors mb-3"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-3.5 h-3.5" />
             <span>Back to Builder</span>
           </button>
-          <h1 className="text-3xl font-bold gradient-text mb-2">My Profile</h1>
-          <p className="text-gray-400">
-            Manage your saved oracles and configurations
+          <h1 className="text-xl font-semibold text-white mb-1">My Oracles</h1>
+          <p className="text-xs text-gray-500">
+            Manage your saved configurations
           </p>
         </div>
 
         {/* Category Tabs */}
-        <div className="flex flex-wrap gap-2 mb-4 pb-4 border-b border-[#3a3b35]">
+        <div className="flex flex-wrap gap-1.5 mb-3 pb-3 border-b border-[#3a3b35]">
           {TABS.map((tab) => {
             const Icon = tab.icon
             return (
@@ -401,31 +482,31 @@ export default function ProfilePage() {
                   playPickupSound()
                   setActiveTab(tab.id)
                 }}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors ${
                   activeTab === tab.id
-                    ? 'gradient-bg text-white'
-                    : 'bg-[#252620] text-gray-400 hover:text-white hover:bg-[#2a2b25] border border-[#3a3b35]'
-                } star-glow-on-hover`}
+                    ? 'bg-feedgod-primary text-white'
+                    : 'bg-[#252620] text-gray-500 hover:text-gray-300 hover:bg-[#2a2b25] border border-[#3a3b35]'
+                }`}
               >
-                <Icon className="w-4 h-4" />
+                <Icon className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">{tab.label}</span>
-                <span className="text-xs opacity-75">({tab.count})</span>
+                <span className="text-[10px] opacity-75">({tab.count})</span>
               </button>
             )
           })}
         </div>
 
         {/* Filter Tabs */}
-        <div className="flex gap-2 mb-6">
+        <div className="flex gap-1.5 mb-4">
           <button
             onClick={() => {
               playPickupSound()
               setFilter('all')
             }}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors star-glow-on-hover ${
+            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
               filter === 'all'
-                ? 'gradient-bg text-white'
-                : 'bg-[#252620] border border-[#3a3b35] text-gray-400 hover:text-white hover:bg-[#2a2b25]'
+                ? 'bg-[#252620] text-white border border-[#3a3b35]'
+                : 'text-gray-500 hover:text-gray-300'
             }`}
           >
             All ({getTotalCount()})
@@ -435,146 +516,170 @@ export default function ProfilePage() {
               playPickupSound()
               setFilter('favorites')
             }}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 star-glow-on-hover ${
+            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors flex items-center gap-1.5 ${
               filter === 'favorites'
-                ? 'gradient-bg text-white'
-                : 'bg-[#252620] border border-[#3a3b35] text-gray-400 hover:text-white hover:bg-[#2a2b25]'
+                ? 'bg-[#252620] text-white border border-[#3a3b35]'
+                : 'text-gray-500 hover:text-gray-300'
             }`}
           >
-            <Heart className={`w-4 h-4 ${filter === 'favorites' ? 'fill-current' : ''}`} />
+            <Heart className={`w-3 h-3 ${filter === 'favorites' ? 'fill-current text-feedgod-primary' : ''}`} />
             Favorites ({getFavoriteCount()})
           </button>
         </div>
 
         {/* Items Grid */}
         {currentItems.length === 0 ? (
-          <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-12 text-center">
-            <p className="text-gray-400 mb-4">No {TABS.find(t => t.id === activeTab)?.label.toLowerCase()} saved yet</p>
+          <div className="bg-[#252620] rounded-md border border-[#3a3b35] p-8 text-center">
+            <p className="text-gray-500 text-sm mb-3">
+              {activeTab === 'all' 
+                ? 'No saved configurations yet' 
+                : `No ${TABS.find(t => t.id === activeTab)?.label.toLowerCase()} saved yet`
+              }
+            </p>
             <button
               onClick={() => router.push('/')}
-              className="px-6 py-3 gradient-bg hover:opacity-90 rounded-lg text-white font-medium transition-all star-glow-on-hover"
+              className="px-4 py-2 bg-feedgod-primary hover:opacity-90 rounded-md text-white text-xs font-medium transition-all"
             >
-              Create Your First {TABS.find(t => t.id === activeTab)?.label.slice(0, -1)}
+              {activeTab === 'all' 
+                ? 'Create Your First Oracle' 
+                : `Create ${TABS.find(t => t.id === activeTab)?.label.slice(0, -1)}`
+              }
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {currentItems.map((item: any) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {currentItems.map((item: any) => {
+              const category = item._category || activeTab
+              const colors = CATEGORY_COLORS[category] || CATEGORY_COLORS.feed
+              const categoryLabel = CATEGORY_LABELS[category] || category
+              
+              return (
               <div
                 key={item.id}
-                className="bg-[#252620] rounded-lg border border-[#3a3b35] p-6 hover:border-feedgod-primary/50 transition-colors"
+                className={`bg-[#252620] rounded-md border p-4 transition-colors ${
+                  activeTab === 'all' 
+                    ? `${colors.border} hover:border-opacity-60` 
+                    : 'border-[#3a3b35] hover:border-feedgod-primary/30'
+                }`}
               >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex-1">
-                    <h3 className="text-lg font-bold gradient-text mb-1">
+                {/* Category Badge - shown in "All" view */}
+                {activeTab === 'all' && (
+                  <div className="mb-2">
+                    <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium ${colors.badge} text-white`}>
+                      {categoryLabel}
+                    </span>
+                  </div>
+                )}
+                
+                <div className="flex items-start justify-between mb-2">
+                  <div className="flex-1 min-w-0">
+                    <h3 className={`text-sm font-semibold mb-0.5 truncate ${activeTab === 'all' ? colors.text : 'text-white'}`}>
                       {item.symbol || item.name || item.question || 'Untitled'}
                     </h3>
-                    <p className="text-sm text-gray-400">{item.name || item.description || item.city?.name || item.platform || ''}</p>
+                    <p className="text-xs text-gray-500 truncate">{item.name || item.description || item.city?.name || item.platform || ''}</p>
                   </div>
                   <button
-                    onClick={() => toggleFavorite(item.id, activeTab)}
-                    className={`p-2 rounded-lg transition-colors star-glow-on-hover ${
+                    onClick={() => toggleFavorite(item.id, category as ProfileTab)}
+                    className={`p-1 rounded transition-colors ml-2 ${
                       item.isFavorite
                         ? 'text-feedgod-primary'
-                        : 'text-gray-500 hover:text-feedgod-primary'
+                        : 'text-gray-600 hover:text-feedgod-primary'
                     }`}
                   >
-                    <Heart className={`w-5 h-5 ${item.isFavorite ? 'fill-current' : ''}`} />
+                    <Heart className={`w-3.5 h-3.5 ${item.isFavorite ? 'fill-current' : ''}`} />
                   </button>
                 </div>
 
-                <div className="space-y-2 mb-4">
+                <div className="space-y-1 mb-3">
                   {item.blockchain && (
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">Blockchain</span>
-                      <span className="text-white font-medium capitalize">{item.blockchain}</span>
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-gray-600">Blockchain</span>
+                      <span className="text-gray-400 capitalize">{item.blockchain}</span>
                     </div>
                   )}
                   {item.network && (
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">Network</span>
-                      <span className="text-white font-medium capitalize">{item.network}</span>
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-gray-600">Network</span>
+                      <span className="text-gray-400 capitalize">{item.network}</span>
                     </div>
                   )}
                   {item.dataSources && (
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">Sources</span>
-                      <span className="text-white font-medium">{item.dataSources.length}</span>
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-gray-600">Sources</span>
+                      <span className="text-gray-400">{item.dataSources.length}</span>
                     </div>
                   )}
                   {item.updateInterval && (
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">Update Interval</span>
-                      <span className="text-white font-medium">{item.updateInterval}s</span>
-                    </div>
-                  )}
-                  {item.language && (
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">Language</span>
-                      <span className="text-white font-medium capitalize">{item.language}</span>
-                    </div>
-                  )}
-                  {item.type && (
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">Type</span>
-                      <span className="text-white font-medium capitalize">{item.type.replace('_', ' ')}</span>
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-gray-600">Interval</span>
+                      <span className="text-gray-400">{item.updateInterval}s</span>
                     </div>
                   )}
                   {item.city && (
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">City</span>
-                      <span className="text-white font-medium">{item.city.name}, {item.city.country}</span>
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-gray-600">City</span>
+                      <span className="text-gray-400">{item.city.name}</span>
                     </div>
                   )}
                   {item.metric && (
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">Metric</span>
-                      <span className="text-white font-medium capitalize">{item.metric.replace('_', ' ')}</span>
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-gray-600">Metric</span>
+                      <span className="text-gray-400 capitalize">{item.metric.replace('_', ' ')}</span>
                     </div>
                   )}
                   {item.platform && (
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">Platform</span>
-                      <span className="text-white font-medium capitalize">{item.platform}</span>
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-gray-600">Platform</span>
+                      <span className="text-gray-400 capitalize">{item.platform}</span>
                     </div>
                   )}
                   {item.username && (
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">Username</span>
-                      <span className="text-white font-medium">@{item.username}</span>
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-gray-600">User</span>
+                      <span className="text-gray-400">@{item.username}</span>
                     </div>
                   )}
-                  {item.question && (
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">Question</span>
-                      <span className="text-white font-medium truncate max-w-[150px]">{item.question}</span>
+                  {item.match && (
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-gray-600">Match</span>
+                      <span className="text-gray-400 truncate max-w-[120px]">
+                        {item.match.homeTeam?.name} vs {item.match.awayTeam?.name}
+                      </span>
                     </div>
                   )}
-                  {item.endpoint && (
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">Endpoint</span>
-                      <span className="text-white font-medium truncate max-w-[150px]">{item.endpoint}</span>
+                  {item.marketTitle && (
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-gray-600">Market</span>
+                      <span className="text-gray-400 truncate max-w-[120px]">{item.marketTitle}</span>
+                    </div>
+                  )}
+                  {item.model && (
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-gray-600">Model</span>
+                      <span className="text-gray-400">{item.model}</span>
                     </div>
                   )}
                 </div>
 
-                <div className="flex gap-2 pt-4 border-t border-[#3a3b35]">
+                <div className="flex gap-1.5 pt-3 border-t border-[#3a3b35]">
                   <button
-                    onClick={() => loadItem(item, activeTab)}
-                    className="flex-1 px-3 py-2 gradient-bg hover:opacity-90 rounded-lg text-white text-sm font-medium transition-all flex items-center justify-center gap-2 star-glow-on-hover"
+                    onClick={() => loadItem(item, category as BuilderType)}
+                    className={`flex-1 px-2.5 py-1.5 rounded text-white text-[11px] font-medium transition-all flex items-center justify-center gap-1.5 ${
+                      activeTab === 'all' ? `${colors.badge} hover:opacity-90` : 'bg-feedgod-primary hover:opacity-90'
+                    }`}
                   >
-                    <Edit className="w-4 h-4" />
+                    <Edit className="w-3 h-3" />
                     Edit
                   </button>
                   <button
-                    onClick={() => deleteItem(item.id, activeTab)}
-                    className="px-3 py-2 bg-[#2a2b25] border border-[#3a3b35] hover:bg-red-900/30 hover:border-red-500/50 rounded-lg text-red-400 text-sm font-medium transition-colors star-glow-on-hover"
+                    onClick={() => deleteItem(item.id, category as ProfileTab)}
+                    className="px-2 py-1.5 bg-[#2a2b25] hover:bg-red-900/30 rounded text-gray-500 hover:text-red-400 text-[11px] font-medium transition-colors"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <Trash2 className="w-3 h-3" />
                   </button>
                 </div>
               </div>
-            ))}
+            )})}
           </div>
         )}
       </div>

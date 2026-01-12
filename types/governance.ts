@@ -214,12 +214,12 @@ export const METRIC_SOURCES: MetricSource[] = [
   // Social metrics
   {
     id: 'twitter_followers',
-    name: 'X Followers',
+    name: 'X Verified Followers',
     category: 'social',
     type: 'twitter_followers',
-    description: 'Number of X (Twitter) followers',
-    iconName: 'XLogo',
-    sampleValue: 25000,
+    description: 'Number of verified (blue check) X followers',
+    iconName: 'UserCheck',
+    sampleValue: 1250,
   },
   {
     id: 'twitter_engagement',
@@ -417,7 +417,7 @@ export const GOVERNANCE_TEMPLATES: GovernanceTemplate[] = [
       {
         id: 'cg1',
         conditions: [
-          { id: 'c1', metricId: 'twitter_followers', operator: 'increased_by_percent', value: 20 },
+          { id: 'c1', metricId: 'twitter_followers', operator: 'increased_by_percent', value: 10 },
         ],
         logicalOperator: 'AND',
       },
@@ -430,6 +430,7 @@ export const GOVERNANCE_TEMPLATES: GovernanceTemplate[] = [
       'Marketing campaign effectiveness',
       'Influencer partnership verification',
       'Growth-based token unlocks',
+      'Verified follower milestone rewards',
     ],
   },
   {

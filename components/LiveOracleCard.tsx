@@ -12,15 +12,39 @@ import {
   Bell,
   MoreVertical,
   AlertTriangle,
-  RefreshCw
+  RefreshCw,
+  BarChart3,
+  Target,
+  Cloud,
+  Trophy,
+  Users,
+  Dices,
+  Zap,
+  Radio,
+  LucideIcon
 } from 'lucide-react'
 import { 
   MonitoredOracle, 
   formatOracleValue, 
   getStatusBg,
-  getTimeSinceUpdate,
-  getTypeIcon 
+  getTimeSinceUpdate
 } from '@/lib/oracle-monitor'
+
+// Type icon mapping
+const TYPE_ICONS: Record<string, LucideIcon> = {
+  feed: BarChart3,
+  price: BarChart3,
+  prediction: Target,
+  weather: Cloud,
+  sports: Trophy,
+  social: Users,
+  vrf: Dices,
+  function: Zap,
+}
+
+const getTypeIcon = (type: string): LucideIcon => {
+  return TYPE_ICONS[type] || Radio
+}
 import OracleSparkline from './OracleSparkline'
 import { playPickupSound } from '@/lib/sound-utils'
 
@@ -65,10 +89,10 @@ export default function LiveOracleCard({
 
   if (compact) {
     return (
-      <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-purple-200 dark:border-feedgod-dark-accent dark:border-feedgod-purple-200 dark:border-feedgod-dark-accent p-4 backdrop-blur-sm hover:border-feedgod-primary dark:text-feedgod-primary/50 transition-all">
+      <div className="bg-[#252620]/80 rounded-lg border border-feedgod-purple-200 dark:border-feedgod-dark-accent dark:border-feedgod-purple-200 dark:border-feedgod-dark-accent p-4 backdrop-blur-sm hover:border-feedgod-primary dark:text-feedgod-primary/50 transition-all">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
-            <span className="text-lg">{getTypeIcon(oracle.type)}</span>
+            {(() => { const Icon = getTypeIcon(oracle.type); return <Icon className="w-5 h-5 text-feedgod-primary" />; })()}
             <span className="font-medium text-white text-sm truncate">
               {oracle.symbol}
             </span>
@@ -89,7 +113,7 @@ export default function LiveOracleCard({
   }
 
   return (
-    <div className={`relative bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-xl border backdrop-blur-sm transition-all hover:shadow-lg ${
+    <div className={`relative bg-[#252620]/80 rounded-xl border backdrop-blur-sm transition-all hover:shadow-lg ${
       oracle.status === 'error' ? 'border-red-300 dark:border-red-700/50' :
       oracle.status === 'stale' ? 'border-amber-300 dark:border-amber-700/50' :
       'border-feedgod-purple-200 dark:border-feedgod-dark-accent dark:border-feedgod-purple-200 dark:border-feedgod-dark-accent hover:border-feedgod-primary dark:text-feedgod-primary/50'
@@ -108,13 +132,13 @@ export default function LiveOracleCard({
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
             <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-              oracle.type === 'feed' ? 'bg-blue-100 dark:bg-blue-900/30' :
-              oracle.type === 'prediction' ? 'bg-purple-100 dark:bg-purple-900/30' :
-              oracle.type === 'weather' ? 'bg-cyan-100 dark:bg-cyan-900/30' :
-              oracle.type === 'social' ? 'bg-pink-100 dark:bg-pink-900/30' :
-              'bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent'
+              oracle.type === 'feed' ? 'bg-blue-600' :
+              oracle.type === 'prediction' ? 'bg-purple-600' :
+              oracle.type === 'weather' ? 'bg-cyan-600' :
+              oracle.type === 'social' ? 'bg-pink-600' :
+              'bg-[#3a3b35]'
             }`}>
-              <span className="text-xl">{getTypeIcon(oracle.type)}</span>
+              {(() => { const Icon = getTypeIcon(oracle.type); return <Icon className="w-6 h-6 text-white" />; })()}
             </div>
             <div>
               <h3 className="font-semibold text-white text-sm">

@@ -82,7 +82,7 @@ function CostEstimateDisplay({
           <span>Estimated Cost:</span>
         </div>
         <div className="text-right">
-          <div className="text-lg font-bold gradient-text">
+          <div className="text-base font-semibold text-white">
             {estimate.estimatedCost} {estimate.currency}
           </div>
           {estimate.usdEstimate && (
@@ -563,13 +563,13 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
   return (
       <div className="space-y-6">
         {/* Module Header */}
-        <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+        <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-feedgod-primary to-pink-500 flex items-center justify-center">
-              <Database className="w-5 h-5 text-white" />
+            <div className="w-9 h-9 rounded-lg bg-[#ff0d6e] flex items-center justify-center">
+              <Database className="w-4 h-4 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-bold gradient-text">
+              <h2 className="text-lg font-semibold text-white">
                 Price Feed Builder
               </h2>
               <p className="text-sm text-gray-400">
@@ -580,7 +580,7 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
         </div>
 
         {/* Price Display */}
-        <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-8 backdrop-blur-sm relative overflow-hidden">
+        <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-8 backdrop-blur-sm relative overflow-hidden">
           {/* Subtle chain logo watermark */}
           <div className="absolute -right-8 -bottom-8 opacity-5 dark:opacity-10 pointer-events-none">
             <img 
@@ -595,7 +595,7 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
               <div className="flex items-center gap-4 mb-4">
                 <h2 className="text-2xl font-bold text-feedgod-primary dark:text-feedgod-primary">{localConfig.symbol}</h2>
                 {/* Chain badge */}
-                <div className="flex items-center gap-1.5 px-2 py-1 bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-full">
+                <div className="flex items-center gap-1.5 px-2 py-1 bg-[#2a2b25] rounded-full">
                   <img 
                     src={CHAIN_LOGOS[localConfig.blockchain] || CHAIN_LOGOS.solana}
                     alt={localConfig.blockchain}
@@ -617,7 +617,7 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
                 <div className="text-5xl font-bold text-gray-400 mb-2">Loading...</div>
               ) : (
                 <>
-                  <p className="text-6xl font-bold gradient-text mb-3">
+                  <p className="text-4xl font-semibold text-white mb-3">
                     ${formatPrice(currentPrice)}
                   </p>
                   <p className={`text-lg font-medium mb-4 ${priceChange !== null && priceChange >= 0 ? 'text-green-600' : 'text-red-500'}`}>
@@ -631,7 +631,7 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
             </div>
             <button
               onClick={handleRefreshPrices}
-              className="p-3 hover:bg-feedgod-purple-100 dark:bg-feedgod-dark-accent rounded-lg transition-colors star-glow"
+              className="p-3 hover:bg-[#2a2b25] rounded-lg transition-colors star-glow"
               title="Refresh prices"
             >
               <RefreshCw className="w-5 h-5 text-gray-400 hover:text-feedgod-primary dark:text-feedgod-primary" />
@@ -644,7 +644,7 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
         <div className="lg:col-span-2 space-y-6">
 
           {/* Feed Configuration */}
-          <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+          <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
             <h3 className="text-lg font-semibold text-feedgod-primary dark:text-feedgod-primary mb-4 flex items-center gap-2">
               <Settings className="w-5 h-5" />
               Feed Configuration
@@ -776,7 +776,7 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
 
         {/* Right Column - Source Selection */}
         <div className="space-y-6">
-          <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+          <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
             <h3 className="text-lg font-semibold text-feedgod-primary dark:text-feedgod-primary mb-4">Data Sources</h3>
             <p className="text-sm text-gray-400 mb-4">
               Select which sources to use for price aggregation
@@ -797,7 +797,7 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
                           type="checkbox"
                           checked={source.enabled}
                           onChange={() => toggleSource(source.id)}
-                          className="w-4 h-4 rounded border-feedgod-purple-300 dark:border-feedgod-dark-accent dark:border-feedgod-purple-200 dark:border-feedgod-dark-accent bg-feedgod-dark-secondary dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary gradient-text focus:ring-feedgod-primary dark:text-feedgod-primary dark:focus:ring-feedgod-primary dark:text-feedgod-primary cursor-pointer star-glow-on-hover"
+                          className="w-4 h-4 rounded border-[#3a3b35] bg-[#1D1E19] gradient-text focus:ring-feedgod-primary dark:text-feedgod-primary dark:focus:ring-feedgod-primary dark:text-feedgod-primary cursor-pointer star-glow-on-hover"
                         />
                         <div>
                           <p className="text-white font-medium">{source.name}</p>
@@ -839,7 +839,7 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
                               )
                               handleConfigUpdate({ dataSources: updated })
                             }}
-                            className="w-20 bg-feedgod-dark-secondary dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary border border-[#3a3b35] rounded px-2 py-1 text-sm text-white focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary dark:focus:ring-feedgod-primary dark:text-feedgod-primary"
+                            className="w-20 bg-[#1D1E19] border border-[#3a3b35] rounded px-2 py-1 text-sm text-white focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary dark:focus:ring-feedgod-primary dark:text-feedgod-primary"
                             min="0"
                             step="0.1"
                           />
@@ -863,7 +863,7 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
                       <button
                         key={source.id}
                         onClick={() => addSource(source)}
-                        className="w-full text-left p-3 bg-[#252620] hover:bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg transition-colors star-glow-on-hover"
+                        className="w-full text-left p-3 bg-[#252620] hover:bg-[#2a2b25] hover:bg-[#323329] rounded-lg transition-colors star-glow-on-hover"
                       >
                         <div className="font-medium text-white text-sm">{source.name}</div>
                         <div className="text-xs text-gray-400 capitalize mt-1">{source.type}</div>
@@ -874,7 +874,7 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
               )}
               <button
                 onClick={() => setShowCustomModal(true)}
-                className="w-full text-left p-3 bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent dark:hover:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary rounded-lg transition-colors flex items-center gap-2 star-glow-on-hover"
+                className="w-full text-left p-3 bg-[#2a2b25] hover:bg-[#323329] rounded-lg transition-colors flex items-center gap-2 star-glow-on-hover"
               >
                 <Plus className="w-4 h-4 text-feedgod-primary dark:text-feedgod-primary" />
                 <span className="text-sm font-medium text-feedgod-primary dark:text-feedgod-primary">Add Custom Source</span>
@@ -915,7 +915,7 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
           <div className="flex gap-3">
             <button
               onClick={handleSave}
-              className="flex-1 px-4 py-3 bg-feedgod-purple-200 dark:border-feedgod-dark-accent dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary hover:bg-feedgod-purple-300 dark:border-feedgod-dark-accent dark:hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg text-white text-sm font-medium transition-colors flex items-center justify-center gap-2 star-glow-on-hover"
+              className="flex-1 px-4 py-3 bg-[#2a2b25] hover:bg-[#323329] rounded-lg text-white text-sm font-medium transition-colors flex items-center justify-center gap-2 star-glow-on-hover"
             >
               <Save className="w-4 h-4" />
               Save
@@ -952,7 +952,7 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
       {/* Deployment Modal */}
       {showDeploymentModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="w-full max-w-lg bg-feedgod-dark-secondary dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary rounded-2xl border border-[#3a3b35] shadow-2xl overflow-hidden relative">
+          <div className="w-full max-w-lg bg-[#1D1E19] rounded-2xl border border-[#3a3b35] shadow-2xl overflow-hidden relative">
             {/* Subtle chain watermark */}
             <div className="absolute -right-12 -top-12 opacity-5 dark:opacity-10 pointer-events-none">
               <img 
@@ -998,7 +998,7 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
                 {!isDeploying && (
                   <button
                     onClick={closeDeploymentModal}
-                    className="p-2 hover:bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg transition-colors"
+                    className="p-2 hover:bg-[#2a2b25] hover:bg-[#323329] rounded-lg transition-colors"
                   >
                     <X className="w-5 h-5 text-gray-400" />
                   </button>
@@ -1030,13 +1030,13 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
                     <label className="block text-sm font-medium text-white mb-2">
                       Feed Public Key
                     </label>
-                    <div className="flex items-center gap-2 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg p-3">
+                    <div className="flex items-center gap-2 bg-[#1D1E19] rounded-lg p-3">
                       <code className="flex-1 text-sm font-mono gradient-text break-all">
                         {deploymentResult.publicKey}
                       </code>
                       <button
                         onClick={() => handleCopyToClipboard(deploymentResult.publicKey!, 'pubkey')}
-                        className="p-2 hover:bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:hover:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary rounded transition-colors flex-shrink-0"
+                        className="p-2 hover:bg-[#2a2b25] hover:bg-[#323329] rounded transition-colors flex-shrink-0"
                         title="Copy public key"
                       >
                         {copiedText === 'pubkey' ? (
@@ -1054,7 +1054,7 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
                       href={getSolscanLink(deploymentResult.publicKey!, localConfig?.network || 'devnet')}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 px-4 py-3 bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2"
+                      className="flex-1 px-4 py-3 bg-[#2a2b25] hover:bg-[#323329] rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2"
                     >
                       <ExternalLink className="w-4 h-4" />
                       View on Solscan
@@ -1129,11 +1129,15 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
                 >
                   Done
                 </button>
+                <p className="text-xs text-gray-500 text-center mt-3">
+                  Your feed is ready to use in your projects. Arena markets are curated separately.
+                </p>
               </div>
             )}
           </div>
         </div>
       )}
+
     </div>
   )
 }

@@ -38,7 +38,7 @@ const TABS: { id: BuilderType; label: string; icon: typeof Database; description
 
 export default function TabNavigation({ activeTab, onTabChange }: TabNavigationProps) {
   return (
-    <div className="border-b border-feedgod-purple-200 dark:border-feedgod-dark-accent dark:border-feedgod-purple-200 dark:border-feedgod-dark-accent bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 backdrop-blur-sm rounded-t-lg">
+    <div className="border-b border-feedgod-purple-200 dark:border-feedgod-dark-accent dark:border-feedgod-purple-200 dark:border-feedgod-dark-accent bg-[#252620]/80 backdrop-blur-sm rounded-t-lg">
       <div className="flex gap-1 px-2 pt-2">
         {TABS.map((tab) => {
           const Icon = tab.icon

@@ -94,7 +94,7 @@ function CostEstimateDisplay({ blockchain, network }: { blockchain: string; netw
           <span>Estimated Cost:</span>
         </div>
         <div className="text-right">
-          <div className="text-lg font-bold gradient-text">
+          <div className="text-base font-semibold text-white">
             {estimate.estimatedCost} {estimate.currency}
           </div>
         </div>
@@ -244,7 +244,7 @@ export default function WeatherBuilder() {
     const oracles = saved ? JSON.parse(saved) : []
     oracles.push(config)
     localStorage.setItem('savedWeatherOracles', JSON.stringify(oracles))
-    alert('Weather Oracle configuration saved!')
+    alert('Weather Oracle saved! View it in your Profile tab.')
   }
   
   const handleRefresh = async () => {
@@ -300,14 +300,14 @@ export default function WeatherBuilder() {
   return (
     <div className="space-y-6">
       {/* Module Header */}
-      <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+      <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-sky-400 to-feedgod-primary flex items-center justify-center">
-              <Cloud className="w-5 h-5 text-white" />
+            <div className="w-9 h-9 rounded-lg bg-sky-500 flex items-center justify-center">
+              <Cloud className="w-4 h-4 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-bold gradient-text">
+              <h2 className="text-lg font-semibold text-white">
                 Weather Oracle Builder
               </h2>
               <p className="text-sm text-gray-400">
@@ -319,13 +319,13 @@ export default function WeatherBuilder() {
           {/* Step indicator */}
           <div className="flex items-center gap-2">
             <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-              step === 'configure' ? 'bg-feedgod-primary dark:text-feedgod-primary text-white' : 'bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent text-gray-400'
+              step === 'configure' ? 'bg-feedgod-primary text-white' : 'bg-[#2a2b25] text-gray-400'
             }`}>
               1. Configure
             </div>
-            <ChevronRight className="w-4 h-4 text-feedgod-purple-300 dark:border-feedgod-dark-accent" />
+            <ChevronRight className="w-4 h-4 text-gray-500" />
             <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-              step === 'preview' ? 'bg-feedgod-primary dark:text-feedgod-primary text-white' : 'bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent text-gray-400'
+              step === 'preview' ? 'bg-feedgod-primary text-white' : 'bg-[#2a2b25] text-gray-400'
             }`}>
               2. Deploy
             </div>
@@ -338,8 +338,8 @@ export default function WeatherBuilder() {
           {/* Left - Configuration */}
           <div className="lg:col-span-2 space-y-6">
             {/* City Selection */}
-            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold gradient-text mb-4 flex items-center gap-2">
+            <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h3 className="text-sm font-medium text-gray-300 mb-4 flex items-center gap-2">
                 <MapPin className="w-5 h-5" />
                 Select Location
               </h3>
@@ -355,17 +355,17 @@ export default function WeatherBuilder() {
                   }}
                   onFocus={() => setShowCityDropdown(true)}
                   placeholder="Search cities... (e.g., Tokyo, London, New York)"
-                  className="w-full pl-10 pr-4 py-3 bg-[#252620] border border-[#3a3b35] rounded-lg text-white placeholder-feedgod-feedgod-secondary dark:text-feedgod-secondary/70 focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary"
+                  className="w-full pl-10 pr-4 py-3 bg-[#252620] border border-[#3a3b35] rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-feedgod-primary/50"
                 />
                 
                 {showCityDropdown && filteredCities.length > 0 && (
-                  <div className="absolute z-50 w-full mt-2 bg-feedgod-dark-secondary dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary border border-[#3a3b35] rounded-lg shadow-lg max-h-64 overflow-y-auto">
+                  <div className="absolute z-50 w-full mt-2 bg-[#252620] border border-[#3a3b35] rounded-lg shadow-lg max-h-64 overflow-y-auto">
                     {filteredCities.map((city) => (
                       <button
                         key={`${city.name}-${city.country}`}
                         onClick={() => handleCitySelect(city)}
-                        className={`w-full px-4 py-3 text-left hover:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent transition-colors flex items-center justify-between ${
-                          selectedCity?.name === city.name ? 'bg-feedgod-primary dark:text-feedgod-primary/10' : ''
+                        className={`w-full px-4 py-3 text-left hover:bg-[#2a2b25] transition-colors flex items-center justify-between ${
+                          selectedCity?.name === city.name ? 'bg-feedgod-primary/10' : ''
                         }`}
                       >
                         <span className="text-white font-medium">{city.name}</span>
@@ -377,7 +377,7 @@ export default function WeatherBuilder() {
               </div>
               
               {selectedCity && (
-                <div className="mt-4 p-4 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg">
+                <div className="mt-4 p-4 bg-[#1D1E19] rounded-lg border border-[#3a3b35]">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-lg font-semibold text-white">
@@ -404,8 +404,8 @@ export default function WeatherBuilder() {
             </div>
 
             {/* Metric Selection */}
-            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold gradient-text mb-4 flex items-center gap-2">
+            <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h3 className="text-sm font-medium text-gray-300 mb-4 flex items-center gap-2">
                 <Thermometer className="w-5 h-5" />
                 Select Metric
               </h3>
@@ -413,6 +413,7 @@ export default function WeatherBuilder() {
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {WEATHER_METRICS.map((metric) => {
                   const MetricIcon = WEATHER_ICON_MAP[metric.iconName] || Thermometer
+                  const isSelected = selectedMetric === metric.value
                   return (
                     <button
                       key={metric.value}
@@ -421,16 +422,16 @@ export default function WeatherBuilder() {
                         setSelectedMetric(metric.value)
                       }}
                       className={`p-4 rounded-lg border transition-all ${
-                        selectedMetric === metric.value
-                          ? 'bg-feedgod-primary dark:text-feedgod-primary/10 border-feedgod-primary dark:text-feedgod-primary dark:border-feedgod-primary dark:text-feedgod-primary'
-                          : 'bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent border-[#3a3b35] hover:border-feedgod-primary dark:text-feedgod-primary/50'
+                        isSelected
+                          ? 'bg-feedgod-primary border-feedgod-primary'
+                          : 'bg-[#252620] border-[#3a3b35] hover:border-feedgod-primary/50'
                       }`}
                     >
                       <div className="mb-2">
-                        <MetricIcon className="w-8 h-8 text-feedgod-primary" />
+                        <MetricIcon className={`w-8 h-8 ${isSelected ? 'text-white' : 'text-feedgod-primary'}`} />
                       </div>
-                      <p className="text-sm font-medium text-white">{metric.label}</p>
-                      <p className="text-xs text-gray-400">{metric.unit}</p>
+                      <p className={`text-sm font-medium ${isSelected ? 'text-white' : 'text-gray-200'}`}>{metric.label}</p>
+                      <p className={`text-xs ${isSelected ? 'text-white/70' : 'text-gray-500'}`}>{metric.unit}</p>
                     </button>
                   )
                 })}
@@ -438,8 +439,8 @@ export default function WeatherBuilder() {
             </div>
 
             {/* Data Type & Chain */}
-            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold gradient-text mb-4 flex items-center gap-2">
+            <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h3 className="text-sm font-medium text-gray-300 mb-4 flex items-center gap-2">
                 <Calendar className="w-5 h-5" />
                 Data Configuration
               </h3>
@@ -503,15 +504,15 @@ export default function WeatherBuilder() {
           {/* Right - Preview & Actions */}
           <div className="space-y-4">
             {/* Current Data Preview */}
-            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+            <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
               <div className="flex items-center justify-between mb-4">
-                <h4 className="text-sm font-semibold gradient-text">
+                <h4 className="text-sm font-medium text-gray-400">
                   Live Data Preview
                 </h4>
                 <button
                   onClick={handleRefresh}
                   disabled={!selectedCity || isLoading}
-                  className="p-1.5 hover:bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded transition-colors"
+                  className="p-1.5 hover:bg-[#2a2b25] rounded transition-colors"
                 >
                   <RefreshCw className={`w-4 h-4 text-gray-400 ${isLoading ? 'animate-spin' : ''}`} />
                 </button>
@@ -532,7 +533,7 @@ export default function WeatherBuilder() {
               ) : (
                 <div className="space-y-4">
                   {/* Current value for selected metric */}
-                  <div className="p-4 bg-gradient-to-br from-feedgod-primary dark:text-feedgod-primary/10 to-feedgod-primary/10 rounded-lg">
+                  <div className="p-4 bg-gradient-to-br from-feedgod-primary/15 to-feedgod-primary/5 rounded-lg border border-feedgod-primary/20">
                     <div className="flex items-center gap-3 mb-2">
                       <MetricIcon metric={selectedMetric} />
                       <span className="text-sm text-gray-400">
@@ -561,7 +562,7 @@ export default function WeatherBuilder() {
                       <p className="text-xs text-gray-400 mb-2">7-Day Forecast</p>
                       <div className="grid grid-cols-7 gap-1">
                         {forecastData.slice(0, 7).map((day, i) => (
-                          <div key={day.date} className="text-center p-2 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded">
+                          <div key={day.date} className="text-center p-2 bg-[#1D1E19] rounded">
                             <p className="text-[10px] text-gray-400">
                               {new Date(day.date).toLocaleDateString('en', { weekday: 'short' })}
                             </p>
@@ -600,8 +601,8 @@ export default function WeatherBuilder() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Config Preview */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold gradient-text mb-4">
+            <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h3 className="text-sm font-medium text-gray-300 mb-4">
                 Switchboard Oracle Configuration
               </h3>
               
@@ -613,15 +614,15 @@ export default function WeatherBuilder() {
             </div>
 
             {/* What happens */}
-            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
-              <h4 className="text-sm font-semibold gradient-text mb-4">
+            <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h4 className="text-sm font-medium text-gray-400 mb-4">
                 How This Oracle Works
               </h4>
               
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-feedgod-primary dark:text-feedgod-primary/10 flex items-center justify-center flex-shrink-0">
-                    <span className="text-xs font-bold text-feedgod-primary dark:text-feedgod-primary">1</span>
+                  <div className="w-6 h-6 rounded-full bg-[#ff0d6e] flex items-center justify-center flex-shrink-0">
+                    <span className="text-xs font-bold text-white">1</span>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-white">Data Fetched</p>
@@ -636,8 +637,8 @@ export default function WeatherBuilder() {
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-feedgod-primary dark:text-feedgod-primary/10 flex items-center justify-center flex-shrink-0">
-                    <span className="text-xs font-bold text-feedgod-primary dark:text-feedgod-primary">2</span>
+                  <div className="w-6 h-6 rounded-full bg-[#ff0d6e] flex items-center justify-center flex-shrink-0">
+                    <span className="text-xs font-bold text-white">2</span>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-white">On-Chain Update</p>
@@ -648,8 +649,8 @@ export default function WeatherBuilder() {
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-feedgod-primary dark:text-feedgod-primary/10 flex items-center justify-center flex-shrink-0">
-                    <span className="text-xs font-bold text-feedgod-primary dark:text-feedgod-primary">3</span>
+                  <div className="w-6 h-6 rounded-full bg-[#ff0d6e] flex items-center justify-center flex-shrink-0">
+                    <span className="text-xs font-bold text-white">3</span>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-white">Smart Contract Access</p>
@@ -664,8 +665,8 @@ export default function WeatherBuilder() {
 
           {/* Right - Summary & Actions */}
           <div className="space-y-4">
-            <div className="bg-gradient-to-br from-sky-400/10 to-feedgod-primary/10 rounded-lg border border-sky-400/20 p-6">
-              <h4 className="text-sm font-semibold gradient-text mb-4">
+            <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-6">
+              <h4 className="text-sm font-medium text-gray-400 mb-4">
                 Oracle Summary
               </h4>
               
@@ -717,7 +718,7 @@ export default function WeatherBuilder() {
               </button>
               <button
                 onClick={handleSave}
-                className="w-full px-4 py-3 bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2"
+                className="w-full px-4 py-3 bg-[#2a2b25] hover:bg-[#323329] rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2"
               >
                 <Save className="w-4 h-4" />
                 Save Configuration

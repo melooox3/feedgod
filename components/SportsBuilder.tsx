@@ -105,7 +105,7 @@ function CostEstimateDisplay({ blockchain, network }: { blockchain: string; netw
           <span>Estimated Cost:</span>
         </div>
         <div className="text-right">
-          <div className="text-lg font-bold gradient-text">
+          <div className="text-base font-semibold text-white">
             {estimate.estimatedCost} {estimate.currency}
           </div>
         </div>
@@ -131,7 +131,7 @@ function MatchCard({
   return (
     <div
       onClick={onSelect}
-      className={`p-4 rounded-xl border-2 transition-all cursor-pointer ${
+      className={`p-4 rounded-lg border transition-all cursor-pointer ${
         isSelected
           ? 'border-feedgod-primary bg-feedgod-primary/10'
           : 'border-[#3a3b35] bg-[#252620] hover:border-feedgod-primary/50'
@@ -380,7 +380,7 @@ export default function SportsBuilder() {
     const oracles = saved ? JSON.parse(saved) : []
     oracles.push(config)
     localStorage.setItem('savedSportsOracles', JSON.stringify(oracles))
-    alert('Sports Oracle configuration saved!')
+    alert('Sports Oracle saved! View it in your Profile tab.')
   }
   
   const handleRefresh = async () => {
@@ -436,11 +436,11 @@ export default function SportsBuilder() {
       <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-6">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
-              <Trophy className="w-5 h-5 text-white" />
+            <div className="w-9 h-9 rounded-lg bg-emerald-600 flex items-center justify-center">
+              <Trophy className="w-4 h-4 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-bold gradient-text">
+              <h2 className="text-lg font-semibold text-white">
                 Sports Oracle Builder
               </h2>
               <p className="text-sm text-gray-400">
@@ -472,13 +472,34 @@ export default function SportsBuilder() {
         </div>
       </div>
 
+      {/* Top Bar - appears when match is selected in browse step */}
+      {step === 'browse' && selectedMatch && (
+        <div className="bg-[#1D1E19]/95 backdrop-blur-sm border border-[#3a3b35] rounded-lg p-4 shadow-lg">
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0">
+              <p className="text-sm text-gray-400">Selected Match</p>
+              <p className="text-white font-medium truncate">
+                {selectedMatch.homeTeam.name} vs {selectedMatch.awayTeam.name}
+              </p>
+            </div>
+            <button
+              onClick={handleConfigure}
+              className="px-6 py-3 gradient-bg hover:opacity-90 rounded-lg text-white font-medium transition-all flex items-center gap-2 flex-shrink-0"
+            >
+              Configure Oracle
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
+
       {step === 'browse' && (
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className={`grid grid-cols-1 lg:grid-cols-4 gap-6 ${selectedMatch ? 'pb-24' : ''}`}>
           {/* Left - Filters */}
           <div className="space-y-4">
             {/* Sport Category */}
             <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-4">
-              <h4 className="text-sm font-semibold gradient-text mb-3">Sport</h4>
+              <h4 className="text-sm font-medium text-gray-400 mb-3">Sport</h4>
               <div className="space-y-2">
                 {SPORT_CATEGORIES.map((sport) => {
                   const SportIcon = SPORT_ICON_MAP[sport.iconName] || Circle
@@ -502,7 +523,7 @@ export default function SportsBuilder() {
             
             {/* League Selector */}
             <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-4">
-              <h4 className="text-sm font-semibold gradient-text mb-3">League</h4>
+              <h4 className="text-sm font-medium text-gray-400 mb-3">League</h4>
               <div className="space-y-2 max-h-64 overflow-y-auto">
                 {availableLeagues.map((league) => {
                   const LeagueIcon = league.iconName ? LEAGUE_ICON_MAP[league.iconName as LeagueIconName] || Trophy : Trophy
@@ -594,7 +615,7 @@ export default function SportsBuilder() {
             {/* Matches */}
             {isLoading ? (
               <div className="flex items-center justify-center py-20">
-                <Loader2 className="w-8 h-8 animate-spin text-feedgod-primary" />
+                <Loader2 className="w-5 h-5 animate-spin text-gray-400" />
               </div>
             ) : filteredMatches.length === 0 ? (
               <div className="text-center py-20">
@@ -625,18 +646,27 @@ export default function SportsBuilder() {
               </>
             )}
 
-            {/* Next Button */}
-            {selectedMatch && (
-              <div className="sticky bottom-4 pt-4">
-                <button
-                  onClick={handleConfigure}
-                  className="w-full px-4 py-3 gradient-bg hover:opacity-90 rounded-lg text-white font-medium transition-all flex items-center justify-center gap-2 shadow-lg"
-                >
-                  Configure Oracle for {selectedMatch.homeTeam.name} vs {selectedMatch.awayTeam.name}
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            )}
+          </div>
+        </div>
+      )}
+
+      {/* Fixed Bottom Bar - appears when match is selected in browse step */}
+      {step === 'browse' && selectedMatch && (
+        <div className="fixed bottom-0 left-0 right-0 bg-[#1D1E19]/95 backdrop-blur-sm border-t border-[#3a3b35] p-4 z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.3)]">
+          <div className="max-w-[1400px] mx-auto flex items-center justify-between gap-4">
+            <div className="min-w-0">
+              <p className="text-sm text-gray-400">Selected Match</p>
+              <p className="text-white font-medium truncate">
+                {selectedMatch.homeTeam.name} vs {selectedMatch.awayTeam.name}
+              </p>
+            </div>
+            <button
+              onClick={handleConfigure}
+              className="px-6 py-3 gradient-bg hover:opacity-90 rounded-lg text-white font-medium transition-all flex items-center gap-2 flex-shrink-0"
+            >
+              Configure Oracle
+              <ChevronRight className="w-4 h-4" />
+            </button>
           </div>
         </div>
       )}
@@ -647,13 +677,13 @@ export default function SportsBuilder() {
           <div className="lg:col-span-2 space-y-6">
             {/* Selected Match Summary */}
             <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-6">
-              <h3 className="text-lg font-semibold gradient-text mb-4">Selected Match</h3>
+              <h3 className="text-sm font-medium text-gray-300 mb-4">Selected Match</h3>
               <MatchCard match={selectedMatch} isSelected={true} onSelect={() => {}} />
             </div>
 
             {/* Oracle Output Type */}
             <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-6">
-              <h3 className="text-lg font-semibold gradient-text mb-4">
+              <h3 className="text-sm font-medium text-gray-300 mb-4">
                 Oracle Output Type
               </h3>
               
@@ -683,7 +713,7 @@ export default function SportsBuilder() {
 
             {/* Chain Selection */}
             <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-6">
-              <h3 className="text-lg font-semibold gradient-text mb-4">
+              <h3 className="text-sm font-medium text-gray-300 mb-4">
                 Deployment Settings
               </h3>
               
@@ -717,8 +747,8 @@ export default function SportsBuilder() {
 
           {/* Right - Summary & Actions */}
           <div className="space-y-4">
-            <div className="bg-gradient-to-br from-green-400/10 to-emerald-600/10 rounded-lg border border-green-400/20 p-6">
-              <h4 className="text-sm font-semibold gradient-text mb-4">
+            <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-6">
+              <h4 className="text-sm font-medium text-gray-400 mb-4">
                 Oracle Summary
               </h4>
               
@@ -778,7 +808,7 @@ export default function SportsBuilder() {
           {/* Config Preview */}
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-6">
-              <h3 className="text-lg font-semibold gradient-text mb-4">
+              <h3 className="text-sm font-medium text-gray-300 mb-4">
                 Switchboard Oracle Configuration
               </h3>
               
@@ -791,7 +821,7 @@ export default function SportsBuilder() {
 
             {/* How it works */}
             <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-6">
-              <h4 className="text-sm font-semibold gradient-text mb-4">
+              <h4 className="text-sm font-medium text-gray-400 mb-4">
                 How This Oracle Works
               </h4>
               
@@ -837,8 +867,8 @@ export default function SportsBuilder() {
 
           {/* Right - Actions */}
           <div className="space-y-4">
-            <div className="bg-gradient-to-br from-green-400/10 to-emerald-600/10 rounded-lg border border-green-400/20 p-6">
-              <h4 className="text-sm font-semibold gradient-text mb-4">
+            <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-6">
+              <h4 className="text-sm font-medium text-gray-400 mb-4">
                 Final Summary
               </h4>
               

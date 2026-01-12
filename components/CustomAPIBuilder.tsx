@@ -96,7 +96,7 @@ function CostEstimateDisplay({ blockchain, network }: { blockchain: string; netw
           <span>Estimated Cost:</span>
         </div>
         <div className="text-right">
-          <div className="text-lg font-bold gradient-text">
+          <div className="text-base font-semibold text-white">
             {estimate.estimatedCost} {estimate.currency}
           </div>
         </div>
@@ -265,7 +265,7 @@ export default function CustomAPIBuilder() {
     const oracles = saved ? JSON.parse(saved) : []
     oracles.push(fullConfig)
     localStorage.setItem('savedCustomAPIOracles', JSON.stringify(oracles))
-    alert('Custom API Oracle configuration saved!')
+    alert('Custom API Oracle saved! View it in your Profile tab.')
   }
   
   // Calculate transformed value
@@ -276,14 +276,14 @@ export default function CustomAPIBuilder() {
   return (
     <div className="space-y-6">
       {/* Module Header */}
-      <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+      <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 via-feedgod-primary to-feedgod-primary flex items-center justify-center">
-              <Globe className="w-5 h-5 text-white" />
+            <div className="w-9 h-9 rounded-lg bg-cyan-600 flex items-center justify-center">
+              <Globe className="w-4 h-4 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-bold gradient-text">
+              <h2 className="text-lg font-semibold text-white">
                 Custom API Oracle Builder
               </h2>
               <p className="text-sm text-gray-400">
@@ -324,8 +324,8 @@ export default function CustomAPIBuilder() {
       {step === 'fetch' && (
         <div className="space-y-6">
           {/* URL Input */}
-          <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
-            <h3 className="text-lg font-semibold gradient-text mb-4">
+          <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+            <h3 className="text-sm font-medium text-gray-300 mb-4">
               Enter API URL
             </h3>
             
@@ -441,8 +441,8 @@ export default function CustomAPIBuilder() {
           )}
 
           {/* API Templates */}
-          <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
-            <h3 className="text-lg font-semibold gradient-text mb-4">
+          <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+            <h3 className="text-sm font-medium text-gray-300 mb-4">
               Quick Templates
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -478,8 +478,8 @@ export default function CustomAPIBuilder() {
 
       {step === 'select' && testResult?.success && (
         <div className="space-y-6">
-          <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
-            <h3 className="text-lg font-semibold gradient-text mb-4">
+          <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+            <h3 className="text-sm font-medium text-gray-300 mb-4">
               Select Value to Track
             </h3>
             
@@ -492,8 +492,8 @@ export default function CustomAPIBuilder() {
 
           {/* Selected value preview */}
           {config.jsonPath && selectedValue !== undefined && (
-            <div className="bg-gradient-to-br from-cyan-500/10 to-feedgod-primary/10 rounded-lg border border-cyan-400/30 p-6">
-              <h4 className="text-sm font-semibold gradient-text mb-3">
+            <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-6">
+              <h4 className="text-sm font-medium text-gray-400 mb-3">
                 Selected Value Preview
               </h4>
               <div className="flex items-center gap-4">
@@ -537,8 +537,8 @@ export default function CustomAPIBuilder() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             {/* Oracle Settings */}
-            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold gradient-text mb-4">
+            <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h3 className="text-sm font-medium text-gray-300 mb-4">
                 Oracle Settings
               </h3>
               
@@ -588,8 +588,8 @@ export default function CustomAPIBuilder() {
             </div>
 
             {/* Value Transforms */}
-            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold gradient-text mb-4">
+            <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h3 className="text-sm font-medium text-gray-300 mb-4">
                 Value Transforms (Optional)
               </h3>
               
@@ -645,8 +645,8 @@ export default function CustomAPIBuilder() {
           {/* Right sidebar */}
           <div className="space-y-4">
             {/* Live Preview */}
-            <div className="bg-gradient-to-br from-cyan-400/10 via-feedgod-primary/10 to-feedgod-primary/10 rounded-lg border border-cyan-400/20 p-6">
-              <h4 className="text-sm font-semibold gradient-text mb-4">
+            <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-6">
+              <h4 className="text-sm font-medium text-gray-400 mb-4">
                 Live Value Preview
               </h4>
               
@@ -700,8 +700,8 @@ export default function CustomAPIBuilder() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Config Preview */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold gradient-text mb-4">
+            <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h3 className="text-sm font-medium text-gray-300 mb-4">
                 Switchboard Job Definition
               </h3>
               
@@ -719,8 +719,8 @@ export default function CustomAPIBuilder() {
             </div>
 
             {/* What you're creating */}
-            <div className="bg-gradient-to-br from-cyan-500/10 to-feedgod-primary/10 rounded-lg border border-cyan-400/30 p-6">
-              <h4 className="text-sm font-semibold gradient-text mb-4">
+            <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-6">
+              <h4 className="text-sm font-medium text-gray-400 mb-4">
                 Oracle Summary
               </h4>
               
@@ -756,8 +756,8 @@ export default function CustomAPIBuilder() {
             </div>
 
             {/* Power examples */}
-            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
-              <h4 className="text-sm font-semibold gradient-text mb-4">
+            <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h4 className="text-sm font-medium text-gray-400 mb-4">
                 The Power of Custom API Oracles
               </h4>
               
@@ -804,8 +804,8 @@ export default function CustomAPIBuilder() {
 
           {/* Right - Actions */}
           <div className="space-y-4">
-            <div className="bg-gradient-to-br from-cyan-400/10 via-feedgod-primary/10 to-feedgod-primary/10 rounded-lg border border-cyan-400/20 p-6">
-              <h4 className="text-sm font-semibold gradient-text mb-4">
+            <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-6">
+              <h4 className="text-sm font-medium text-gray-400 mb-4">
                 Final Preview
               </h4>
               
@@ -846,7 +846,7 @@ export default function CustomAPIBuilder() {
             <div className="flex flex-col gap-3">
               <button
                 onClick={handleDeploy}
-                className="w-full px-4 py-3 bg-gradient-to-r from-cyan-500 to-feedgod-primary hover:from-cyan-600 hover:to-feedgod-primary rounded-lg text-white font-medium transition-all flex items-center justify-center gap-2"
+                className="w-full px-4 py-3 gradient-bg hover:opacity-90 rounded-lg text-white font-medium transition-all flex items-center justify-center gap-2"
               >
                 <Play className="w-4 h-4" />
                 Deploy Oracle

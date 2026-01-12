@@ -104,7 +104,7 @@ function CostEstimateDisplay({ blockchain, network }: { blockchain: string; netw
           <span>Estimated Cost:</span>
         </div>
         <div className="text-right">
-          <div className="text-lg font-bold gradient-text">
+          <div className="text-base font-semibold text-white">
             {estimate.estimatedCost} {estimate.currency}
           </div>
         </div>
@@ -146,18 +146,19 @@ function ResolutionTypeSelector({
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
       {RESOLUTION_TYPES.map((type) => {
         const TypeIcon = RESOLUTION_ICON_MAP[type.iconName]
+        const isSelected = selected === type.value
         return (
           <button
             key={type.value}
             onClick={() => { playPickupSound(); onSelect(type.value); }}
             className={`p-4 rounded-xl border-2 transition-all text-left ${
-              selected === type.value
-                ? 'border-feedgod-primary dark:text-feedgod-primary dark:border-feedgod-primary dark:text-feedgod-primary bg-feedgod-primary dark:text-feedgod-primary/5'
-                : 'border-[#3a3b35] bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 hover:border-feedgod-primary dark:text-feedgod-primary/50'
+              isSelected
+                ? 'border-[#ff0d6e] bg-[#2d2530]'
+                : 'border-[#3a3b35] bg-[#252620]/80 hover:border-[#ff0d6e]/50'
             }`}
           >
             <div className="mb-2">
-              <TypeIcon className="w-7 h-7 text-feedgod-primary" />
+              <TypeIcon className={`w-7 h-7 ${isSelected ? 'text-white' : 'text-[#ff0d6e]'}`} />
             </div>
             <h4 className="font-semibold text-white text-sm">{type.label}</h4>
             <p className="text-xs text-gray-400 mt-1">
@@ -188,8 +189,8 @@ function SourceSelector({
             onClick={() => { playPickupSound(); onToggle(source.value); }}
             className={`px-3 py-2 rounded-lg border transition-all flex items-center gap-2 ${
               selected.includes(source.value)
-                ? 'border-feedgod-primary dark:text-feedgod-primary dark:border-feedgod-primary dark:text-feedgod-primary bg-feedgod-primary dark:text-feedgod-primary/10 gradient-text'
-                : 'border-[#3a3b35] bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 text-white hover:border-feedgod-primary dark:text-feedgod-primary/50'
+                ? 'border-[#ff0d6e] bg-[#2d2530] text-white'
+                : 'border-[#3a3b35] bg-[#252620]/80 text-white hover:border-[#ff0d6e]/50'
             }`}
           >
             <SourceIcon className="w-4 h-4" />
@@ -234,7 +235,7 @@ function ResolutionPreview({
 }) {
   if (isLoading) {
     return (
-      <div className="p-6 bg-gradient-to-br from-feedgod-primary/10 to-pink-500/10 rounded-xl border border-feedgod-secondary/30 text-center">
+      <div className="p-6 bg-[#252620] rounded-xl border border-feedgod-secondary/30 text-center">
         <Loader2 className="w-8 h-8 animate-spin mx-auto gradient-text mb-3" />
         <p className="text-sm text-white">AI is analyzing your question...</p>
         <p className="text-xs text-gray-400 mt-1">
@@ -247,7 +248,7 @@ function ResolutionPreview({
   if (!response) return null
   
   return (
-    <div className="p-6 bg-gradient-to-br from-feedgod-primary/10 to-pink-500/10 rounded-xl border border-feedgod-secondary/30">
+    <div className="p-6 bg-[#252620] rounded-xl border border-feedgod-secondary/30">
       <div className="flex items-center justify-between mb-4">
         <h4 className="font-semibold gradient-text flex items-center gap-2">
           <Brain className="w-5 h-5" />
@@ -471,7 +472,7 @@ export default function AIJudgeBuilder() {
     const oracles = saved ? JSON.parse(saved) : []
     oracles.push(fullConfig)
     localStorage.setItem('savedAIJudgeOracles', JSON.stringify(oracles))
-    alert('AI Judge Oracle configuration saved!')
+    alert('AI Judge Oracle saved! View it in your Profile tab.')
   }
   
   // Generate config preview
@@ -496,15 +497,15 @@ export default function AIJudgeBuilder() {
   return (
     <div className="space-y-6">
       {/* Module Header */}
-      <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+      <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-feedgod-primary via-pink-500 to-orange-400 flex items-center justify-center">
-              <Brain className="w-5 h-5 text-white" />
+            <div className="w-9 h-9 rounded-lg bg-[#ff0d6e] flex items-center justify-center">
+              <Brain className="w-4 h-4 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-bold gradient-text">
-                AI Judge Oracle Builder
+              <h2 className="text-lg font-semibold text-white">
+                AI Judge
               </h2>
               <p className="text-sm text-gray-400">
                 Any question → On-chain answer via AI reasoning
@@ -514,20 +515,20 @@ export default function AIJudgeBuilder() {
           
           {/* Step indicator */}
           <div className="flex items-center gap-2">
-            <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-              step === 'create' ? 'bg-feedgod-primary dark:text-feedgod-primary text-white' : 'bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent text-gray-400'
+            <div className={`px-2.5 py-1 rounded text-xs font-medium ${
+              step === 'create' ? 'bg-[#ff0d6e]/20 text-[#ff0d6e]' : 'bg-[#2a2b25] text-gray-500'
             }`}>
               1. Question
             </div>
-            <ChevronRight className="w-4 h-4 text-feedgod-purple-300 dark:border-feedgod-dark-accent" />
-            <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-              step === 'configure' ? 'bg-feedgod-primary dark:text-feedgod-primary text-white' : 'bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent text-gray-400'
+            <ChevronRight className="w-3 h-3 text-gray-600" />
+            <div className={`px-2.5 py-1 rounded text-xs font-medium ${
+              step === 'configure' ? 'bg-[#ff0d6e]/20 text-[#ff0d6e]' : 'bg-[#2a2b25] text-gray-500'
             }`}>
               2. Configure
             </div>
-            <ChevronRight className="w-4 h-4 text-feedgod-purple-300 dark:border-feedgod-dark-accent" />
-            <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-              step === 'preview' ? 'bg-feedgod-primary dark:text-feedgod-primary text-white' : 'bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent text-gray-400'
+            <ChevronRight className="w-3 h-3 text-gray-600" />
+            <div className={`px-2.5 py-1 rounded text-xs font-medium ${
+              step === 'preview' ? 'bg-[#ff0d6e]/20 text-[#ff0d6e]' : 'bg-[#2a2b25] text-gray-500'
             }`}>
               3. Deploy
             </div>
@@ -541,8 +542,8 @@ export default function AIJudgeBuilder() {
       {step === 'create' && (
         <div className="space-y-6">
           {/* Question Input */}
-          <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
-            <h3 className="text-lg font-semibold gradient-text mb-4">
+          <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+            <h3 className="text-sm font-medium text-gray-300 mb-3">
               What question should the AI resolve?
             </h3>
             
@@ -550,7 +551,7 @@ export default function AIJudgeBuilder() {
               value={config.question || ''}
               onChange={(e) => setConfig(prev => ({ ...prev, question: e.target.value }))}
               placeholder="Enter your question... (e.g., 'Did Taylor Swift release a new album this week?')"
-              className="w-full h-32 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent border border-[#3a3b35] rounded-lg px-4 py-3 text-white placeholder-feedgod-feedgod-secondary dark:text-feedgod-secondary/70 focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary resize-none"
+              className="w-full h-32 bg-[#1D1E19] border border-[#3a3b35] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#ff0d6e] resize-none"
             />
             
             <div className="mt-4">
@@ -559,8 +560,8 @@ export default function AIJudgeBuilder() {
           </div>
 
           {/* Resolution Type */}
-          <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
-            <h3 className="text-lg font-semibold gradient-text mb-4">
+          <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+            <h3 className="text-sm font-medium text-gray-300 mb-3">
               Resolution Type
             </h3>
             <ResolutionTypeSelector
@@ -605,8 +606,8 @@ export default function AIJudgeBuilder() {
           </div>
 
           {/* Trusted Sources */}
-          <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
-            <h3 className="text-lg font-semibold gradient-text mb-4">
+          <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+            <h3 className="text-sm font-medium text-gray-300 mb-4">
               Trusted Sources
             </h3>
             <p className="text-sm text-gray-400 mb-4">
@@ -654,9 +655,9 @@ export default function AIJudgeBuilder() {
           </div>
 
           {/* Test Resolution */}
-          <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+          <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold gradient-text">
+              <h3 className="text-sm font-medium text-gray-300">
                 Test AI Resolution
               </h3>
               <button
@@ -689,7 +690,7 @@ export default function AIJudgeBuilder() {
           <button
             onClick={handleContinue}
             disabled={!config.question || config.question.length < 10}
-            className="w-full px-4 py-3 gradient-bg hover:opacity-90 disabled:opacity-50 rounded-lg text-white font-medium transition-all flex items-center justify-center gap-2"
+            className="w-full px-4 py-2.5 gradient-bg hover:opacity-90 disabled:opacity-50 rounded-lg text-white font-medium transition-all flex items-center justify-center gap-2"
           >
             Continue to Configure
             <ChevronRight className="w-4 h-4" />
@@ -701,8 +702,8 @@ export default function AIJudgeBuilder() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             {/* Oracle Settings */}
-            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold gradient-text mb-4">
+            <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h3 className="text-sm font-medium text-gray-300 mb-4">
                 Oracle Settings
               </h3>
               
@@ -724,7 +725,7 @@ export default function AIJudgeBuilder() {
                 {/* Resolution Date */}
                 <div>
                   <label className="block text-sm font-medium text-white mb-2 flex items-center gap-2">
-                    <Calendar className="w-4 h-4" />
+                    <Calendar className="w-4 h-4" color="white" style={{ color: 'white', stroke: 'white' }} />
                     Resolution Date
                   </label>
                   <input
@@ -732,7 +733,8 @@ export default function AIJudgeBuilder() {
                     value={config.resolutionDate ? new Date(config.resolutionDate.getTime() - config.resolutionDate.getTimezoneOffset() * 60000).toISOString().slice(0, 16) : ''}
                     onChange={(e) => setConfig(prev => ({ ...prev, resolutionDate: new Date(e.target.value) }))}
                     min={new Date().toISOString().slice(0, 16)}
-                    className="w-full bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent border border-[#3a3b35] rounded-lg px-4 py-2 text-white"
+                    className="w-full bg-[#1D1E19] border border-[#3a3b35] rounded-lg px-4 py-2 text-white [color-scheme:dark] date-input-white"
+                    style={{ colorScheme: 'dark' }}
                   />
                   <p className="text-xs text-gray-400 /60 mt-1">
                     When should the AI evaluate and resolve this question?
@@ -763,8 +765,8 @@ export default function AIJudgeBuilder() {
             </div>
 
             {/* Question Preview */}
-            <div className="bg-gradient-to-br from-feedgod-primary/10 to-pink-500/10 rounded-lg border border-feedgod-secondary/20 p-6">
-              <h4 className="text-sm font-semibold gradient-text mb-3">
+            <div className="bg-[#252620] rounded-lg border border-feedgod-secondary/20 p-6">
+              <h4 className="text-sm font-medium text-gray-400 mb-3">
                 Question to Resolve
               </h4>
               <p className="text-lg text-white font-medium">
@@ -797,8 +799,8 @@ export default function AIJudgeBuilder() {
 
           {/* Right sidebar */}
           <div className="space-y-4">
-            <div className="bg-gradient-to-br from-feedgod-secondary/10 via-pink-500/10 to-orange-400/10 rounded-lg border border-feedgod-secondary/20 p-6">
-              <h4 className="text-sm font-semibold gradient-text mb-4">
+            <div className="bg-[#252620] rounded-lg border border-feedgod-secondary/20 p-6">
+              <h4 className="text-sm font-medium text-gray-400 mb-4">
                 Oracle Summary
               </h4>
               
@@ -854,7 +856,7 @@ export default function AIJudgeBuilder() {
               <button
                 onClick={handlePreview}
                 disabled={!config.resolutionDate}
-                className="w-full px-4 py-3 gradient-bg hover:opacity-90 disabled:opacity-50 rounded-lg text-white font-medium transition-all flex items-center justify-center gap-2"
+                className="w-full px-4 py-2.5 gradient-bg hover:opacity-90 disabled:opacity-50 rounded-lg text-white font-medium transition-all flex items-center justify-center gap-2"
               >
                 Preview & Deploy
                 <ChevronRight className="w-4 h-4" />
@@ -874,8 +876,8 @@ export default function AIJudgeBuilder() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Config Preview */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold gradient-text mb-4">
+            <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h3 className="text-sm font-medium text-gray-300 mb-4">
                 Switchboard Oracle Configuration
               </h3>
               
@@ -887,15 +889,15 @@ export default function AIJudgeBuilder() {
             </div>
 
             {/* How it works */}
-            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
-              <h4 className="text-sm font-semibold gradient-text mb-4 flex items-center gap-2">
+            <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h4 className="text-sm font-medium text-gray-400 mb-4 flex items-center gap-2">
                 <Info className="w-4 h-4" />
                 How AI Resolution Works
               </h4>
               
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-xs font-bold text-feedgod-primary dark:text-feedgod-secondary">1</div>
+                  <div className="w-6 h-6 rounded-full bg-[#ff0d6e] flex items-center justify-center text-xs font-bold text-white">1</div>
                   <div>
                     <h5 className="font-medium text-white text-sm">Scheduled Trigger</h5>
                     <p className="text-xs text-gray-400">
@@ -904,7 +906,7 @@ export default function AIJudgeBuilder() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center text-xs font-bold text-pink-600 dark:text-pink-400">2</div>
+                  <div className="w-6 h-6 rounded-full bg-[#ff0d6e] flex items-center justify-center text-xs font-bold text-white">2</div>
                   <div>
                     <h5 className="font-medium text-white text-sm">AI Consultation</h5>
                     <p className="text-xs text-gray-400">
@@ -913,7 +915,7 @@ export default function AIJudgeBuilder() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-xs font-bold text-orange-600 dark:text-orange-400">3</div>
+                  <div className="w-6 h-6 rounded-full bg-[#ff0d6e] flex items-center justify-center text-xs font-bold text-white">3</div>
                   <div>
                     <h5 className="font-medium text-white text-sm">On-Chain Resolution</h5>
                     <p className="text-xs text-gray-400">
@@ -925,8 +927,8 @@ export default function AIJudgeBuilder() {
             </div>
 
             {/* Use cases */}
-            <div className="bg-feedgod-dark-secondary/60 dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
-              <h4 className="text-sm font-semibold gradient-text mb-4">
+            <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h4 className="text-sm font-medium text-gray-400 mb-4">
                 Use Cases
               </h4>
               
@@ -973,8 +975,8 @@ export default function AIJudgeBuilder() {
 
           {/* Right - Actions */}
           <div className="space-y-4">
-            <div className="bg-gradient-to-br from-feedgod-secondary/10 via-pink-500/10 to-orange-400/10 rounded-lg border border-feedgod-secondary/20 p-6">
-              <h4 className="text-sm font-semibold gradient-text mb-4">
+            <div className="bg-[#252620] rounded-lg border border-feedgod-secondary/20 p-6">
+              <h4 className="text-sm font-medium text-gray-400 mb-4">
                 Final Summary
               </h4>
               
@@ -1025,14 +1027,14 @@ export default function AIJudgeBuilder() {
             <div className="flex flex-col gap-3">
               <button
                 onClick={handleDeploy}
-                className="w-full px-4 py-3 bg-gradient-to-r from-feedgod-primary to-pink-500 hover:from-feedgod-primary hover:to-pink-600 rounded-lg text-white font-medium transition-all flex items-center justify-center gap-2"
+                className="w-full px-4 py-2.5 gradient-bg hover:opacity-90 rounded-lg text-white font-medium transition-all flex items-center justify-center gap-2"
               >
                 <Play className="w-4 h-4" />
-                Deploy AI Oracle
+                Deploy Oracle
               </button>
               <button
                 onClick={handleSave}
-                className="w-full px-4 py-3 bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2"
+                className="w-full px-4 py-2.5 bg-[#2a2b25] hover:bg-[#3a3b35] rounded-lg text-gray-300 text-sm font-medium transition-colors flex items-center justify-center gap-2"
               >
                 <Save className="w-4 h-4" />
                 Save Configuration

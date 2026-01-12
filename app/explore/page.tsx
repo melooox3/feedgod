@@ -91,18 +91,18 @@ function StatCard({
   color: string 
 }) {
   return (
-    <div className="bg-feedgod-dark-secondary/80 rounded-xl border border-feedgod-dark-accent p-4 backdrop-blur-sm">
-      <div className="flex items-center gap-3">
-        <div className={`w-10 h-10 rounded-lg ${color} flex items-center justify-center`}>
-          <Icon className="w-5 h-5 text-white" />
+    <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-3">
+      <div className="flex items-center gap-2.5">
+        <div className={`w-8 h-8 rounded ${color} flex items-center justify-center`}>
+          <Icon className="w-4 h-4 text-white" />
         </div>
         <div>
-          <p className="text-2xl font-bold text-white">{value}</p>
-          <p className="text-xs text-gray-400">{label}</p>
+          <p className="text-lg font-semibold text-white">{value}</p>
+          <p className="text-xs text-gray-500">{label}</p>
         </div>
       </div>
       {subValue && (
-        <p className="text-xs text-gray-500 mt-2">{subValue}</p>
+        <p className="text-xs text-gray-600 mt-2">{subValue}</p>
       )}
     </div>
   )
@@ -131,48 +131,48 @@ function OracleListRow({ oracle, onRefresh }: { oracle: MonitoredOracle; onRefre
   const TypeIcon = ORACLE_ICON_MAP[iconName]
 
   return (
-    <div className="flex items-center gap-4 px-4 py-3 hover:bg-feedgod-dark-accent/50 transition-colors border-b border-feedgod-dark-accent last:border-0">
+    <div className="flex items-center gap-3 px-3 py-2.5 hover:bg-[#2a2b25] transition-colors border-b border-[#2a2b25] last:border-0">
       {/* Status */}
-      <div className={`w-2 h-2 rounded-full flex-shrink-0 ${getStatusBg(oracle.status)}`} />
+      <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${getStatusBg(oracle.status)}`} />
       
       {/* Icon & Name */}
-      <div className="flex items-center gap-2 min-w-[200px]">
-        <div className="w-8 h-8 rounded-lg bg-feedgod-dark-accent flex items-center justify-center">
-          <TypeIcon className="w-4 h-4 text-feedgod-primary" />
+      <div className="flex items-center gap-2 min-w-[180px]">
+        <div className="w-7 h-7 rounded bg-[#3a3b35] flex items-center justify-center">
+          <TypeIcon className="w-3.5 h-3.5 text-gray-400" />
         </div>
         <div>
           <p className="font-medium text-white text-sm">{oracle.symbol}</p>
-          <p className="text-xs text-gray-500 truncate max-w-[150px]">{oracle.name}</p>
+          <p className="text-xs text-gray-600 truncate max-w-[140px]">{oracle.name}</p>
         </div>
       </div>
       
       {/* Value */}
-      <div className="min-w-[120px]">
-        <p className="font-bold text-white">
+      <div className="min-w-[100px]">
+        <p className="font-medium text-white text-sm">
           {formatOracleValue(oracle.currentValue, oracle.type, oracle.symbol)}
         </p>
       </div>
       
       {/* Change */}
-      <div className={`flex items-center gap-1 min-w-[80px] ${changeColor}`}>
+      <div className={`flex items-center gap-1 min-w-[70px] ${changeColor}`}>
         {ChangeIcon && <ChangeIcon className="w-3 h-3" />}
-        <span className="text-sm">
+        <span className="text-xs">
           {oracle.change24h >= 0 ? '+' : ''}{oracle.change24h.toFixed(2)}%
         </span>
       </div>
       
       {/* Sparkline */}
-      <div className="flex-1 min-w-[120px]">
+      <div className="flex-1 min-w-[100px]">
         <OracleSparkline 
           data={oracle.history.slice(-24)} 
-          width={100} 
-          height={24}
+          width={90} 
+          height={20}
           showArea={false}
         />
       </div>
       
       {/* Last Update */}
-      <div className="flex items-center gap-1 text-xs text-gray-500 min-w-[80px]">
+      <div className="flex items-center gap-1 text-xs text-gray-600 min-w-[70px]">
         <Clock className="w-3 h-3" />
         {getTimeSinceUpdate(oracle.lastUpdate)}
       </div>
@@ -180,21 +180,39 @@ function OracleListRow({ oracle, onRefresh }: { oracle: MonitoredOracle; onRefre
       {/* Actions */}
       <button
         onClick={onRefresh}
-        className="p-2 hover:bg-feedgod-dark-accent rounded-lg transition-colors"
+        className="p-1.5 hover:bg-[#3a3b35] rounded transition-colors"
       >
-        <RefreshCw className="w-4 h-4 text-gray-400" />
+        <RefreshCw className="w-3.5 h-3.5 text-gray-500" />
       </button>
     </div>
   )
 }
 
+// Cache keys
+const ORACLES_CACHE_KEY = 'explore_oracles_cache'
+const MY_ORACLES_CACHE_KEY = 'explore_my_oracles_cache'
+const CACHE_DURATION = 60000 // 1 minute
+
 export default function ExplorePage() {
   const [activeTab, setActiveTab] = useState<TabType>('my-oracles')
   
-  // Explore state
-  const [oracles, setOracles] = useState<Oracle[]>([])
+  // Explore state - initialize from cache for instant display
+  const [oracles, setOracles] = useState<Oracle[]>(() => {
+    if (typeof window !== 'undefined') {
+      const cached = localStorage.getItem(ORACLES_CACHE_KEY)
+      if (cached) {
+        try {
+          const { data, timestamp } = JSON.parse(cached)
+          if (Date.now() - timestamp < CACHE_DURATION) {
+            return data
+          }
+        } catch {}
+      }
+    }
+    return []
+  })
   const [exploreStats, setExploreStats] = useState<OracleStats | null>(null)
-  const [isExploreLoading, setIsExploreLoading] = useState(true)
+  const [isExploreLoading, setIsExploreLoading] = useState(false) // Start false, only true when fetching
   const [selectedOracle, setSelectedOracle] = useState<Oracle | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
@@ -203,8 +221,11 @@ export default function ExplorePage() {
   const [showSortDropdown, setShowSortDropdown] = useState(false)
   const [showOnlyInUse, setShowOnlyInUse] = useState(false)
   
-  // Dashboard state
-  const [myOracles, setMyOracles] = useState<MonitoredOracle[]>([])
+  // Dashboard state - initialize immediately
+  const [myOracles, setMyOracles] = useState<MonitoredOracle[]>(() => {
+    // Initialize immediately for instant render
+    return getMockDeployedOracles()
+  })
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
   const [dashboardFilter, setDashboardFilter] = useState<DashboardFilter>('all')
   const [dashboardSearch, setDashboardSearch] = useState('')
@@ -221,10 +242,15 @@ export default function ExplorePage() {
   // Fetch real prices from CoinGecko
   const { prices, loading: pricesLoading, refresh: refreshPrices } = usePrices(allPriceSymbols, 30000)
   
-  // Initialize dashboard oracles
+  // Cache oracles when they change
   useEffect(() => {
-    setMyOracles(getMockDeployedOracles())
-  }, [])
+    if (oracles.length > 0 && typeof window !== 'undefined') {
+      localStorage.setItem(ORACLES_CACHE_KEY, JSON.stringify({
+        data: oracles,
+        timestamp: Date.now()
+      }))
+    }
+  }, [oracles])
   
   // Update oracles when real prices come in
   useEffect(() => {
@@ -249,11 +275,15 @@ export default function ExplorePage() {
     }
   }, [prices])
   
-  // Load explore oracles
+  // Load explore oracles - only show loading if we have no data
   useEffect(() => {
     if (activeTab === 'all-oracles') {
       const loadData = async () => {
-        setIsExploreLoading(true)
+        // Only show loading spinner if we don't have cached data
+        if (oracles.length === 0) {
+          setIsExploreLoading(true)
+        }
+        
         const [oraclesData, statsData] = await Promise.all([
           fetchAllOracles({
             type: typeFilter,
@@ -357,45 +387,45 @@ export default function ExplorePage() {
     <main className="min-h-screen">
       <Header />
       
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Hero Section */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">
+        <div className="text-center mb-6">
+          <h1 className="text-2xl font-semibold text-white mb-2">
             Explore
           </h1>
-          <p className="text-gray-400 max-w-xl mx-auto">
+          <p className="text-sm text-gray-500 max-w-lg mx-auto">
             Monitor your deployed oracles and discover data feeds from the community.
           </p>
         </div>
         
         {/* Tab Navigation */}
-        <div className="flex justify-center mb-8">
-          <div className="inline-flex bg-feedgod-dark-secondary rounded-xl p-1 border border-feedgod-dark-accent">
+        <div className="flex justify-center mb-6">
+          <div className="inline-flex bg-[#252620] rounded-lg p-1 border border-[#3a3b35]">
             <button
               onClick={() => { playPickupSound(); setActiveTab('my-oracles'); }}
-              className={`px-6 py-3 rounded-lg font-medium transition-all flex items-center gap-2 ${
+              className={`px-4 py-2 rounded text-sm font-medium transition-all flex items-center gap-2 ${
                 activeTab === 'my-oracles'
-                  ? 'gradient-bg text-white'
+                  ? 'bg-[#ff0d6e] text-white'
                   : 'text-gray-400 hover:text-white'
               }`}
             >
-              <Activity className="w-4 h-4" />
+              <Activity className="w-3.5 h-3.5" />
               My Oracles
               {dashboardStats.totalAlerts > 0 && (
-                <span className="bg-amber-500 text-white text-xs px-1.5 py-0.5 rounded-full">
+                <span className="bg-amber-500 text-white text-xs px-1.5 py-0.5 rounded">
                   {dashboardStats.totalAlerts}
                 </span>
               )}
             </button>
             <button
               onClick={() => { playPickupSound(); setActiveTab('all-oracles'); }}
-              className={`px-6 py-3 rounded-lg font-medium transition-all flex items-center gap-2 ${
+              className={`px-4 py-2 rounded text-sm font-medium transition-all flex items-center gap-2 ${
                 activeTab === 'all-oracles'
-                  ? 'gradient-bg text-white'
+                  ? 'bg-[#ff0d6e] text-white'
                   : 'text-gray-400 hover:text-white'
               }`}
             >
-              <Sparkles className="w-4 h-4" />
+              <Sparkles className="w-3.5 h-3.5" />
               All Oracles
             </button>
           </div>
@@ -411,33 +441,33 @@ export default function ExplorePage() {
                 label="Total Oracles"
                 value={dashboardStats.total}
                 subValue={`${dashboardStats.byChain.solana} Solana, ${dashboardStats.byChain.ethereum} ETH`}
-                color="bg-gradient-to-br from-feedgod-primary to-feedgod-secondary"
+                color="bg-[#ff0d6e]"
               />
               <StatCard
                 icon={CheckCircle}
                 label="Healthy"
                 value={dashboardStats.healthy}
                 subValue={`${Math.round((dashboardStats.healthy / dashboardStats.total) * 100)}% uptime`}
-                color="bg-gradient-to-br from-emerald-500 to-green-500"
+                color="bg-emerald-600"
               />
               <StatCard
                 icon={AlertTriangle}
                 label="Alerts"
                 value={dashboardStats.totalAlerts}
                 subValue={dashboardStats.totalAlerts > 0 ? 'Action required' : 'All clear'}
-                color={dashboardStats.totalAlerts > 0 ? 'bg-gradient-to-br from-amber-500 to-orange-500' : 'bg-gradient-to-br from-gray-400 to-gray-500'}
+                color={dashboardStats.totalAlerts > 0 ? 'bg-amber-600' : 'bg-gray-600'}
               />
               <StatCard
                 icon={Zap}
                 label="Last Update"
                 value={lastRefresh.toLocaleTimeString()}
                 subValue={isLive ? 'Auto-refreshing' : 'Paused'}
-                color="bg-gradient-to-br from-feedgod-primary to-feedgod-secondary"
+                color="bg-[#ff0d6e]"
               />
             </div>
 
             {/* Filters & Controls */}
-            <div className="bg-feedgod-dark-secondary/80 rounded-xl border border-feedgod-dark-accent p-4 mb-6 backdrop-blur-sm">
+            <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-4 mb-6">
               <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
                 {/* Search */}
                 <div className="flex-1 relative">
@@ -447,7 +477,7 @@ export default function ExplorePage() {
                     value={dashboardSearch}
                     onChange={(e) => setDashboardSearch(e.target.value)}
                     placeholder="Search your oracles..."
-                    className="w-full pl-10 pr-4 py-2 bg-feedgod-dark-accent border border-feedgod-dark-accent rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-feedgod-primary"
+                    className="w-full pl-9 pr-4 py-2 bg-[#1D1E19] border border-[#3a3b35] rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-[#ff0d6e]"
                   />
                 </div>
                 
@@ -462,10 +492,10 @@ export default function ExplorePage() {
                     <button
                       key={option.value}
                       onClick={() => { playPickupSound(); setDashboardFilter(option.value as DashboardFilter); }}
-                      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                      className={`px-2.5 py-1.5 rounded text-xs font-medium transition-all ${
                         dashboardFilter === option.value
-                          ? 'bg-feedgod-primary text-white'
-                          : 'bg-feedgod-dark-accent text-gray-300 hover:bg-feedgod-dark-accent/80'
+                          ? 'bg-[#ff0d6e] text-white'
+                          : 'bg-[#2a2b25] text-gray-400 hover:text-gray-300'
                       }`}
                     >
                       {option.label}
@@ -477,49 +507,49 @@ export default function ExplorePage() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => { playPickupSound(); setIsLive(!isLive); }}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg font-medium transition-all ${
+                    className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-all ${
                       isLive 
-                        ? 'bg-emerald-500 text-white' 
-                        : 'bg-feedgod-dark-accent text-gray-300'
+                        ? 'bg-emerald-600 text-white' 
+                        : 'bg-[#2a2b25] text-gray-400'
                     }`}
                   >
                     {isLive ? (
                       <>
-                        <span className="w-2 h-2 bg-feedgod-primary rounded-full animate-pulse" />
-                        <span className="text-sm">Live</span>
+                        <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+                        <span>Live</span>
                       </>
                     ) : (
                       <>
-                        <BellOff className="w-4 h-4" />
-                        <span className="text-sm">Paused</span>
+                        <BellOff className="w-3.5 h-3.5" />
+                        <span>Paused</span>
                       </>
                     )}
                   </button>
                   
                   <button
                     onClick={handleRefreshAll}
-                    className="p-2 bg-feedgod-dark-accent hover:bg-feedgod-dark-accent/80 rounded-lg transition-colors"
+                    className="p-1.5 bg-[#2a2b25] hover:bg-[#3a3b35] rounded transition-colors"
                     title="Refresh all"
                   >
-                    <RefreshCw className="w-4 h-4 text-gray-300" />
+                    <RefreshCw className="w-3.5 h-3.5 text-gray-400" />
                   </button>
                   
-                  <div className="flex items-center gap-1 bg-feedgod-dark-accent rounded-lg p-1">
+                  <div className="flex items-center gap-0.5 bg-[#1D1E19] rounded p-0.5">
                     <button
                       onClick={() => { playPickupSound(); setViewMode('grid'); }}
-                      className={`p-2 rounded-md transition-all ${
-                        viewMode === 'grid' ? 'bg-feedgod-dark-secondary shadow-sm' : ''
+                      className={`p-1.5 rounded transition-all ${
+                        viewMode === 'grid' ? 'bg-[#3a3b35]' : ''
                       }`}
                     >
-                      <Grid3X3 className="w-4 h-4 text-gray-300" />
+                      <Grid3X3 className="w-3.5 h-3.5 text-gray-400" />
                     </button>
                     <button
                       onClick={() => { playPickupSound(); setViewMode('list'); }}
-                      className={`p-2 rounded-md transition-all ${
-                        viewMode === 'list' ? 'bg-feedgod-dark-secondary shadow-sm' : ''
+                      className={`p-1.5 rounded transition-all ${
+                        viewMode === 'list' ? 'bg-[#3a3b35]' : ''
                       }`}
                     >
-                      <List className="w-4 h-4 text-gray-300" />
+                      <List className="w-3.5 h-3.5 text-gray-400" />
                     </button>
                   </div>
                 </div>
@@ -528,15 +558,15 @@ export default function ExplorePage() {
 
             {/* Oracle Cards/List */}
             {filteredMyOracles.length === 0 ? (
-              <div className="text-center py-20">
-                <Activity className="w-16 h-16 mx-auto text-gray-600 mb-4" />
-                <h3 className="text-xl font-semibold text-white mb-2">No oracles found</h3>
-                <p className="text-gray-400">
+              <div className="text-center py-16">
+                <Activity className="w-10 h-10 mx-auto text-gray-600 mb-3" />
+                <h3 className="text-base font-medium text-white mb-1">No oracles found</h3>
+                <p className="text-sm text-gray-500">
                   {dashboardSearch ? 'Try a different search term' : 'Deploy your first oracle to see it here'}
                 </p>
               </div>
             ) : viewMode === 'grid' ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filteredMyOracles.map((oracle) => (
                   <LiveOracleCard
                     key={oracle.id}
@@ -546,8 +576,8 @@ export default function ExplorePage() {
                 ))}
               </div>
             ) : (
-              <div className="bg-feedgod-dark-secondary/80 rounded-xl border border-feedgod-dark-accent backdrop-blur-sm overflow-hidden">
-                <div className="flex items-center gap-4 px-4 py-3 bg-feedgod-dark-accent/50 border-b border-feedgod-dark-accent text-xs font-medium text-gray-400 uppercase tracking-wider">
+              <div className="bg-[#252620] rounded-lg border border-[#3a3b35] overflow-hidden">
+                <div className="flex items-center gap-3 px-3 py-2 bg-[#1D1E19] border-b border-[#3a3b35] text-xs font-medium text-gray-500">
                   <div className="w-2" />
                   <div className="min-w-[200px]">Oracle</div>
                   <div className="min-w-[120px]">Value</div>
@@ -573,17 +603,17 @@ export default function ExplorePage() {
           <>
             {/* Stats Bar */}
             {exploreStats && (
-              <div className="grid grid-cols-2 md:grid-cols-6 gap-3 mb-8">
+              <div className="grid grid-cols-2 md:grid-cols-6 gap-2 mb-6">
                 {[
                   { label: 'Total Oracles', value: exploreStats.totalOracles, color: 'text-white' },
                   { label: 'Price Feeds', value: exploreStats.totalFeeds, color: 'text-emerald-500' },
-                  { label: 'Predictions', value: exploreStats.totalPredictions, color: 'text-feedgod-primary' },
+                  { label: 'Predictions', value: exploreStats.totalPredictions, color: 'text-[#ff0d6e]' },
                   { label: 'Weather', value: exploreStats.totalWeather, color: 'text-sky-500' },
                   { label: 'VRF', value: exploreStats.totalVRF, color: 'text-amber-500' },
                   { label: 'Functions', value: exploreStats.totalFunctions, color: 'text-pink-500' },
                 ].map((stat) => (
-                  <div key={stat.label} className="bg-feedgod-dark-secondary/80 rounded-xl border border-feedgod-dark-accent p-4 text-center backdrop-blur-sm">
-                    <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
+                  <div key={stat.label} className="bg-[#252620] rounded-lg border border-[#3a3b35] p-3 text-center">
+                    <p className={`text-lg font-semibold ${stat.color}`}>{stat.value}</p>
                     <p className="text-xs text-gray-500">{stat.label}</p>
                   </div>
                 ))}
@@ -591,17 +621,17 @@ export default function ExplorePage() {
             )}
             
             {/* Search and Filters */}
-            <div className="bg-feedgod-dark-secondary/80 rounded-xl border border-feedgod-dark-accent p-4 mb-6 backdrop-blur-sm">
-              <div className="flex flex-col md:flex-row gap-4">
+            <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-4 mb-6">
+              <div className="flex flex-col md:flex-row gap-3">
                 {/* Search */}
                 <div className="flex-1 relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search by name, symbol, or description..."
-                    className="w-full pl-10 pr-4 py-3 bg-feedgod-dark-accent border border-feedgod-dark-accent rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-feedgod-primary"
+                    className="w-full pl-9 pr-4 py-2 bg-[#1D1E19] border border-[#3a3b35] rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-[#ff0d6e]"
                   />
                 </div>
                 
@@ -609,20 +639,20 @@ export default function ExplorePage() {
                 <div className="relative">
                   <button
                     onClick={() => { playPickupSound(); setShowSortDropdown(!showSortDropdown); }}
-                    className="w-full md:w-auto px-4 py-3 bg-feedgod-dark-accent border border-feedgod-dark-accent rounded-lg text-white flex items-center justify-between gap-2 hover:border-feedgod-primary transition-colors"
+                    className="w-full md:w-auto px-3 py-2 bg-[#1D1E19] border border-[#3a3b35] rounded-lg text-white text-sm flex items-center justify-between gap-2 hover:border-[#ff0d6e]/50 transition-colors"
                   >
-                    <ArrowUpDown className="w-4 h-4 text-gray-400" />
-                    <span className="text-sm">{SORT_OPTIONS.find(o => o.value === sortBy)?.label}</span>
+                    <ArrowUpDown className="w-3.5 h-3.5 text-gray-400" />
+                    <span>{SORT_OPTIONS.find(o => o.value === sortBy)?.label}</span>
                   </button>
                   
                   {showSortDropdown && (
-                    <div className="absolute right-0 mt-2 w-48 bg-feedgod-dark-secondary border border-feedgod-dark-accent rounded-lg shadow-lg z-20">
+                    <div className="absolute right-0 mt-1 w-44 bg-[#252620] border border-[#3a3b35] rounded-lg shadow-lg z-20">
                       {SORT_OPTIONS.map((option) => (
                         <button
                           key={option.value}
                           onClick={() => handleSortChange(option.value)}
-                          className={`w-full px-4 py-2 text-left text-sm hover:bg-feedgod-dark-accent transition-colors ${
-                            sortBy === option.value ? 'text-feedgod-primary font-medium' : 'text-white'
+                          className={`w-full px-3 py-2 text-left text-sm hover:bg-[#3a3b35] transition-colors ${
+                            sortBy === option.value ? 'text-[#ff0d6e]' : 'text-gray-300'
                           }`}
                         >
                           {option.label}
@@ -634,39 +664,39 @@ export default function ExplorePage() {
               </div>
               
               {/* Type Filter Pills */}
-              <div className="flex flex-wrap items-center gap-2 mt-4">
+              <div className="flex flex-wrap items-center gap-2 mt-3">
                 {TYPE_FILTERS.map(({ value, label, icon: Icon }) => (
                   <button
                     key={value}
                     onClick={() => handleTypeFilter(value)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 ${
+                    className={`px-3 py-1.5 rounded text-xs font-medium transition-all flex items-center gap-1.5 ${
                       typeFilter === value
-                        ? 'gradient-bg text-white shadow-lg shadow-feedgod-primary/20'
-                        : 'bg-feedgod-dark-accent text-gray-300 hover:bg-feedgod-dark-accent/80'
+                        ? 'bg-[#ff0d6e] text-white'
+                        : 'bg-[#2a2b25] text-gray-400 hover:text-gray-300'
                     }`}
                   >
-                    <Icon className="w-4 h-4" />
+                    <Icon className="w-3.5 h-3.5" />
                     {label}
                   </button>
                 ))}
                 
                 {/* Divider */}
-                <div className="w-px h-6 bg-feedgod-dark-accent mx-2" />
+                <div className="w-px h-5 bg-[#3a3b35] mx-1" />
                 
                 {/* In Use Filter Toggle */}
                 <button
                   onClick={() => { playPickupSound(); setShowOnlyInUse(!showOnlyInUse); }}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 ${
+                  className={`px-3 py-1.5 rounded text-xs font-medium transition-all flex items-center gap-1.5 ${
                     showOnlyInUse
-                      ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20'
-                      : 'bg-feedgod-dark-accent text-gray-300 hover:bg-feedgod-dark-accent/80'
+                      ? 'bg-emerald-600 text-white'
+                      : 'bg-[#2a2b25] text-gray-400 hover:text-gray-300'
                   }`}
                 >
-                  <CheckCircle className="w-4 h-4" />
+                  <CheckCircle className="w-3.5 h-3.5" />
                   In Use
                   {myOracles.length > 0 && (
-                    <span className={`text-xs px-1.5 py-0.5 rounded-full ${
-                      showOnlyInUse ? 'bg-emerald-600' : 'bg-feedgod-dark-secondary'
+                    <span className={`text-xs px-1.5 py-0.5 rounded ${
+                      showOnlyInUse ? 'bg-emerald-700' : 'bg-[#1D1E19]'
                     }`}>
                       {myOracles.length}
                     </span>
@@ -677,14 +707,14 @@ export default function ExplorePage() {
             
             {/* Results */}
             {isExploreLoading ? (
-              <div className="flex items-center justify-center py-20">
-                <Loader2 className="w-8 h-8 animate-spin text-feedgod-primary" />
+              <div className="flex items-center justify-center py-16">
+                <Loader2 className="w-5 h-5 animate-spin text-gray-400" />
               </div>
             ) : oracles.length === 0 ? (
-              <div className="text-center py-20">
-                <Database className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-white mb-2">No oracles found</h3>
-                <p className="text-gray-400">Try adjusting your search or filters</p>
+              <div className="text-center py-16">
+                <Database className="w-10 h-10 text-gray-600 mx-auto mb-3" />
+                <h3 className="text-base font-medium text-white mb-1">No oracles found</h3>
+                <p className="text-sm text-gray-500">Try adjusting your search or filters</p>
               </div>
             ) : (
               <>
