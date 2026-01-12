@@ -42,7 +42,6 @@ import {
   fetchPastMatches,
   formatMatchTime, 
   getSportIconName,
-  SportIconName,
   generateMockEsportsMatches 
 } from '@/lib/sports-api'
 import { playPickupSound } from '@/lib/sound-utils'
