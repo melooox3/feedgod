@@ -4,131 +4,159 @@ import { AIResolutionRequest, AIResolutionResponse } from '@/types/ai-judge'
 /**
  * AI Resolution API Endpoint
  * 
- * In production, this would call OpenAI/Claude/etc.
- * For demo, we simulate AI reasoning with realistic responses.
- * 
- * To enable real AI:
- * 1. Add OPENAI_API_KEY to .env.local
- * 2. npm install openai
- * 3. Replace simulateAIResolution with real API call
+ * Uses OpenAI GPT-4 to actually answer user questions.
+ * Falls back to a "no API key" error if not configured.
  */
 
-// Simulated AI resolution for demo purposes
-async function simulateAIResolution(request: AIResolutionRequest): Promise<AIResolutionResponse> {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000))
+// Real AI resolution using OpenAI
+async function resolveWithOpenAI(request: AIResolutionRequest): Promise<AIResolutionResponse> {
+  const { question, resolutionType, trustedSources, categories, additionalContext } = request
   
-  const { question, resolutionType, trustedSources, categories } = request
-  const questionLower = question.toLowerCase()
+  const openaiKey = process.env.OPENAI_API_KEY
   
-  // Generate contextual mock responses based on question content
-  let answer: string | number | boolean
-  let reasoning: string
-  let confidence: number
-  let sources: string[]
+  if (!openaiKey) {
+    return {
+      success: false,
+      answer: '',
+      reasoning: 'OpenAI API key not configured. Please add OPENAI_API_KEY to your environment variables.',
+      sources: [],
+      confidence: 0,
+      timestamp: new Date().toISOString(),
+      warning: 'API key required for AI resolution.',
+    }
+  }
   
-  // Binary questions
+  // Build the prompt based on resolution type
+  let systemPrompt = `You are an AI oracle that researches and answers questions with factual accuracy. 
+You must provide:
+1. A clear answer
+2. Your reasoning with specific evidence
+3. Sources you would use to verify this (real websites)
+4. A confidence score (0-100)
+
+Be honest about what you know and don't know. If you're uncertain, reflect that in your confidence score.
+Today's date is ${new Date().toLocaleDateString()}.`
+
+  let userPrompt = `Question: ${question}\n\n`
+  
+  if (additionalContext) {
+    userPrompt += `Additional context: ${additionalContext}\n\n`
+  }
+  
+  if (trustedSources && trustedSources.length > 0) {
+    userPrompt += `Trusted source categories to consider: ${trustedSources.join(', ')}\n\n`
+  }
+  
+  // Format expected based on resolution type
   if (resolutionType === 'binary') {
-    // Simulate different scenarios
-    const isPositive = Math.random() > 0.4 // Slightly bias toward yes for demo
-    answer = isPositive
-    
-    if (questionLower.includes('snow') || questionLower.includes('rain') || questionLower.includes('weather')) {
-      reasoning = isPositive 
-        ? `Based on weather service data, precipitation was recorded in the specified location on the given date. Multiple weather stations confirmed the conditions.`
-        : `Weather service data indicates no precipitation was recorded in the specified location. Clear conditions were reported across monitoring stations.`
-      sources = ['weather.gov', 'accuweather.com', 'wunderground.com']
-      confidence = 92 + Math.floor(Math.random() * 8)
-    } else if (questionLower.includes('release') || questionLower.includes('album') || questionLower.includes('song')) {
-      reasoning = isPositive
-        ? `Music industry sources and streaming platforms confirm a new release. Social media buzz and official announcements corroborate this information.`
-        : `No official announcements or streaming platform listings were found for a new release in the specified timeframe.`
-      sources = ['spotify.com', 'billboard.com', 'pitchfork.com']
-      confidence = 85 + Math.floor(Math.random() * 10)
-    } else if (questionLower.includes('bitcoin') || questionLower.includes('crypto') || questionLower.includes('bullish')) {
-      reasoning = isPositive
-        ? `Analysis of social media sentiment, trading volume, and market indicators suggests a predominantly bullish outlook. Fear & Greed Index supports this assessment.`
-        : `Market indicators and sentiment analysis show mixed to bearish signals. Trading volume and social sentiment lean negative.`
-      sources = ['coingecko.com', 'cryptoquant.com', 'santiment.net']
-      confidence = 70 + Math.floor(Math.random() * 15)
-    } else if (questionLower.includes('tweet') || questionLower.includes('post') || questionLower.includes('twitter')) {
-      reasoning = isPositive
-        ? `Twitter/X activity search found matching content from the specified account within the given timeframe.`
-        : `No matching posts were found from the specified account within the given timeframe.`
-      sources = ['twitter.com/x.com', 'nitter.net']
-      confidence = 88 + Math.floor(Math.random() * 10)
-    } else {
-      reasoning = isPositive
-        ? `Based on analysis of available sources, the evidence supports a positive resolution. Multiple independent sources corroborate this finding.`
-        : `Available evidence does not support a positive resolution. Sources analyzed did not confirm the stated condition.`
-      sources = trustedSources.map(s => `${s}-source.com`)
-      confidence = 75 + Math.floor(Math.random() * 15)
-    }
+    userPrompt += `This is a YES/NO question. Respond with JSON in this exact format:
+{
+  "answer": true or false,
+  "reasoning": "Your detailed explanation with evidence",
+  "sources": ["source1.com", "source2.com"],
+  "confidence": 85
+}`
+  } else if (resolutionType === 'numeric') {
+    userPrompt += `This question expects a numeric answer. Respond with JSON in this exact format:
+{
+  "answer": 123.45,
+  "reasoning": "Your detailed explanation",
+  "sources": ["source1.com", "source2.com"],
+  "confidence": 85
+}`
+  } else if (resolutionType === 'categorical' && categories && categories.length > 0) {
+    userPrompt += `Choose from these options: ${categories.join(', ')}. Respond with JSON in this exact format:
+{
+  "answer": "chosen option",
+  "reasoning": "Your detailed explanation",
+  "sources": ["source1.com", "source2.com"],
+  "confidence": 85
+}`
+  } else {
+    userPrompt += `Provide a text answer. Respond with JSON in this exact format:
+{
+  "answer": "Your answer text",
+  "reasoning": "Your detailed explanation",
+  "sources": ["source1.com", "source2.com"],
+  "confidence": 85
+}`
   }
-  // Numeric questions
-  else if (resolutionType === 'numeric') {
-    if (questionLower.includes('price') || questionLower.includes('bitcoin') || questionLower.includes('ethereum')) {
-      if (questionLower.includes('bitcoin')) {
-        answer = 95000 + Math.floor(Math.random() * 10000)
-      } else if (questionLower.includes('ethereum')) {
-        answer = 3200 + Math.floor(Math.random() * 500)
-      } else {
-        answer = Math.floor(Math.random() * 10000)
+
+  try {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${openaiKey}`,
+      },
+      body: JSON.stringify({
+        model: 'gpt-4-turbo-preview',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt }
+        ],
+        temperature: 0.3,
+        max_tokens: 1000,
+        response_format: { type: 'json_object' }
+      }),
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      console.error('[AI Resolve] OpenAI API error:', response.status, errorData)
+      
+      return {
+        success: false,
+        answer: '',
+        reasoning: `OpenAI API error: ${response.status}. ${errorData.error?.message || 'Unknown error'}`,
+        sources: [],
+        confidence: 0,
+        timestamp: new Date().toISOString(),
+        warning: 'Failed to get AI response.',
       }
-      reasoning = `Price data aggregated from multiple exchanges shows the current market value. Data represents a weighted average across major trading pairs.`
-      sources = ['coingecko.com', 'coinmarketcap.com', 'binance.com']
-      confidence = 95 + Math.floor(Math.random() * 5)
-    } else if (questionLower.includes('temperature') || questionLower.includes('degrees')) {
-      answer = 40 + Math.floor(Math.random() * 50)
-      reasoning = `Temperature data collected from weather monitoring stations in the specified region.`
-      sources = ['weather.gov', 'noaa.gov']
-      confidence = 90 + Math.floor(Math.random() * 10)
-    } else {
-      answer = Math.floor(Math.random() * 1000)
-      reasoning = `Numeric value determined through analysis of relevant data sources.`
-      sources = trustedSources.map(s => `${s}-data.com`)
-      confidence = 70 + Math.floor(Math.random() * 20)
     }
-  }
-  // Categorical questions
-  else if (resolutionType === 'categorical' && categories && categories.length > 0) {
-    const selectedIndex = Math.floor(Math.random() * categories.length)
-    answer = categories[selectedIndex]
-    reasoning = `Based on official results and multiple news sources, "${answer}" has been confirmed as the correct answer.`
-    sources = ['official-results.com', 'ap-news.com', 'reuters.com']
-    confidence = 85 + Math.floor(Math.random() * 15)
-  }
-  // Text questions
-  else {
-    if (questionLower.includes('headline') || questionLower.includes('news')) {
-      const headlines = [
-        'Tech stocks rally amid AI optimism',
-        'Global leaders meet for climate summit',
-        'New breakthrough in renewable energy announced',
-        'Markets react to Federal Reserve decision',
-      ]
-      answer = headlines[Math.floor(Math.random() * headlines.length)]
-    } else if (questionLower.includes('trending')) {
-      const trends = ['#AIRevolution', '#Bitcoin100K', '#BreakingNews', '#TechNews', '#CryptoTwitter']
-      answer = trends[Math.floor(Math.random() * trends.length)]
-    } else {
-      answer = 'Based on current analysis, the most relevant finding is that the situation remains dynamic with multiple factors at play.'
+
+    const data = await response.json()
+    const content = data.choices?.[0]?.message?.content
+
+    if (!content) {
+      return {
+        success: false,
+        answer: '',
+        reasoning: 'No response content from AI',
+        sources: [],
+        confidence: 0,
+        timestamp: new Date().toISOString(),
+      }
     }
-    reasoning = `Text response generated from analysis of current events and trending topics across specified sources.`
-    sources = ['trends.google.com', 'twitter.com/trending', 'reddit.com']
-    confidence = 65 + Math.floor(Math.random() * 20)
-  }
-  
-  return {
-    success: true,
-    answer,
-    reasoning,
-    sources,
-    confidence,
-    timestamp: new Date().toISOString(),
-    warning: confidence < 80 
-      ? 'Lower confidence score - consider additional verification before using for high-stakes decisions.'
-      : undefined,
+
+    // Parse the JSON response
+    const parsed = JSON.parse(content)
+    
+    return {
+      success: true,
+      answer: parsed.answer,
+      reasoning: parsed.reasoning || 'No reasoning provided',
+      sources: parsed.sources || [],
+      confidence: Math.min(100, Math.max(0, parsed.confidence || 50)),
+      timestamp: new Date().toISOString(),
+      warning: parsed.confidence < 70 
+        ? 'Lower confidence - the AI is uncertain about this answer.'
+        : undefined,
+    }
+
+  } catch (error) {
+    console.error('[AI Resolve] Error calling OpenAI:', error)
+    
+    return {
+      success: false,
+      answer: '',
+      reasoning: `Error processing AI request: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      sources: [],
+      confidence: 0,
+      timestamp: new Date().toISOString(),
+      warning: 'An error occurred during AI resolution.',
+    }
   }
 }
 
@@ -151,14 +179,8 @@ export async function POST(request: NextRequest) {
       )
     }
     
-    // In production, check for API key and call real AI
-    // const openaiKey = process.env.OPENAI_API_KEY
-    // if (openaiKey) {
-    //   return await callOpenAI(body)
-    // }
-    
-    // Demo mode - simulate AI resolution
-    const response = await simulateAIResolution(body)
+    // Call real AI resolution
+    const response = await resolveWithOpenAI(body)
     
     return NextResponse.json(response)
     
@@ -168,7 +190,7 @@ export async function POST(request: NextRequest) {
       { 
         success: false, 
         error: 'Failed to process AI resolution',
-        answer: null,
+        answer: '',
         reasoning: 'An error occurred during resolution',
         sources: [],
         confidence: 0,
@@ -181,11 +203,17 @@ export async function POST(request: NextRequest) {
 
 // GET endpoint for testing
 export async function GET() {
+  const hasApiKey = !!process.env.OPENAI_API_KEY
+  
   return NextResponse.json({
     status: 'AI Resolution API is running',
-    mode: 'demo', // Would be 'production' with real API key
+    mode: hasApiKey ? 'production' : 'no-api-key',
+    hasOpenAIKey: hasApiKey,
     supportedTypes: ['binary', 'numeric', 'categorical', 'text'],
-    note: 'POST a question to get AI resolution',
+    note: hasApiKey 
+      ? 'API is ready. POST a question to get AI resolution.'
+      : 'OPENAI_API_KEY not configured. Add it to .env.local to enable AI resolution.',
   })
 }
+
 

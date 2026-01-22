@@ -2,6 +2,9 @@ import { Blockchain, Network } from './feed'
 
 export type WeatherMetric = 'temperature_max' | 'temperature_min' | 'precipitation' | 'humidity' | 'wind_speed'
 
+// Icon names from Lucide
+export type WeatherIconName = 'Thermometer' | 'ThermometerSnowflake' | 'CloudRain' | 'Droplets' | 'Wind'
+
 export interface City {
   name: string
   country: string
@@ -34,11 +37,11 @@ export interface WeatherOracleConfig {
   updatedAt?: Date
 }
 
-export const WEATHER_METRICS: { value: WeatherMetric; label: string; unit: string; icon: string }[] = [
-  { value: 'temperature_max', label: 'Max Temperature', unit: '°C', icon: '🌡️' },
-  { value: 'temperature_min', label: 'Min Temperature', unit: '°C', icon: '❄️' },
-  { value: 'precipitation', label: 'Precipitation', unit: 'mm', icon: '🌧️' },
-  { value: 'humidity', label: 'Relative Humidity', unit: '%', icon: '💧' },
-  { value: 'wind_speed', label: 'Wind Speed', unit: 'km/h', icon: '💨' },
+export const WEATHER_METRICS: { value: WeatherMetric; label: string; unit: string; iconName: WeatherIconName }[] = [
+  { value: 'temperature_max', label: 'Max Temperature', unit: '°C', iconName: 'Thermometer' },
+  { value: 'temperature_min', label: 'Min Temperature', unit: '°C', iconName: 'ThermometerSnowflake' },
+  { value: 'precipitation', label: 'Precipitation', unit: 'mm', iconName: 'CloudRain' },
+  { value: 'humidity', label: 'Relative Humidity', unit: '%', iconName: 'Droplets' },
+  { value: 'wind_speed', label: 'Wind Speed', unit: 'km/h', iconName: 'Wind' },
 ]
 

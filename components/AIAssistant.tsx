@@ -64,10 +64,10 @@ export default function AIAssistant({ onFeedGenerated, currentConfig }: AIAssist
   }
 
   return (
-    <div className="h-[calc(100vh-120px)] flex flex-col bg-switchboard-dark-light rounded-lg border border-switchboard-dark-lighter">
-      <div className="p-4 border-b border-switchboard-dark-lighter">
+    <div className="h-[calc(100vh-120px)] flex flex-col bg-feedgod-dark-secondary rounded-lg border border-feedgod-dark-secondaryer">
+      <div className="p-4 border-b border-feedgod-dark-secondaryer">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-switchboard-accent" />
+          <Sparkles className="w-5 h-5 text-feedgod-primary" />
           <h2 className="text-lg font-semibold text-white">AI Assistant</h2>
         </div>
         <p className="text-xs text-gray-400 mt-1">
@@ -84,8 +84,8 @@ export default function AIAssistant({ onFeedGenerated, currentConfig }: AIAssist
             <div
               className={`max-w-[80%] rounded-lg px-4 py-2 ${
                 message.role === 'user'
-                  ? 'bg-switchboard-primary text-white'
-                  : 'bg-switchboard-dark-lighter text-gray-300'
+                  ? 'bg-feedgod-primary dark:text-feedgod-primary text-white'
+                  : 'bg-feedgod-dark-secondaryer text-gray-300'
               }`}
             >
               <p className="text-sm whitespace-pre-wrap">{message.content}</p>
@@ -95,8 +95,8 @@ export default function AIAssistant({ onFeedGenerated, currentConfig }: AIAssist
         
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-switchboard-dark-lighter rounded-lg px-4 py-2">
-              <Loader2 className="w-4 h-4 animate-spin text-switchboard-accent" />
+            <div className="bg-feedgod-dark-secondaryer rounded-lg px-4 py-2">
+              <Loader2 className="w-4 h-4 animate-spin text-feedgod-primary" />
             </div>
           </div>
         )}
@@ -104,20 +104,20 @@ export default function AIAssistant({ onFeedGenerated, currentConfig }: AIAssist
         <div ref={messagesEndRef} />
       </div>
 
-      <form onSubmit={handleSubmit} className="p-4 border-t border-switchboard-dark-lighter">
+      <form onSubmit={handleSubmit} className="p-4 border-t border-feedgod-dark-secondaryer">
         <div className="flex gap-2">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Describe your feed..."
-            className="flex-1 bg-switchboard-dark-lighter border border-switchboard-dark-lighter rounded-lg px-4 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-switchboard-primary"
+            className="flex-1 bg-feedgod-dark-secondaryer border border-feedgod-dark-secondaryer rounded-lg px-4 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary"
             disabled={isLoading}
           />
           <button
             type="submit"
             disabled={isLoading || !input.trim()}
-            className="px-4 py-2 bg-switchboard-primary hover:bg-switchboard-primary/80 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors flex items-center gap-2 text-white text-sm font-medium"
+            className="px-4 py-2 bg-feedgod-primary dark:text-feedgod-primary hover:bg-feedgod-primary dark:text-feedgod-primary/80 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors flex items-center gap-2 text-white text-sm font-medium"
           >
             {isLoading ? (
               <Loader2 className="w-4 h-4 animate-spin" />

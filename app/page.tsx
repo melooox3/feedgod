@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Database, Code, Dice6, Key, ArrowLeft, Plus, Target, TrendingUp, Scale, Terminal, Sparkles, Shield, Cloud, Thermometer, Trophy, Gamepad2, Users, Heart, AtSign, Brain, Zap, Globe, Link2 } from 'lucide-react'
+import { Database, Code, Dice6, Key, ArrowLeft, Plus, Target, TrendingUp, Scale, Terminal, Sparkles, Shield, Cloud, Thermometer, Trophy, Gamepad2, Users, Heart, AtSign, Brain, Zap, Globe, Link2, Landmark, Vote } from 'lucide-react'
 import FeedBuilder from '@/components/FeedBuilder'
 import FunctionBuilder from '@/components/FunctionBuilder'
 import VRFBuilder from '@/components/VRFBuilder'
@@ -12,6 +12,7 @@ import SportsBuilder from '@/components/SportsBuilder'
 import SocialBuilder from '@/components/SocialBuilder'
 import AIJudgeBuilder from '@/components/AIJudgeBuilder'
 import CustomAPIBuilder from '@/components/CustomAPIBuilder'
+import GovernanceBuilder from '@/components/GovernanceBuilder'
 import CommandBar from '@/components/CommandBar'
 import Header from '@/components/Header'
 import HeroSection from '@/components/HeroSection'
@@ -37,6 +38,48 @@ const MODULES = [
     backgroundIcon: Scale,
   },
   {
+    id: 'sports' as BuilderType,
+    title: 'Sports',
+    description: 'Create oracles for sports match outcomes. Soccer, NBA, NFL, and esports supported.',
+    icon: Trophy,
+    backgroundIcon: Gamepad2,
+  },
+  {
+    id: 'governance' as BuilderType,
+    title: 'Governance Oracle',
+    description: 'Create oracles that trigger DAO actions based on real-world data. If this, then DAO.',
+    icon: Landmark,
+    backgroundIcon: Vote,
+  },
+  {
+    id: 'ai-judge' as BuilderType,
+    title: 'AI Judge',
+    description: 'Any question → on-chain answer. AI resolves real-world events without custom code.',
+    icon: Brain,
+    backgroundIcon: Zap,
+  },
+  {
+    id: 'weather' as BuilderType,
+    title: 'Weather',
+    description: 'Deploy real-time weather data oracles for any city. Power insurance, gaming, and DeFi.',
+    icon: Cloud,
+    backgroundIcon: Thermometer,
+  },
+  {
+    id: 'custom-api' as BuilderType,
+    title: 'Custom API',
+    description: 'Turn any JSON API into an on-chain oracle. Click to select values, auto-generate paths.',
+    icon: Globe,
+    backgroundIcon: Link2,
+  },
+  {
+    id: 'social' as BuilderType,
+    title: 'Social Media',
+    description: 'Track X, YouTube, and TikTok metrics on-chain. Followers, engagement, viral content.',
+    icon: Users,
+    backgroundIcon: Heart,
+  },
+  {
     id: 'function' as BuilderType,
     title: 'Functions',
     description: 'Run custom off-chain computation and push results on-chain with verifiable execution.',
@@ -56,41 +99,6 @@ const MODULES = [
     description: 'Securely store and manage API keys and sensitive data for your oracle functions.',
     icon: Key,
     backgroundIcon: Shield,
-  },
-  {
-    id: 'weather' as BuilderType,
-    title: 'Weather',
-    description: 'Deploy real-time weather data oracles for any city. Power insurance, gaming, and DeFi.',
-    icon: Cloud,
-    backgroundIcon: Thermometer,
-  },
-  {
-    id: 'sports' as BuilderType,
-    title: 'Sports',
-    description: 'Create oracles for sports match outcomes. Soccer, NBA, NFL, and esports supported.',
-    icon: Trophy,
-    backgroundIcon: Gamepad2,
-  },
-  {
-    id: 'social' as BuilderType,
-    title: 'Social Media',
-    description: 'Track Twitter, YouTube, and TikTok metrics on-chain. Followers, engagement, viral content.',
-    icon: Users,
-    backgroundIcon: Heart,
-  },
-  {
-    id: 'ai-judge' as BuilderType,
-    title: 'AI Judge',
-    description: 'Any question → on-chain answer. AI resolves real-world events without custom code.',
-    icon: Brain,
-    backgroundIcon: Zap,
-  },
-  {
-    id: 'custom-api' as BuilderType,
-    title: 'Custom API',
-    description: 'Turn any JSON API into an on-chain oracle. Click to select values, auto-generate paths.',
-    icon: Globe,
-    backgroundIcon: Link2,
   },
 ]
 
@@ -147,6 +155,13 @@ export default function Home() {
     }
   }, [])
 
+  // Scroll to top when module changes
+  useEffect(() => {
+    if (activeModule) {
+      window.scrollTo({ top: 0, behavior: 'instant' })
+    }
+  }, [activeModule])
+
   const handleSearch = (query: string) => {
     console.log('Searching for:', query)
     alert(`Searching for: ${query}\n\n(In production, this would search existing Switchboard resources)`)
@@ -187,7 +202,6 @@ export default function Home() {
     setActiveModule(module)
     
     // Pre-fill module state if parsed data is available
-    // This could be extended to pass the parsed data to each builder
     console.log('Smart navigate to:', module, 'with parsed:', parsed)
     
     // Store parsed data in session storage for the builder to pick up
@@ -239,6 +253,8 @@ export default function Home() {
         return <AIJudgeBuilder />
       case 'custom-api':
         return <CustomAPIBuilder />
+      case 'governance':
+        return <GovernanceBuilder />
       default:
         return null
     }
@@ -255,11 +271,13 @@ export default function Home() {
       
       {!activeModule ? (
         // Landing view: Hero + Module Grid
-        <div className="container mx-auto px-4 max-w-5xl">
-          <HeroSection />
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <HeroSection />
+          </div>
           
-          {/* Quick Command Bar - Universal Smart Prompt */}
-          <div className="mb-12 max-w-2xl mx-auto">
+          {/* Command Bar - centered with breathing room */}
+          <div className="mb-16 max-w-xl mx-auto">
             <CommandBar
               onModuleNavigate={handleSmartNavigate}
               onSearch={handleSearch}
@@ -269,11 +287,14 @@ export default function Home() {
           </div>
           
           {/* Module Selection Grid */}
-          <div className="pb-20">
-            <h2 className="text-center text-sm font-medium text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 uppercase tracking-wider mb-8">
-              Choose a module to get started
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+          <div className="pb-24 max-w-4xl mx-auto">
+            {/* Section header - eyebrow style */}
+            <div className="text-center mb-10">
+              <span className="eyebrow">Start to build</span>
+            </div>
+            
+            {/* Grid with consistent spacing */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 animate-fade-in animate-delay-4">
               {MODULES.map((module) => (
                 <ModuleCard
                   key={module.id}
@@ -289,12 +310,12 @@ export default function Home() {
         </div>
       ) : (
         // Builder view
-        <div className="container mx-auto px-4 py-6">
+        <div className="max-w-7xl mx-auto px-4 py-6">
           {/* Breadcrumb / Back navigation */}
           <div className="flex items-center justify-between mb-6">
             <button
               onClick={handleBack}
-              className="inline-flex items-center gap-2 text-feedgod-pink-500 dark:text-feedgod-neon-cyan/80 hover:text-feedgod-primary dark:hover:text-feedgod-neon-pink transition-colors"
+              className="inline-flex items-center gap-2 text-gray-400 hover:text-feedgod-primary transition-colors duration-150"
             >
               <ArrowLeft className="w-4 h-4" />
               <span className="text-sm font-medium">Back to modules</span>
@@ -304,7 +325,7 @@ export default function Home() {
               {activeModule === 'feed' && (
                 <button
                   onClick={() => setShowBulkCreator(true)}
-                  className="px-4 py-2 bg-feedgod-pink-100 dark:bg-feedgod-dark-secondary hover:bg-feedgod-pink-200 dark:hover:bg-feedgod-dark-accent rounded-lg text-feedgod-dark dark:text-feedgod-neon-cyan text-sm font-medium transition-colors flex items-center gap-2"
+                  className="px-4 py-2 bg-[#252620] hover:bg-[#2a2b25] border border-[#3a3b35] hover:border-[#4a4b45] rounded-lg text-white text-sm font-medium transition-all duration-150 flex items-center gap-2"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Bulk Create</span>
@@ -315,7 +336,7 @@ export default function Home() {
 
           {/* Module Title */}
           <div className="mb-6">
-            <h1 className="text-2xl font-bold text-feedgod-dark dark:text-white">
+            <h1 className="text-xl font-semibold text-white tracking-tight">
               {getModuleTitle()}
             </h1>
           </div>
@@ -333,7 +354,7 @@ export default function Home() {
           </div>
 
           {/* Builder Content */}
-          <div className="bg-white/40 dark:bg-feedgod-dark-secondary/30 rounded-2xl border border-feedgod-pink-200/50 dark:border-feedgod-dark-accent/30 backdrop-blur-sm p-6">
+          <div className="bg-[#252620]/50 rounded-xl border border-[#3a3b35] backdrop-blur-sm p-6">
             {renderBuilder()}
           </div>
         </div>

@@ -256,12 +256,12 @@ export default function PriceChart({
   }
 
   return (
-    <div className="bg-white/60 rounded-lg border border-feedgod-pink-200 p-6 backdrop-blur-sm">
+    <div className="bg-feedgod-dark-secondary/60 rounded-lg border border-feedgod-purple-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
       {/* Combined Header with Price Info */}
       <div className="flex items-start justify-between mb-6">
         <div className="flex-1">
           <div className="flex items-center gap-4 mb-3">
-            <h3 className="text-xl font-bold text-feedgod-primary">{symbol} Price Chart</h3>
+            <h3 className="text-xl font-bold text-feedgod-primary dark:text-feedgod-primary">{symbol} Price Chart</h3>
             {priceChange !== null && (
               priceChange >= 0 ? (
                 <TrendingUp className="w-5 h-5 text-green-400" />
@@ -272,31 +272,31 @@ export default function PriceChart({
           </div>
           {currentPrice !== null ? (
             <div className="space-y-1">
-              <p className="text-4xl font-bold text-feedgod-primary">
+              <p className="text-4xl font-bold text-feedgod-primary dark:text-feedgod-primary">
                 ${currentPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </p>
               <p className={`text-sm font-medium ${priceChange !== null && priceChange >= 0 ? 'text-green-600' : 'text-red-500'}`}>
                 {priceChange !== null ? `${priceChange >= 0 ? '+' : ''}${priceChange.toFixed(2)}%` : 'N/A'} (24h)
               </p>
-              <p className="text-xs text-feedgod-pink-500 mt-2">
+              <p className="text-xs text-gray-400 mt-2">
                 Aggregated from {sourceCount} source{sourceCount !== 1 ? 's' : ''} using {aggregatorType} method
               </p>
             </div>
           ) : (
-            <div className="text-2xl font-bold text-feedgod-pink-400">Loading...</div>
+            <div className="text-2xl font-bold text-gray-400 dark:text-feedgod-secondary/70">Loading...</div>
           )}
         </div>
         <div className="flex items-center gap-3">
           {/* Time Interval Selector */}
-          <div className="flex items-center gap-1 bg-feedgod-pink-100 rounded-lg p-1">
+          <div className="flex items-center gap-1 bg-feedgod-purple-100 dark:bg-feedgod-dark-accent rounded-lg p-1">
             {intervals.map((interval) => (
               <button
                 key={interval.value}
                 onClick={() => setTimeInterval(interval.value)}
                 className={`px-3 py-1 text-xs font-medium rounded transition-colors ${
                   timeInterval === interval.value
-                    ? 'bg-feedgod-primary text-white'
-                    : 'text-feedgod-pink-500 hover:text-feedgod-primary'
+                    ? 'bg-feedgod-primary dark:text-feedgod-primary text-white'
+                    : 'text-gray-400 hover:text-feedgod-primary dark:text-feedgod-primary'
                 }`}
               >
                 {interval.label}
@@ -306,10 +306,10 @@ export default function PriceChart({
           {onRefresh && (
             <button
               onClick={onRefresh}
-              className="p-2 hover:bg-feedgod-pink-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-feedgod-purple-100 dark:bg-feedgod-dark-accent rounded-lg transition-colors"
               title="Refresh prices"
             >
-              <RefreshCw className="w-4 h-4 text-feedgod-pink-500 hover:text-feedgod-primary" />
+              <RefreshCw className="w-4 h-4 text-gray-400 hover:text-feedgod-primary dark:text-feedgod-primary" />
             </button>
           )}
         </div>
@@ -318,7 +318,7 @@ export default function PriceChart({
       {/* Chart */}
       <div className="relative w-full" ref={containerRef}>
         {filteredData.length === 0 ? (
-          <div className="h-[400px] flex items-center justify-center text-feedgod-pink-400">
+          <div className="h-[400px] flex items-center justify-center text-gray-400 dark:text-feedgod-secondary/70">
             Loading chart data...
           </div>
         ) : (
@@ -332,17 +332,17 @@ export default function PriceChart({
             {/* Hover Tooltip */}
             {hoveredPoint && (
               <div
-                className="absolute pointer-events-none bg-white border border-feedgod-pink-200 rounded-lg px-3 py-2 shadow-xl z-10"
+                className="absolute pointer-events-none bg-feedgod-dark-secondary border border-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg px-3 py-2 shadow-xl z-10"
                 style={{
                   left: `${hoveredPoint.x}px`,
                   top: `${hoveredPoint.y - 60}px`,
                   transform: 'translateX(-50%)',
                 }}
               >
-                <div className="text-xs text-feedgod-pink-500 mb-1">
+                <div className="text-xs text-gray-400 mb-1">
                   {hoveredPoint.time.toLocaleString()}
                 </div>
-                <div className="text-sm font-bold text-feedgod-primary">
+                <div className="text-sm font-bold text-feedgod-primary dark:text-feedgod-primary">
                   ${hoveredPoint.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </div>
               </div>

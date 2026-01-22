@@ -48,10 +48,11 @@ export default function ChainSelector({
   const availableNetworks = currentChain?.networks || []
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
+      {/* Chain Selection */}
       <div>
-        <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2 flex items-center gap-2">
-          <NetworkIcon className="w-4 h-4" />
+        <label className="block text-sm font-medium text-gray-200 mb-2 flex items-center gap-2">
+          <NetworkIcon className="w-4 h-4 text-gray-400" />
           Chain
         </label>
         <div className="grid grid-cols-3 gap-2">
@@ -62,20 +63,18 @@ export default function ChainSelector({
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
-                console.log('Blockchain button clicked:', chain.value)
                 playPickupSound()
                 onBlockchainChange(chain.value)
-                // Set to first available network for this chain
                 onNetworkChange(chain.networks[0])
               }}
-              className={`p-3 rounded-lg border-2 transition-colors text-left cursor-pointer relative z-10 overflow-hidden group ${
+              className={`p-3 rounded-lg border transition-all duration-150 text-left cursor-pointer relative overflow-hidden group ${
                 blockchain === chain.value
-                  ? 'border-feedgod-primary dark:border-feedgod-neon-pink bg-feedgod-pink-50 dark:bg-feedgod-dark-accent'
-                  : 'border-feedgod-pink-200 dark:border-feedgod-dark-accent bg-white dark:bg-feedgod-dark-secondary hover:border-feedgod-pink-300 dark:hover:border-feedgod-neon-cyan'
+                  ? 'border-feedgod-primary/60 bg-feedgod-primary/10'
+                  : 'border-[#3a3b35] bg-[#252620] hover:border-[#4a4b45] hover:bg-[#2a2b25]'
               }`}
             >
               {/* Background logo watermark */}
-              <div className="absolute -right-2 -bottom-2 opacity-10 group-hover:opacity-20 transition-opacity">
+              <div className="absolute -right-2 -bottom-2 opacity-[0.07] group-hover:opacity-[0.12] transition-opacity pointer-events-none">
                 <img 
                   src={chain.logo} 
                   alt="" 
@@ -89,9 +88,15 @@ export default function ChainSelector({
                   alt={chain.label} 
                   className="w-5 h-5 object-contain"
                 />
-                <div className="font-medium text-feedgod-dark dark:text-feedgod-neon-cyan text-sm">{chain.label}</div>
+                <span className={`font-medium text-sm ${
+                  blockchain === chain.value ? 'text-white' : 'text-gray-200'
+                }`}>
+                  {chain.label}
+                </span>
               </div>
-              <div className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mt-1 relative z-10">
+              <div className={`text-xs mt-1 relative z-10 ${
+                blockchain === chain.value ? 'text-feedgod-primary/70' : 'text-gray-500'
+              }`}>
                 {chain.networks.length} network{chain.networks.length !== 1 ? 's' : ''}
               </div>
             </button>
@@ -99,8 +104,9 @@ export default function ChainSelector({
         </div>
       </div>
 
+      {/* Network Selection */}
       <div>
-        <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2">
+        <label className="block text-sm font-medium text-gray-200 mb-2">
           Network
         </label>
         <div className="flex gap-2 flex-wrap">
@@ -111,28 +117,25 @@ export default function ChainSelector({
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
-                console.log('Network button clicked:', net, 'current blockchain:', blockchain)
                 playPickupSound()
-                // CRITICAL: Only update network, don't touch blockchain
                 onNetworkChange(net)
               }}
-              className={`px-4 py-2 rounded-lg border-2 transition-colors text-sm font-medium cursor-pointer relative z-10 ${
+              className={`px-4 py-2 rounded-lg border transition-all duration-150 text-sm font-medium cursor-pointer ${
                 network === net
-                  ? 'border-feedgod-primary dark:border-feedgod-neon-pink bg-feedgod-primary dark:bg-feedgod-neon-pink text-white'
-                  : 'border-feedgod-pink-200 dark:border-feedgod-dark-accent bg-white dark:bg-feedgod-dark-secondary text-feedgod-dark dark:text-feedgod-neon-cyan hover:border-feedgod-pink-300 dark:hover:border-feedgod-neon-cyan'
-              } star-glow-on-hover`}
+                  ? 'border-feedgod-primary bg-feedgod-primary text-white'
+                  : 'border-[#3a3b35] bg-[#252620] text-gray-300 hover:border-[#4a4b45] hover:text-white'
+              }`}
             >
               {NETWORK_LABELS[net]}
             </button>
           ))}
         </div>
-        {network === 'testnet' || network === 'devnet' ? (
-          <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mt-2">
-            ⚠️ {network === 'testnet' ? 'Testnet' : 'Devnet'} is for testing only. Use mainnet for production.
+        {(network === 'testnet' || network === 'devnet') && (
+          <p className="text-xs text-gray-500 mt-2">
+            {network === 'testnet' ? 'Testnet' : 'Devnet'} is for testing only. Use mainnet for production.
           </p>
-        ) : null}
+        )}
       </div>
     </div>
   )
 }
-

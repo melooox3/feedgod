@@ -31,6 +31,7 @@ const CHAIN_LOGOS: Record<string, string> = {
 interface OracleCardProps {
   oracle: Oracle
   onClick: () => void
+  isInUse?: boolean
 }
 
 // Get icon for oracle type
@@ -64,7 +65,7 @@ function truncateKey(key: string): string {
   return `${key.slice(0, 8)}...${key.slice(-6)}`
 }
 
-export default function OracleCard({ oracle, onClick }: OracleCardProps) {
+export default function OracleCard({ oracle, onClick, isInUse }: OracleCardProps) {
   const Icon = getOracleIcon(oracle.type)
   const typeColor = getOracleTypeColor(oracle.type)
   
@@ -77,15 +78,29 @@ export default function OracleCard({ oracle, onClick }: OracleCardProps) {
   return (
     <div
       onClick={onClick}
-      className="group bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-xl border border-feedgod-pink-200 dark:border-feedgod-dark-accent hover:border-feedgod-primary dark:hover:border-feedgod-neon-pink transition-all duration-300 backdrop-blur-sm cursor-pointer hover:shadow-lg hover:shadow-feedgod-primary/10 dark:hover:shadow-feedgod-neon-pink/10 overflow-hidden"
+      className={`group bg-[#252620]/80 rounded-xl border transition-all duration-300 backdrop-blur-sm cursor-pointer hover:shadow-lg overflow-hidden ${
+        isInUse 
+          ? 'border-emerald-500/50 hover:border-emerald-400 hover:shadow-emerald-500/10 ring-1 ring-emerald-500/20' 
+          : 'border-feedgod-purple-200 dark:border-feedgod-dark-accent hover:border-feedgod-primary hover:shadow-feedgod-primary/10'
+      }`}
     >
+      {/* In Use Badge */}
+      {isInUse && (
+        <div className="bg-gradient-to-r from-emerald-500/20 to-emerald-600/10 border-b border-emerald-500/30 px-4 py-1.5">
+          <div className="flex items-center gap-1.5">
+            <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="text-[10px] font-semibold text-emerald-400 uppercase tracking-wider">In Use</span>
+          </div>
+        </div>
+      )}
+      
       {/* Header with type badge and status */}
-      <div className="p-4 pb-3 border-b border-feedgod-pink-100 dark:border-feedgod-dark-accent/50">
+      <div className="p-4 pb-3 border-b border-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:border-feedgod-purple-200 dark:border-feedgod-dark-accent/50">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
             <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
               oracle.type === 'feed' ? 'bg-gradient-to-br from-emerald-400 to-emerald-600' :
-              oracle.type === 'prediction' ? 'bg-gradient-to-br from-purple-400 to-purple-600' :
+              oracle.type === 'prediction' ? 'bg-gradient-to-br from-feedgod-secondary to-feedgod-primary' :
               oracle.type === 'vrf' ? 'bg-gradient-to-br from-amber-400 to-amber-600' :
               oracle.type === 'weather' ? 'bg-gradient-to-br from-sky-400 to-sky-600' :
               'bg-gradient-to-br from-pink-400 to-pink-600'
@@ -106,7 +121,7 @@ export default function OracleCard({ oracle, onClick }: OracleCardProps) {
                 Active
               </span>
             ) : (
-              <span className="flex items-center gap-1 text-[10px] text-feedgod-pink-400">
+              <span className="flex items-center gap-1 text-[10px] text-gray-400 dark:text-feedgod-secondary/70">
                 <AlertCircle className="w-3 h-3" />
                 {oracle.status}
               </span>
@@ -117,44 +132,44 @@ export default function OracleCard({ oracle, onClick }: OracleCardProps) {
       
       {/* Main content */}
       <div className="p-4">
-        <h3 className="text-lg font-bold text-feedgod-dark dark:text-white mb-1 group-hover:text-feedgod-primary dark:group-hover:text-feedgod-neon-pink transition-colors line-clamp-1">
+        <h3 className="text-lg font-bold text-white mb-1 group-hover:text-feedgod-primary dark:text-feedgod-primary dark:group-hover:text-feedgod-primary dark:text-feedgod-primary transition-colors line-clamp-1">
           {oracle.name}
         </h3>
         
         <div className="flex items-center gap-2 mb-3">
-          <span className="text-sm font-mono text-feedgod-primary dark:text-feedgod-neon-cyan font-medium">
+          <span className="text-sm font-mono text-feedgod-primary dark:text-feedgod-primary  font-medium">
             {oracle.symbol}
           </span>
-          <span className="text-xs text-feedgod-pink-400">•</span>
+          <span className="text-xs text-gray-400 dark:text-feedgod-secondary/70">•</span>
           <div className="flex items-center gap-1">
             <img 
               src={CHAIN_LOGOS[oracle.network] || '/solana.png'}
               alt=""
               className="w-3.5 h-3.5 object-contain"
             />
-            <span className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/60 capitalize">
+            <span className="text-xs text-gray-400 /60 capitalize">
               {oracle.network.replace('-', ' ')}
             </span>
           </div>
         </div>
         
         {/* Current value - prominent display */}
-        <div className="bg-feedgod-pink-50 dark:bg-feedgod-dark-accent/50 rounded-lg p-3 mb-3">
-          <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/60 mb-1">Current Value</p>
-          <p className="text-2xl font-bold text-feedgod-dark dark:text-white font-mono">
+        <div className="bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent/50 rounded-lg p-3 mb-3">
+          <p className="text-xs text-gray-400 /60 mb-1">Current Value</p>
+          <p className="text-2xl font-bold text-white font-mono">
             {formatOracleValue(oracle)}
           </p>
         </div>
         
         {/* Meta info */}
         <div className="flex items-center justify-between text-xs">
-          <div className="flex items-center gap-1 text-feedgod-pink-500 dark:text-feedgod-neon-cyan/60">
+          <div className="flex items-center gap-1 text-gray-400 /60">
             <Clock className="w-3 h-3" />
             <span>{formatTimeAgo(oracle.lastUpdate)}</span>
           </div>
           
           <div className="flex items-center gap-1">
-            <span className="text-feedgod-pink-400 dark:text-feedgod-neon-cyan/50">
+            <span className="text-gray-400 dark:text-feedgod-secondary/70 /50">
               {oracle.sources.length} source{oracle.sources.length !== 1 ? 's' : ''}
             </span>
           </div>
@@ -163,16 +178,16 @@ export default function OracleCard({ oracle, onClick }: OracleCardProps) {
       
       {/* Footer with public key */}
       <div className="px-4 pb-4">
-        <div className="flex items-center justify-between bg-feedgod-pink-50/50 dark:bg-feedgod-dark-accent/30 rounded-lg px-3 py-2">
-          <code className="text-xs font-mono text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+        <div className="flex items-center justify-between bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/50 dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent/30 rounded-lg px-3 py-2">
+          <code className="text-xs font-mono text-gray-400 /70">
             {truncateKey(oracle.publicKey)}
           </code>
           <button
             onClick={handleCopyKey}
-            className="p-1.5 hover:bg-feedgod-pink-100 dark:hover:bg-feedgod-dark-accent rounded transition-colors"
+            className="p-1.5 hover:bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded transition-colors"
             title="Copy public key"
           >
-            <Copy className="w-3.5 h-3.5 text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70" />
+            <Copy className="w-3.5 h-3.5 text-gray-400 /70" />
           </button>
         </div>
       </div>

@@ -53,3 +53,4 @@ export interface MarketSearchFilters {
   minLiquidity?: number
 }
 
+

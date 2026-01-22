@@ -10,33 +10,45 @@ module.exports = {
     extend: {
       colors: {
         feedgod: {
-          primary: '#EC4899',
-          secondary: '#F472B6',
-          accent: '#F9A8D4',
-          light: '#FCE7F3',
-          bg: '#FFF1F2',
-          dark: '#831843',
-          'pink-50': '#FDF2F8',
-          'pink-100': '#FCE7F3',
-          'pink-200': '#FBCFE8',
-          'pink-300': '#F9A8D4',
-          'pink-400': '#F472B6',
-          'pink-500': '#EC4899',
+          primary: '#ff0d6e',
+          secondary: '#ff3d8a',
+          accent: '#ff6b8a',
+          purple: '#e534a8',
+          magenta: '#d63384',
+          light: '#2a2b25',
+          bg: '#1D1E19',
+          dark: '#1D1E19',
+          'red-50': '#2a2b25',
+          'red-100': '#252620',
+          'red-200': '#3a3b35',
+          'red-300': '#4a4b45',
+          'red-400': '#ff6b8a',
+          'red-500': '#ff0d6e',
+          'red-600': '#e00b5f',
+          // Dark background shades (all dark for proper dark theme)
+          'purple-50': '#252620',   // darkest bg
+          'purple-100': '#2a2b25',  // dark bg
+          'purple-200': '#323329',  // slightly lighter
+          'purple-300': '#3a3b35',  // border color
           // Dark mode colors
-          'dark-bg': '#0A0E27',
-          'dark-secondary': '#1A1F3A',
-          'dark-accent': '#2A2F4A',
-          'neon-pink': '#FF00FF',
-          'neon-cyan': '#00FFFF',
-          'neon-purple': '#9D4EDD',
+          'dark-bg': '#1D1E19',
+          'dark-secondary': '#252620',
+          'dark-accent': '#3a3b35',
+          'neon-red': '#ff3d8a',
+          'neon-cyan': '#ff6b8a',
+          'neon-violet': '#ff0d6e',
         },
       },
       fontFamily: {
         pixel: ['Press Start 2P', 'monospace'],
       },
       backgroundImage: {
-        'feedgod-gradient': 'linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(249, 168, 212, 0.1) 100%)',
-        'feedgod-radial': 'radial-gradient(ellipse at top left, rgba(236, 72, 153, 0.15) 0%, transparent 50%), radial-gradient(ellipse at bottom right, rgba(244, 114, 182, 0.2) 0%, transparent 50%)',
+        'feedgod-gradient': 'linear-gradient(135deg, rgba(255, 13, 110, 0.1) 0%, rgba(255, 61, 138, 0.05) 100%)',
+        'feedgod-radial': 'radial-gradient(ellipse at top left, rgba(255, 13, 110, 0.1) 0%, transparent 50%), radial-gradient(ellipse at bottom right, rgba(255, 61, 138, 0.08) 0%, transparent 50%)',
+        'feedgod-accent': 'linear-gradient(135deg, #ff0d6e 0%, #ff0d6e 60%, #e534a8 100%)',
+        'feedgod-accent-hover': 'linear-gradient(135deg, #ff3d8a 0%, #ff3d8a 50%, #d946ef 100%)',
+        'feedgod-btn': 'linear-gradient(135deg, #ff0d6e 0%, #ff0d6e 70%, #d63384 100%)',
+        'feedgod-btn-hover': 'linear-gradient(135deg, #ff3d8a 0%, #ff3d8a 60%, #e534a8 100%)',
       },
       animation: {
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',

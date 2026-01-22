@@ -1,14 +1,26 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Source_Serif_4 } from 'next/font/google'
 import './globals.css'
-import { UnifiedWalletProvider } from '@/lib/unified-wallet-provider'
+import { Web3ModalProvider } from '@/lib/web3modal-provider'
 import { ThemeProvider } from '@/contexts/ThemeContext'
 import Footer from '@/components/Footer'
 
-const inter = Inter({ subsets: ['latin'] })
+// Clean neutral sans for UI/body
+const inter = Inter({ 
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+})
+
+// Editorial serif for accents (optional use in components)
+const sourceSerif = Source_Serif_4({ 
+  subsets: ['latin'],
+  variable: '--font-serif',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
-  title: 'Feedgod - Omnipotent Data Feeds for Mere Mortals',
+  title: 'feedgod - by Switchboard',
   description: 'Build custom Switchboard oracle feeds with AI assistance. Simple, fast, and intuitive.',
 }
 
@@ -18,15 +30,15 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} flex flex-col min-h-screen`}>
+    <html lang="en" className={`dark ${inter.variable} ${sourceSerif.variable}`}>
+      <body className={`${inter.className} flex flex-col min-h-screen bg-feedgod-dark text-gray-200 antialiased`}>
         <ThemeProvider>
-          <UnifiedWalletProvider>
+          <Web3ModalProvider>
             <div className="flex-1">
               {children}
             </div>
             <Footer />
-          </UnifiedWalletProvider>
+          </Web3ModalProvider>
         </ThemeProvider>
       </body>
     </html>
