@@ -35,6 +35,7 @@ import {
 import { Blockchain, Network } from '@/types/feed'
 import { playPickupSound } from '@/lib/sound-utils'
 import { useCostEstimate } from '@/lib/use-cost-estimate'
+import { useToast } from './Toast'
 import ChainSelector from './ChainSelector'
 
 type BuilderStep = 'create' | 'configure' | 'preview'
@@ -277,6 +278,7 @@ function ResolutionPreview({
 }
 
 export default function AIJudgeBuilder() {
+  const toast = useToast()
   const [step, setStep] = useState<BuilderStep>('create')
   
   // Config state
@@ -351,7 +353,7 @@ export default function AIJudgeBuilder() {
   
   const handleTestResolution = async () => {
     if (!config.question || config.question.trim().length < 10) {
-      alert('Please enter a question (at least 10 characters)')
+      toast.warning('Please enter a question (at least 10 characters)')
       return
     }
     
@@ -379,7 +381,7 @@ export default function AIJudgeBuilder() {
       setResolutionPreview(data)
     } catch (error) {
       console.error('Resolution test failed:', error)
-      alert('Failed to test resolution')
+      toast.error('Failed to test resolution')
     } finally {
       setIsTestingResolution(false)
     }
@@ -387,7 +389,7 @@ export default function AIJudgeBuilder() {
   
   const handleContinue = () => {
     if (!config.question || config.question.trim().length < 10) {
-      alert('Please enter a question')
+      toast.warning('Please enter a question')
       return
     }
     playPickupSound()
@@ -396,7 +398,7 @@ export default function AIJudgeBuilder() {
   
   const handlePreview = () => {
     if (!config.resolutionDate) {
-      alert('Please select a resolution date')
+      toast.warning('Please select a resolution date')
       return
     }
     playPickupSound()
@@ -412,7 +414,7 @@ export default function AIJudgeBuilder() {
   const handleDeploy = () => {
     playPickupSound()
     console.log('Deploying AI Judge oracle:', config)
-    alert('AI Judge Oracle deployed! (Demo - in production this would deploy to Switchboard)')
+    toast.success('AI Judge Oracle deployed! (Demo - in production this would deploy to Switchboard)')
   }
   
   const handleSave = () => {
@@ -428,7 +430,7 @@ export default function AIJudgeBuilder() {
     const oracles = saved ? JSON.parse(saved) : []
     oracles.push(fullConfig)
     localStorage.setItem('savedAIJudgeOracles', JSON.stringify(oracles))
-    alert('AI Judge Oracle configuration saved!')
+    toast.success('AI Judge Oracle configuration saved!')
   }
   
   // Generate config preview

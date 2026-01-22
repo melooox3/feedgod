@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { X, Plus, Loader2 } from 'lucide-react'
 import { FeedConfig } from '@/types/feed'
 import { playPickupSound } from '@/lib/sound-utils'
+import { useToast } from './Toast'
 
 interface BulkFeedCreatorProps {
   isOpen: boolean
@@ -16,12 +17,13 @@ export default function BulkFeedCreator({ isOpen, onClose, onFeedsGenerated }: B
   const [template, setTemplate] = useState<string>('')
   const [isGenerating, setIsGenerating] = useState(false)
   const [prompt, setPrompt] = useState<string>('')
+  const toast = useToast()
 
   if (!isOpen) return null
 
   const handleGenerate = async () => {
     if (count < 1 || count > 1000) {
-      alert('Please enter a count between 1 and 1000')
+      toast.warning('Please enter a count between 1 and 1000')
       return
     }
 
@@ -130,7 +132,7 @@ export default function BulkFeedCreator({ isOpen, onClose, onFeedsGenerated }: B
       onClose()
     } catch (error) {
       console.error('Error generating bulk feeds:', error)
-      alert('Error generating feeds. Please try again.')
+      toast.error('Error generating feeds. Please try again.')
     } finally {
       setIsGenerating(false)
     }

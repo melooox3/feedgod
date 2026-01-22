@@ -1,4 +1,4 @@
-import { Blockchain, Network } from './feed'
+import { Blockchain, Network, FeedConfig } from './feed'
 
 // Functions (Off-chain Compute)
 export interface FunctionConfig {
@@ -65,4 +65,36 @@ export interface SecretConfig {
 }
 
 export type BuilderType = 'feed' | 'function' | 'vrf' | 'secret' | 'prediction' | 'weather' | 'sports' | 'social' | 'ai-judge' | 'custom-api'
+
+// Parsed prompt data from intent detection
+export interface ParsedPrompt {
+  symbol?: string
+  baseToken?: string
+  quoteToken?: string
+  city?: string
+  country?: string
+  username?: string
+  platform?: string
+  question?: string
+  url?: string
+  team?: string
+  league?: string
+  market?: string
+}
+
+// Union type for all config types
+export type AnyConfig = FeedConfig | FunctionConfig | VRFConfig | SecretConfig
+
+// Deployed feed stored in localStorage
+export interface DeployedFeed {
+  id: string
+  name: string
+  symbol: string
+  publicKey: string
+  signature?: string
+  network: Network
+  blockchain: Blockchain
+  deployedAt: string
+  config: FeedConfig
+}
 

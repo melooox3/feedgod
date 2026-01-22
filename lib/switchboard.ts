@@ -1,5 +1,7 @@
 import { Connection, PublicKey, Keypair, Transaction, VersionedTransaction } from '@solana/web3.js'
 import { FeedConfig, DataSource } from '@/types/feed'
+import { DeployedFeed } from '@/types/switchboard'
+import { logger } from '@/lib/logger'
 
 // Switchboard constants
 export const SWITCHBOARD_PROGRAM_ID = new PublicKey('SBondMDrcV3K4kxZR1HNVT7osZxAHVHgYXL5Ze1oMUv')
@@ -207,10 +209,10 @@ export async function createPriceFeed(
     // Build the job definition
     const jobDefinition = buildPriceFeedJob(config)
     
-    console.log('[Switchboard] Creating feed with job:', JSON.stringify(jobDefinition, null, 2))
-    console.log('[Switchboard] Network:', network)
-    console.log('[Switchboard] Queue:', queue.toBase58())
-    console.log('[Switchboard] Wallet:', wallet.publicKey.toBase58())
+    logger.switchboard.debug('Creating feed with job:', JSON.stringify(jobDefinition, null, 2))
+    logger.switchboard.debug('Network:', network)
+    logger.switchboard.debug('Queue:', queue.toBase58())
+    logger.switchboard.debug('Wallet:', wallet.publicKey.toBase58())
     
     // For demonstration, we'll simulate the transaction
     // In production, you would use the actual Switchboard SDK:
@@ -243,7 +245,7 @@ export async function createPriceFeed(
     }
     
   } catch (error) {
-    console.error('[Switchboard] Deployment error:', error)
+    logger.switchboard.error('Deployment error:', error)
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown deployment error'
@@ -273,7 +275,7 @@ export async function readFeedValue(
       timestamp: Date.now(),
     }
   } catch (error) {
-    console.error('[Switchboard] Read error:', error)
+    logger.switchboard.error('Read error:', error)
     return {
       value: null,
       timestamp: null,
@@ -355,7 +357,7 @@ export function storeDeployedFeed(config: FeedConfig, result: DeploymentResult):
 /**
  * Get all deployed feeds from localStorage
  */
-export function getDeployedFeeds(): any[] {
+export function getDeployedFeeds(): DeployedFeed[] {
   const storedFeeds = localStorage.getItem('deployedFeeds')
   return storedFeeds ? JSON.parse(storedFeeds) : []
 }

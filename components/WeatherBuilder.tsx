@@ -32,6 +32,7 @@ import {
 } from '@/lib/weather-api'
 import { playPickupSound } from '@/lib/sound-utils'
 import { useCostEstimate } from '@/lib/use-cost-estimate'
+import { useToast } from './Toast'
 import ChainSelector from './ChainSelector'
 
 // Chain logo mapping
@@ -95,6 +96,7 @@ function MetricIcon({ metric }: { metric: WeatherMetric }) {
 }
 
 export default function WeatherBuilder() {
+  const toast = useToast()
   const [step, setStep] = useState<BuilderStep>('configure')
   const [citySearch, setCitySearch] = useState('')
   const [showCityDropdown, setShowCityDropdown] = useState(false)
@@ -195,7 +197,7 @@ export default function WeatherBuilder() {
       dataType,
       date: historicalDate,
     })
-    alert('Weather Oracle deployed! (Demo - in production this would deploy to Switchboard)')
+    toast.success('Weather Oracle deployed! (Demo - in production this would deploy to Switchboard)')
   }
   
   const handleSave = () => {
@@ -215,7 +217,7 @@ export default function WeatherBuilder() {
     const oracles = saved ? JSON.parse(saved) : []
     oracles.push(config)
     localStorage.setItem('savedWeatherOracles', JSON.stringify(oracles))
-    alert('Weather Oracle configuration saved!')
+    toast.success('Weather Oracle configuration saved!')
   }
   
   const handleRefresh = async () => {

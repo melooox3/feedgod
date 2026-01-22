@@ -1,25 +1,74 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Database, Code, Dice6, Key, ArrowLeft, Plus, Target, TrendingUp, Scale, Terminal, Sparkles, Shield, Cloud, Thermometer, Trophy, Gamepad2, Users, Heart, AtSign, Brain, Zap, Globe, Link2 } from 'lucide-react'
-import FeedBuilder from '@/components/FeedBuilder'
-import FunctionBuilder from '@/components/FunctionBuilder'
-import VRFBuilder from '@/components/VRFBuilder'
-import SecretBuilder from '@/components/SecretBuilder'
-import PredictionMarketBuilder from '@/components/PredictionMarketBuilder'
-import WeatherBuilder from '@/components/WeatherBuilder'
-import SportsBuilder from '@/components/SportsBuilder'
-import SocialBuilder from '@/components/SocialBuilder'
-import AIJudgeBuilder from '@/components/AIJudgeBuilder'
-import CustomAPIBuilder from '@/components/CustomAPIBuilder'
+import { useState, useEffect, Suspense } from 'react'
+import dynamic from 'next/dynamic'
+import { Database, Code, Dice6, Key, ArrowLeft, Plus, Target, TrendingUp, Scale, Terminal, Sparkles, Shield, Cloud, Thermometer, Trophy, Gamepad2, Users, Heart, AtSign, Brain, Zap, Globe, Link2, Loader2 } from 'lucide-react'
 import CommandBar from '@/components/CommandBar'
+
+// Lazy load builder components - only one is shown at a time
+const FeedBuilder = dynamic(() => import('@/components/FeedBuilder'), {
+  loading: () => <BuilderLoadingFallback />,
+  ssr: false
+})
+const FunctionBuilder = dynamic(() => import('@/components/FunctionBuilder'), {
+  loading: () => <BuilderLoadingFallback />,
+  ssr: false
+})
+const VRFBuilder = dynamic(() => import('@/components/VRFBuilder'), {
+  loading: () => <BuilderLoadingFallback />,
+  ssr: false
+})
+const SecretBuilder = dynamic(() => import('@/components/SecretBuilder'), {
+  loading: () => <BuilderLoadingFallback />,
+  ssr: false
+})
+const PredictionMarketBuilder = dynamic(() => import('@/components/PredictionMarketBuilder'), {
+  loading: () => <BuilderLoadingFallback />,
+  ssr: false
+})
+const WeatherBuilder = dynamic(() => import('@/components/WeatherBuilder'), {
+  loading: () => <BuilderLoadingFallback />,
+  ssr: false
+})
+const SportsBuilder = dynamic(() => import('@/components/SportsBuilder'), {
+  loading: () => <BuilderLoadingFallback />,
+  ssr: false
+})
+const SocialBuilder = dynamic(() => import('@/components/SocialBuilder'), {
+  loading: () => <BuilderLoadingFallback />,
+  ssr: false
+})
+const AIJudgeBuilder = dynamic(() => import('@/components/AIJudgeBuilder'), {
+  loading: () => <BuilderLoadingFallback />,
+  ssr: false
+})
+const CustomAPIBuilder = dynamic(() => import('@/components/CustomAPIBuilder'), {
+  loading: () => <BuilderLoadingFallback />,
+  ssr: false
+})
+
+// Loading fallback for dynamically imported builders
+function BuilderLoadingFallback() {
+  return (
+    <div className="flex items-center justify-center min-h-[400px]">
+      <div className="text-center">
+        <Loader2 className="w-8 h-8 text-feedgod-primary animate-spin mx-auto mb-4" />
+        <p className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Loading builder...</p>
+      </div>
+    </div>
+  )
+}
+
+import { BuilderErrorBoundary } from '@/components/ErrorBoundary'
+import { useToast } from '@/components/Toast'
 import Header from '@/components/Header'
 import HeroSection from '@/components/HeroSection'
 import ModuleCard from '@/components/ModuleCard'
 import BulkFeedCreator from '@/components/BulkFeedCreator'
 import { FeedConfig } from '@/types/feed'
-import { FunctionConfig, VRFConfig, SecretConfig, BuilderType } from '@/types/switchboard'
+import { FunctionConfig, VRFConfig, SecretConfig, BuilderType, ParsedPrompt, AnyConfig } from '@/types/switchboard'
 import { playPickupSound } from '@/lib/sound-utils'
+import { logger } from '@/lib/logger'
 
 const MODULES = [
   {
@@ -101,6 +150,7 @@ export default function Home() {
   const [vrfConfig, setVRFConfig] = useState<VRFConfig | null>(null)
   const [secretConfig, setSecretConfig] = useState<SecretConfig | null>(null)
   const [showBulkCreator, setShowBulkCreator] = useState(false)
+  const toast = useToast()
 
   // Load config from sessionStorage if available (from profile page)
   useEffect(() => {
@@ -142,14 +192,14 @@ export default function Home() {
         
         sessionStorage.removeItem('loadConfig')
       } catch (e) {
-        console.error('Error loading config:', e)
+        logger.config.error('Error loading config:', e)
       }
     }
   }, [])
 
   const handleSearch = (query: string) => {
-    console.log('Searching for:', query)
-    alert(`Searching for: ${query}\n\n(In production, this would search existing Switchboard resources)`)
+    logger.router.debug('Searching for:', query)
+    toast.info(`Searching for: ${query} (In production, this would search existing Switchboard resources)`)
   }
 
   const handleBulkFeedsGenerated = (feeds: FeedConfig[]) => {
@@ -167,7 +217,7 @@ export default function Home() {
     })
     
     localStorage.setItem('savedFeeds', JSON.stringify(existingFeeds))
-    alert(`Successfully created ${feeds.length} feeds! Check your profile to manage them.`)
+    toast.success(`Successfully created ${feeds.length} feeds! Check your profile to manage them.`)
     setShowBulkCreator(false)
   }
 
@@ -182,13 +232,13 @@ export default function Home() {
   }
 
   // Smart module navigation from universal prompt
-  const handleSmartNavigate = (module: BuilderType, parsed?: any) => {
+  const handleSmartNavigate = (module: BuilderType, parsed?: ParsedPrompt) => {
     playPickupSound()
     setActiveModule(module)
     
     // Pre-fill module state if parsed data is available
     // This could be extended to pass the parsed data to each builder
-    console.log('Smart navigate to:', module, 'with parsed:', parsed)
+    logger.router.debug('Smart navigate to:', module, 'with parsed:', parsed)
     
     // Store parsed data in session storage for the builder to pick up
     if (parsed) {
@@ -196,52 +246,63 @@ export default function Home() {
     }
   }
 
-  const handleConfigGenerated = (config: any, type: BuilderType) => {
+  const handleConfigGenerated = (config: AnyConfig, type: BuilderType) => {
     switch (type) {
       case 'feed':
-        setFeedConfig(config)
+        setFeedConfig(config as FeedConfig)
         setActiveModule('feed')
         break
       case 'function':
-        setFunctionConfig(config)
+        setFunctionConfig(config as FunctionConfig)
         setActiveModule('function')
         break
       case 'vrf':
-        setVRFConfig(config)
+        setVRFConfig(config as VRFConfig)
         setActiveModule('vrf')
         break
       case 'secret':
-        setSecretConfig(config)
+        setSecretConfig(config as SecretConfig)
         setActiveModule('secret')
         break
     }
   }
 
   const renderBuilder = () => {
-    switch (activeModule) {
-      case 'feed':
-        return <FeedBuilder config={feedConfig} onConfigChange={setFeedConfig} />
-      case 'prediction':
-        return <PredictionMarketBuilder />
-      case 'function':
-        return <FunctionBuilder config={functionConfig} onConfigChange={setFunctionConfig} />
-      case 'vrf':
-        return <VRFBuilder config={vrfConfig} onConfigChange={setVRFConfig} />
-      case 'secret':
-        return <SecretBuilder config={secretConfig} onConfigChange={setSecretConfig} />
-      case 'weather':
-        return <WeatherBuilder />
-      case 'sports':
-        return <SportsBuilder />
-      case 'social':
-        return <SocialBuilder />
-      case 'ai-judge':
-        return <AIJudgeBuilder />
-      case 'custom-api':
-        return <CustomAPIBuilder />
-      default:
-        return null
-    }
+    const builderContent = (() => {
+      switch (activeModule) {
+        case 'feed':
+          return <FeedBuilder config={feedConfig} onConfigChange={setFeedConfig} />
+        case 'prediction':
+          return <PredictionMarketBuilder />
+        case 'function':
+          return <FunctionBuilder config={functionConfig} onConfigChange={setFunctionConfig} />
+        case 'vrf':
+          return <VRFBuilder config={vrfConfig} onConfigChange={setVRFConfig} />
+        case 'secret':
+          return <SecretBuilder config={secretConfig} onConfigChange={setSecretConfig} />
+        case 'weather':
+          return <WeatherBuilder />
+        case 'sports':
+          return <SportsBuilder />
+        case 'social':
+          return <SocialBuilder />
+        case 'ai-judge':
+          return <AIJudgeBuilder />
+        case 'custom-api':
+          return <CustomAPIBuilder />
+        default:
+          return null
+      }
+    })()
+
+    if (!builderContent) return null
+
+    // Wrap builder in error boundary with module-specific name
+    return (
+      <BuilderErrorBoundary name={getModuleTitle()} key={activeModule}>
+        {builderContent}
+      </BuilderErrorBoundary>
+    )
   }
 
   const getModuleTitle = () => {

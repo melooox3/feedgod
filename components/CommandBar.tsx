@@ -3,18 +3,19 @@
 import { useState, useRef, useEffect, useMemo } from 'react'
 import { Search, Loader2, X, Sparkles, ChevronRight } from 'lucide-react'
 import { FeedConfig } from '@/types/feed'
-import { BuilderType } from '@/types/switchboard'
+import { BuilderType, FunctionConfig, VRFConfig, SecretConfig, ParsedPrompt } from '@/types/switchboard'
 import { generateFromPrompt } from '@/lib/ai-assistant-extended'
 import { detectIntent, EXAMPLE_PROMPTS, DetectedIntent } from '@/lib/prompt-router'
 import { playPickupSound } from '@/lib/sound-utils'
+import { logger } from '@/lib/logger'
 
 interface CommandBarProps {
   onFeedGenerated?: (config: FeedConfig) => void
-  onFunctionGenerated?: (config: any) => void
-  onVRFGenerated?: (config: any) => void
-  onSecretGenerated?: (config: any) => void
+  onFunctionGenerated?: (config: FunctionConfig) => void
+  onVRFGenerated?: (config: VRFConfig) => void
+  onSecretGenerated?: (config: SecretConfig) => void
   onSearch?: (query: string) => void
-  onModuleNavigate?: (module: BuilderType, parsed?: any) => void
+  onModuleNavigate?: (module: BuilderType, parsed?: ParsedPrompt) => void
   placeholder?: string
   activeTab?: BuilderType
   showExamples?: boolean
@@ -149,18 +150,18 @@ export default function CommandBar({
             if (onFeedGenerated) onFeedGenerated(config as FeedConfig)
             break
           case 'function':
-            if (onFunctionGenerated) onFunctionGenerated(config)
+            if (onFunctionGenerated) onFunctionGenerated(config as FunctionConfig)
             break
           case 'vrf':
-            if (onVRFGenerated) onVRFGenerated(config)
+            if (onVRFGenerated) onVRFGenerated(config as VRFConfig)
             break
           case 'secret':
-            if (onSecretGenerated) onSecretGenerated(config)
+            if (onSecretGenerated) onSecretGenerated(config as SecretConfig)
             break
         }
       }
     } catch (error) {
-      console.error('Error:', error)
+      logger.api.error('CommandBar error:', error)
     } finally {
       setIsLoading(false)
       setInput('')

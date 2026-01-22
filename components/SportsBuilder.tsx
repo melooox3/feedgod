@@ -36,6 +36,7 @@ import {
 } from '@/lib/sports-api'
 import { playPickupSound } from '@/lib/sound-utils'
 import { useCostEstimate } from '@/lib/use-cost-estimate'
+import { useToast } from './Toast'
 import ChainSelector from './ChainSelector'
 
 type BuilderStep = 'browse' | 'configure' | 'preview'
@@ -199,6 +200,7 @@ function MatchCard({
 }
 
 export default function SportsBuilder() {
+  const toast = useToast()
   const [step, setStep] = useState<BuilderStep>('browse')
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
   
@@ -326,7 +328,7 @@ export default function SportsBuilder() {
   const handleDeploy = () => {
     playPickupSound()
     console.log('Deploying sports oracle:', { ...oracleConfig, match: selectedMatch })
-    alert('Sports Oracle deployed! (Demo - in production this would deploy to Switchboard)')
+    toast.success('Sports Oracle deployed! (Demo - in production this would deploy to Switchboard)')
   }
   
   const handleSave = () => {
@@ -342,7 +344,7 @@ export default function SportsBuilder() {
     const oracles = saved ? JSON.parse(saved) : []
     oracles.push(config)
     localStorage.setItem('savedSportsOracles', JSON.stringify(oracles))
-    alert('Sports Oracle configuration saved!')
+    toast.success('Sports Oracle configuration saved!')
   }
   
   const handleRefresh = async () => {

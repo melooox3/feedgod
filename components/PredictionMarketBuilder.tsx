@@ -33,6 +33,7 @@ import {
 } from '@/lib/prediction-api'
 import { playPickupSound } from '@/lib/sound-utils'
 import { useCostEstimate } from '@/lib/use-cost-estimate'
+import { useToast } from './Toast'
 import ChainSelector from './ChainSelector'
 
 type BuilderStep = 'browse' | 'configure' | 'preview'
@@ -206,6 +207,7 @@ function MarketCard({
 }
 
 export default function PredictionMarketBuilder() {
+  const toast = useToast()
   const [step, setStep] = useState<BuilderStep>('browse')
   const [markets, setMarkets] = useState<PredictionMarket[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -280,7 +282,7 @@ export default function PredictionMarketBuilder() {
   const handleDeploy = () => {
     playPickupSound()
     console.log('Deploying oracle:', oracleConfig)
-    alert('Oracle deployed! (This is a demo - in production, this would deploy to Switchboard)')
+    toast.success('Oracle deployed! (Demo - in production, this would deploy to Switchboard)')
   }
 
   const handleSave = () => {
@@ -294,7 +296,7 @@ export default function PredictionMarketBuilder() {
       createdAt: new Date(),
     })
     localStorage.setItem('savedPredictionOracles', JSON.stringify(oracles))
-    alert('Oracle configuration saved!')
+    toast.success('Oracle configuration saved!')
   }
 
   const handleRefresh = async () => {

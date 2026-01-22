@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Play, Save, Settings, Key, Eye, EyeOff } from 'lucide-react'
 import { SecretConfig } from '@/types/switchboard'
 import { playPickupSound } from '@/lib/sound-utils'
+import { useToast } from './Toast'
 import ChainSelector from './ChainSelector'
 
 interface SecretBuilderProps {
@@ -14,6 +15,7 @@ interface SecretBuilderProps {
 export default function SecretBuilder({ config, onConfigChange }: SecretBuilderProps) {
   const [localConfig, setLocalConfig] = useState<SecretConfig | null>(config)
   const [showValue, setShowValue] = useState(false)
+  const toast = useToast()
 
   useEffect(() => {
     if (config) {
@@ -64,14 +66,14 @@ export default function SecretBuilder({ config, onConfigChange }: SecretBuilderP
     }
     
     localStorage.setItem('savedSecrets', JSON.stringify(secrets))
-    alert('Secret saved! Check your profile to manage saved secrets.')
+    toast.success('Secret saved! Check your profile to manage saved secrets.')
   }
 
   const handleDeploy = async () => {
     playPickupSound()
     if (!localConfig) return
     console.log('Deploying secret:', localConfig)
-    alert('Secret deployed! (This is a demo - in production, this would deploy to Switchboard)')
+    toast.success('Secret deployed! (Demo - in production, this would deploy to Switchboard)')
   }
 
   if (!localConfig) {

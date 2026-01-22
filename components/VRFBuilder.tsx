@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Play, Save, Settings, Dice6, Hash } from 'lucide-react'
 import { VRFConfig } from '@/types/switchboard'
 import { playPickupSound } from '@/lib/sound-utils'
+import { useToast } from './Toast'
 import ChainSelector from './ChainSelector'
 
 interface VRFBuilderProps {
@@ -13,6 +14,7 @@ interface VRFBuilderProps {
 
 export default function VRFBuilder({ config, onConfigChange }: VRFBuilderProps) {
   const [localConfig, setLocalConfig] = useState<VRFConfig | null>(config)
+  const toast = useToast()
 
   useEffect(() => {
     if (config) {
@@ -62,14 +64,14 @@ export default function VRFBuilder({ config, onConfigChange }: VRFBuilderProps) 
     }
     
     localStorage.setItem('savedVRFs', JSON.stringify(vrfs))
-    alert('VRF saved! Check your profile to manage saved VRFs.')
+    toast.success('VRF saved! Check your profile to manage saved VRFs.')
   }
 
   const handleDeploy = async () => {
     playPickupSound()
     if (!localConfig) return
     console.log('Deploying VRF:', localConfig)
-    alert('VRF deployed! (This is a demo - in production, this would deploy to Switchboard)')
+    toast.success('VRF deployed! (Demo - in production, this would deploy to Switchboard)')
   }
 
   if (!localConfig) {

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Play, Save, Settings, Clock, Code2, Zap, Database, Key, Code } from 'lucide-react'
 import { FunctionConfig } from '@/types/switchboard'
 import { playPickupSound } from '@/lib/sound-utils'
+import { useToast } from './Toast'
 import ChainSelector from './ChainSelector'
 
 interface FunctionBuilderProps {
@@ -13,6 +14,7 @@ interface FunctionBuilderProps {
 
 export default function FunctionBuilder({ config, onConfigChange }: FunctionBuilderProps) {
   const [localConfig, setLocalConfig] = useState<FunctionConfig | null>(config)
+  const toast = useToast()
 
   useEffect(() => {
     if (config) {
@@ -78,14 +80,14 @@ export default main`,
     }
     
     localStorage.setItem('savedFunctions', JSON.stringify(funcs))
-    alert('Function saved! Check your profile to manage saved functions.')
+    toast.success('Function saved! Check your profile to manage saved functions.')
   }
 
   const handleDeploy = async () => {
     playPickupSound()
     if (!localConfig) return
     console.log('Deploying function:', localConfig)
-    alert('Function deployed! (This is a demo - in production, this would deploy to Switchboard)')
+    toast.success('Function deployed! (Demo - in production, this would deploy to Switchboard)')
   }
 
   if (!localConfig) {

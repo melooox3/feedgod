@@ -39,6 +39,7 @@ import {
 } from '@/lib/custom-api'
 import { playPickupSound } from '@/lib/sound-utils'
 import { useCostEstimate } from '@/lib/use-cost-estimate'
+import { useToast } from './Toast'
 import ChainSelector from './ChainSelector'
 import JSONPathSelector from './JSONPathSelector'
 
@@ -84,6 +85,7 @@ function CostEstimateDisplay({ blockchain, network }: { blockchain: string; netw
 }
 
 export default function CustomAPIBuilder() {
+  const toast = useToast()
   const [step, setStep] = useState<BuilderStep>('fetch')
   
   // API config state
@@ -167,7 +169,7 @@ export default function CustomAPIBuilder() {
   
   const handleTest = async () => {
     if (!config.url || !isValidUrl(config.url)) {
-      alert('Please enter a valid URL')
+      toast.warning('Please enter a valid URL')
       return
     }
     
@@ -203,7 +205,7 @@ export default function CustomAPIBuilder() {
   
   const handleContinueToConfig = () => {
     if (!config.jsonPath) {
-      alert('Please select a value from the JSON response')
+      toast.warning('Please select a value from the JSON response')
       return
     }
     playPickupSound()
@@ -228,7 +230,7 @@ export default function CustomAPIBuilder() {
   const handleDeploy = () => {
     playPickupSound()
     console.log('Deploying Custom API oracle:', config)
-    alert('Custom API Oracle deployed! (Demo - in production this would deploy to Switchboard)')
+    toast.success('Custom API Oracle deployed! (Demo - in production this would deploy to Switchboard)')
   }
   
   const handleSave = () => {
@@ -243,7 +245,7 @@ export default function CustomAPIBuilder() {
     const oracles = saved ? JSON.parse(saved) : []
     oracles.push(fullConfig)
     localStorage.setItem('savedCustomAPIOracles', JSON.stringify(oracles))
-    alert('Custom API Oracle configuration saved!')
+    toast.success('Custom API Oracle configuration saved!')
   }
   
   // Calculate transformed value

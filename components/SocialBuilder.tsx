@@ -40,6 +40,7 @@ import {
 } from '@/lib/social-api'
 import { playPickupSound } from '@/lib/sound-utils'
 import { useCostEstimate } from '@/lib/use-cost-estimate'
+import { useToast } from './Toast'
 import ChainSelector from './ChainSelector'
 
 type BuilderStep = 'select' | 'configure' | 'preview'
@@ -195,6 +196,7 @@ function ProfilePreview({ profile, selectedMetric }: { profile: SocialProfile; s
 }
 
 export default function SocialBuilder() {
+  const toast = useToast()
   const [step, setStep] = useState<BuilderStep>('select')
   
   // Selection state
@@ -320,7 +322,7 @@ export default function SocialBuilder() {
   const handleDeploy = () => {
     playPickupSound()
     console.log('Deploying social oracle:', { ...oracleConfig, profile })
-    alert('Social Oracle deployed! (Demo - in production this would deploy to Switchboard)')
+    toast.success('Social Oracle deployed! (Demo - in production this would deploy to Switchboard)')
   }
   
   const handleSave = () => {
@@ -335,7 +337,7 @@ export default function SocialBuilder() {
     const oracles = saved ? JSON.parse(saved) : []
     oracles.push(config)
     localStorage.setItem('savedSocialOracles', JSON.stringify(oracles))
-    alert('Social Oracle configuration saved!')
+    toast.success('Social Oracle configuration saved!')
   }
   
   const handleRefresh = async () => {

@@ -1,7 +1,8 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react'
 import { ethers } from 'ethers'
+import { useToast } from '@/components/Toast'
 
 interface EVMWalletContextType {
   address: string | null
@@ -25,6 +26,7 @@ export function useEVMWallet() {
 }
 
 export function EVMWalletProvider({ children }: { children: ReactNode }) {
+  const toast = useToast()
   const [address, setAddress] = useState<string | null>(null)
   const [chainId, setChainId] = useState<number | null>(null)
   const [provider, setProvider] = useState<ethers.BrowserProvider | null>(null)
@@ -92,7 +94,7 @@ export function EVMWalletProvider({ children }: { children: ReactNode }) {
 
   const connect = async () => {
     if (!window.ethereum) {
-      alert('Please install MetaMask, Rabby, or another EVM-compatible wallet')
+      toast.warning('Please install MetaMask, Rabby, or another EVM-compatible wallet')
       return
     }
 
@@ -112,7 +114,7 @@ export function EVMWalletProvider({ children }: { children: ReactNode }) {
     } catch (error: any) {
       console.error('Error connecting EVM wallet:', error)
       if (error.code === 4001) {
-        alert('Please connect your wallet to continue')
+        toast.warning('Please connect your wallet to continue')
       }
     }
   }
