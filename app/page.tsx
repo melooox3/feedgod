@@ -35,6 +35,7 @@ import { BuilderErrorBoundary } from "@/components/ErrorBoundary";
 import { useToast } from "@/components/Toast";
 import Header from "@/components/Header";
 import ModuleCard from "@/components/ModuleCard";
+import ModuleTiles from "@/components/ModuleTiles";
 import BulkFeedCreator from "@/components/BulkFeedCreator";
 import CommandBar from "@/components/CommandBar";
 import OracleSearchBar from "@/components/OracleSearchBar";
@@ -200,6 +201,7 @@ export default function Home() {
   const [vrfConfig, setVRFConfig] = useState<VRFConfig | null>(null);
   const [secretConfig, setSecretConfig] = useState<SecretConfig | null>(null);
   const [showBulkCreator, setShowBulkCreator] = useState(false);
+  const [showAllModules, setShowAllModules] = useState(false);
   const toast = useToast();
 
   // Load config from sessionStorage if available (from profile page)
@@ -366,6 +368,7 @@ export default function Home() {
   const handleEnterBuilder = () => {
     playPickupSound();
     setCurrentView("builder");
+    setShowAllModules(false);
   };
 
   const handleEnterArena = () => {
@@ -380,6 +383,7 @@ export default function Home() {
     playPickupSound();
     setCurrentView("landing");
     setActiveModule(null);
+    setShowAllModules(false);
   };
 
   return (
@@ -545,23 +549,49 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Module Selection Grid */}
+          {/* Module Tiles Grid */}
           <div className="pb-20">
-            <h2 className="text-center text-sm font-medium text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 uppercase tracking-wider mb-8">
-              Or choose a module to get started
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-              {MODULES.map((module) => (
-                <ModuleCard
-                  key={module.id}
-                  icon={module.icon}
-                  backgroundIcon={module.backgroundIcon}
-                  title={module.title}
-                  description={module.description}
-                  onClick={() => handleModuleSelect(module.id)}
+            {!showAllModules ? (
+              <div className="max-w-3xl mx-auto">
+                <ModuleTiles
+                  modules={MODULES.map((m) => ({
+                    id: m.id,
+                    title: m.title,
+                    icon: m.icon,
+                  }))}
+                  onModuleSelect={(id) => handleModuleSelect(id as BuilderType)}
+                  onViewAll={() => setShowAllModules(true)}
+                  maxVisible={8}
                 />
-              ))}
-            </div>
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center justify-between mb-8">
+                  <h2 className="text-sm font-medium text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 uppercase tracking-wider">
+                    All Modules
+                  </h2>
+                  <button
+                    onClick={() => setShowAllModules(false)}
+                    className="text-sm font-medium text-feedgod-primary dark:text-feedgod-neon-pink hover:text-feedgod-primary/80 dark:hover:text-feedgod-neon-pink/80 transition-colors flex items-center gap-1"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                    Show less
+                  </button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                  {MODULES.map((module) => (
+                    <ModuleCard
+                      key={module.id}
+                      icon={module.icon}
+                      backgroundIcon={module.backgroundIcon}
+                      title={module.title}
+                      description={module.description}
+                      onClick={() => handleModuleSelect(module.id)}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         </div>
       ) : (
