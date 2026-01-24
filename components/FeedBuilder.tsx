@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
+import { useState } from "react";
 import {
   Play,
   Save,
@@ -21,26 +21,32 @@ import {
   CheckCircle,
   X,
   Rocket,
-} from 'lucide-react'
-import { FeedConfig, DataSource } from '@/types/feed'
-import { playPickupSound } from '@/lib/sound-utils'
-import { useCostEstimate } from '@/lib/use-cost-estimate'
-import { useFeedConfig, usePriceFetching, useDeployment, AVAILABLE_SOURCES } from '@/hooks'
-import ChainSelector from './ChainSelector'
-import CustomSourceModal from './CustomSourceModal'
-import { getSolscanLink, generateIntegrationCode } from '@/lib/switchboard'
+} from "lucide-react";
+import { FeedConfig, DataSource } from "@/types/feed";
+import { playPickupSound } from "@/lib/sound-utils";
+import { useCostEstimate } from "@/lib/use-cost-estimate";
+import {
+  useFeedConfig,
+  usePriceFetching,
+  useDeployment,
+  AVAILABLE_SOURCES,
+} from "@/hooks";
+import ChainSelector from "./ChainSelector";
+import NetworkMismatchBanner from "./NetworkMismatchBanner";
+import CustomSourceModal from "./CustomSourceModal";
+import { getSolscanLink, generateIntegrationCode } from "@/lib/switchboard";
 
 interface FeedBuilderProps {
-  config: FeedConfig | null
-  onConfigChange: (config: FeedConfig) => void
+  config: FeedConfig | null;
+  onConfigChange: (config: FeedConfig) => void;
 }
 
 // Chain logo mapping
 const CHAIN_LOGOS: Record<string, string> = {
-  solana: '/solana.png',
-  ethereum: '/ethereum.png',
-  monad: '/monad.png',
-}
+  solana: "/solana.png",
+  ethereum: "/ethereum.png",
+  monad: "/monad.png",
+};
 
 /**
  * Format price with appropriate decimal places
@@ -48,9 +54,15 @@ const CHAIN_LOGOS: Record<string, string> = {
  */
 function formatPrice(price: number): string {
   if (price < 1) {
-    return price.toLocaleString(undefined, { minimumFractionDigits: 5, maximumFractionDigits: 5 })
+    return price.toLocaleString(undefined, {
+      minimumFractionDigits: 5,
+      maximumFractionDigits: 5,
+    });
   }
-  return price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+  return price.toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 }
 
 /**
@@ -61,15 +73,15 @@ function CostEstimateDisplay({
   network,
   operationType,
 }: {
-  blockchain: string
-  network: string
-  operationType: 'feed' | 'function' | 'vrf' | 'secret'
+  blockchain: string;
+  network: string;
+  operationType: "feed" | "function" | "vrf" | "secret";
 }) {
   const { estimate, isLoading } = useCostEstimate(
-    blockchain as 'solana' | 'ethereum' | 'monad',
-    network as 'mainnet' | 'devnet' | 'testnet',
-    operationType
-  )
+    blockchain as "solana" | "ethereum" | "monad",
+    network as "mainnet" | "devnet" | "testnet",
+    operationType,
+  );
 
   if (isLoading || !estimate) {
     return (
@@ -79,7 +91,7 @@ function CostEstimateDisplay({
           <span>Calculating deployment cost...</span>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -106,7 +118,7 @@ function CostEstimateDisplay({
         </div>
       )}
     </div>
-  )
+  );
 }
 
 /**
@@ -120,12 +132,12 @@ function PriceDisplay({
   isLoading,
   onRefresh,
 }: {
-  config: FeedConfig
-  currentPrice: number | null
-  priceChange: number | null
-  enabledSourcesCount: number
-  isLoading: boolean
-  onRefresh: () => void
+  config: FeedConfig;
+  currentPrice: number | null;
+  priceChange: number | null;
+  enabledSourcesCount: number;
+  isLoading: boolean;
+  onRefresh: () => void;
 }) {
   return (
     <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-8 backdrop-blur-sm relative overflow-hidden">
@@ -141,7 +153,9 @@ function PriceDisplay({
       <div className="flex items-start justify-between relative z-10">
         <div className="flex-1">
           <div className="flex items-center gap-4 mb-4">
-            <h2 className="text-2xl font-bold text-feedgod-primary">{config.symbol}</h2>
+            <h2 className="text-2xl font-bold text-feedgod-primary">
+              {config.symbol}
+            </h2>
             {/* Chain badge */}
             <div className="flex items-center gap-1.5 px-2 py-1 bg-feedgod-pink-100 dark:bg-feedgod-dark-accent rounded-full">
               <img
@@ -153,26 +167,34 @@ function PriceDisplay({
                 {config.blockchain}
               </span>
             </div>
-            {priceChange !== null && (
-              priceChange >= 0 ? (
+            {priceChange !== null &&
+              (priceChange >= 0 ? (
                 <TrendingUp className="w-6 h-6 text-green-600" />
               ) : (
                 <TrendingDown className="w-6 h-6 text-red-500" />
-              )
-            )}
+              ))}
           </div>
           {isLoading || currentPrice === null ? (
-            <div className="text-5xl font-bold text-feedgod-pink-400 mb-2">Loading...</div>
+            <div className="text-5xl font-bold text-feedgod-pink-400 mb-2">
+              Loading...
+            </div>
           ) : (
             <>
               <p className="text-6xl font-bold text-feedgod-primary dark:text-feedgod-neon-pink mb-3">
                 ${formatPrice(currentPrice)}
               </p>
-              <p className={`text-lg font-medium mb-4 ${priceChange !== null && priceChange >= 0 ? 'text-green-600' : 'text-red-500'}`}>
-                {priceChange !== null ? `${priceChange >= 0 ? '+' : ''}${priceChange.toFixed(2)}%` : 'N/A'} (24h)
+              <p
+                className={`text-lg font-medium mb-4 ${priceChange !== null && priceChange >= 0 ? "text-green-600" : "text-red-500"}`}
+              >
+                {priceChange !== null
+                  ? `${priceChange >= 0 ? "+" : ""}${priceChange.toFixed(2)}%`
+                  : "N/A"}{" "}
+                (24h)
               </p>
               <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
-                Aggregated from {enabledSourcesCount} source{enabledSourcesCount !== 1 ? 's' : ''} using {config.aggregator.type} method
+                Aggregated from {enabledSourcesCount} source
+                {enabledSourcesCount !== 1 ? "s" : ""} using{" "}
+                {config.aggregator.type} method
               </p>
             </>
           )}
@@ -186,7 +208,7 @@ function PriceDisplay({
         </button>
       </div>
     </div>
-  )
+  );
 }
 
 /**
@@ -202,18 +224,20 @@ function DataSourcesPanel({
   onUpdateWeight,
   onShowCustomModal,
 }: {
-  dataSources: DataSource[]
-  sourcePrices: Record<string, { price: number; status: 'active' | 'error' }>
-  availableToAdd: DataSource[]
-  onToggleSource: (id: string) => void
-  onRemoveSource: (id: string) => void
-  onAddSource: (source: DataSource) => void
-  onUpdateWeight: (id: string, weight: number) => void
-  onShowCustomModal: () => void
+  dataSources: DataSource[];
+  sourcePrices: Record<string, { price: number; status: "active" | "error" }>;
+  availableToAdd: DataSource[];
+  onToggleSource: (id: string) => void;
+  onRemoveSource: (id: string) => void;
+  onAddSource: (source: DataSource) => void;
+  onUpdateWeight: (id: string, weight: number) => void;
+  onShowCustomModal: () => void;
 }) {
   return (
     <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-      <h3 className="text-lg font-semibold text-feedgod-primary mb-4">Data Sources</h3>
+      <h3 className="text-lg font-semibold text-feedgod-primary mb-4">
+        Data Sources
+      </h3>
       <p className="text-sm text-feedgod-pink-500 mb-4">
         Select which sources to use for price aggregation
       </p>
@@ -221,7 +245,7 @@ function DataSourcesPanel({
       {/* Selected Sources */}
       <div className="space-y-3 mb-4 max-h-[500px] overflow-y-auto">
         {dataSources.map((source) => {
-          const sourcePrice = sourcePrices[source.id]
+          const sourcePrice = sourcePrices[source.id];
           return (
             <div
               key={source.id}
@@ -236,8 +260,12 @@ function DataSourcesPanel({
                     className="w-4 h-4 rounded border-feedgod-pink-300 dark:border-feedgod-dark-accent bg-white dark:bg-feedgod-dark-secondary text-feedgod-primary dark:text-feedgod-neon-pink focus:ring-feedgod-primary dark:focus:ring-feedgod-neon-pink cursor-pointer star-glow-on-hover"
                   />
                   <div>
-                    <p className="text-feedgod-dark dark:text-feedgod-neon-cyan font-medium">{source.name}</p>
-                    <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 capitalize">{source.type}</p>
+                    <p className="text-feedgod-dark dark:text-feedgod-neon-cyan font-medium">
+                      {source.name}
+                    </p>
+                    <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 capitalize">
+                      {source.type}
+                    </p>
                   </div>
                 </div>
                 <button
@@ -252,24 +280,35 @@ function DataSourcesPanel({
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-feedgod-pink-500">Price</span>
                     <div className="flex items-center gap-2">
-                      {sourcePrice.status === 'active' ? (
+                      {sourcePrice.status === "active" ? (
                         <CheckCircle2 className="w-3 h-3 text-green-500" />
                       ) : (
                         <XCircle className="w-3 h-3 text-red-500" />
                       )}
-                      <span className={`text-sm font-medium ${
-                        sourcePrice.status === 'active' ? 'text-feedgod-dark dark:text-feedgod-neon-cyan' : 'text-feedgod-pink-400 dark:text-feedgod-neon-cyan/50'
-                      }`}>
+                      <span
+                        className={`text-sm font-medium ${
+                          sourcePrice.status === "active"
+                            ? "text-feedgod-dark dark:text-feedgod-neon-cyan"
+                            : "text-feedgod-pink-400 dark:text-feedgod-neon-cyan/50"
+                        }`}
+                      >
                         ${formatPrice(sourcePrice.price)}
                       </span>
                     </div>
                   </div>
                   <div className="flex items-center justify-between mt-2">
-                    <span className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Weight</span>
+                    <span className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                      Weight
+                    </span>
                     <input
                       type="number"
                       value={source.weight || 1}
-                      onChange={(e) => onUpdateWeight(source.id, parseFloat(e.target.value) || 1)}
+                      onChange={(e) =>
+                        onUpdateWeight(
+                          source.id,
+                          parseFloat(e.target.value) || 1,
+                        )
+                      }
                       className="w-20 bg-white dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded px-2 py-1 text-sm text-feedgod-dark dark:text-feedgod-neon-cyan focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:focus:ring-feedgod-neon-pink"
                       min="0"
                       step="0.1"
@@ -278,7 +317,7 @@ function DataSourcesPanel({
                 </div>
               )}
             </div>
-          )
+          );
         })}
       </div>
 
@@ -296,8 +335,12 @@ function DataSourcesPanel({
                   onClick={() => onAddSource(source)}
                   className="w-full text-left p-3 bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary hover:bg-feedgod-pink-100 dark:hover:bg-feedgod-dark-accent rounded-lg transition-colors star-glow-on-hover"
                 >
-                  <div className="font-medium text-feedgod-dark dark:text-feedgod-neon-cyan text-sm">{source.name}</div>
-                  <div className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 capitalize mt-1">{source.type}</div>
+                  <div className="font-medium text-feedgod-dark dark:text-feedgod-neon-cyan text-sm">
+                    {source.name}
+                  </div>
+                  <div className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 capitalize mt-1">
+                    {source.type}
+                  </div>
                 </button>
               ))}
             </div>
@@ -308,11 +351,13 @@ function DataSourcesPanel({
           className="w-full text-left p-3 bg-feedgod-pink-100 dark:bg-feedgod-dark-accent hover:bg-feedgod-pink-200 dark:hover:bg-feedgod-dark-secondary rounded-lg transition-colors flex items-center gap-2 star-glow-on-hover"
         >
           <Plus className="w-4 h-4 text-feedgod-primary" />
-          <span className="text-sm font-medium text-feedgod-primary">Add Custom Source</span>
+          <span className="text-sm font-medium text-feedgod-primary">
+            Add Custom Source
+          </span>
         </button>
       </div>
     </div>
-  )
+  );
 }
 
 /**
@@ -327,13 +372,18 @@ function DeploymentModal({
   onRetry,
   onCopy,
 }: {
-  config: FeedConfig
-  isDeploying: boolean
-  deploymentResult: { success: boolean; publicKey?: string; signature?: string; error?: string } | null
-  copiedText: string | null
-  onClose: () => void
-  onRetry: () => void
-  onCopy: (text: string, id: string) => void
+  config: FeedConfig;
+  isDeploying: boolean;
+  deploymentResult: {
+    success: boolean;
+    publicKey?: string;
+    signature?: string;
+    error?: string;
+  } | null;
+  copiedText: string | null;
+  onClose: () => void;
+  onRetry: () => void;
+  onCopy: (text: string, id: string) => void;
 }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
@@ -341,7 +391,7 @@ function DeploymentModal({
         {/* Subtle chain watermark */}
         <div className="absolute -right-12 -top-12 opacity-5 dark:opacity-10 pointer-events-none">
           <img
-            src={CHAIN_LOGOS[config.blockchain || 'solana']}
+            src={CHAIN_LOGOS[config.blockchain || "solana"]}
             alt=""
             className="w-64 h-64 object-contain"
           />
@@ -351,10 +401,15 @@ function DeploymentModal({
         <div className="p-6 border-b border-feedgod-pink-200 dark:border-feedgod-dark-accent relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-lg flex items-center justify-center relative ${
-                isDeploying ? 'bg-feedgod-primary/20' :
-                deploymentResult?.success ? 'bg-emerald-500/20' : 'bg-red-500/20'
-              }`}>
+              <div
+                className={`w-10 h-10 rounded-lg flex items-center justify-center relative ${
+                  isDeploying
+                    ? "bg-feedgod-primary/20"
+                    : deploymentResult?.success
+                      ? "bg-emerald-500/20"
+                      : "bg-red-500/20"
+                }`}
+              >
                 {isDeploying ? (
                   <Loader2 className="w-5 h-5 text-feedgod-primary animate-spin" />
                 ) : deploymentResult?.success ? (
@@ -366,11 +421,14 @@ function DeploymentModal({
               <div>
                 <div className="flex items-center gap-2">
                   <h3 className="text-lg font-bold text-feedgod-dark dark:text-white">
-                    {isDeploying ? 'Deploying Feed...' :
-                     deploymentResult?.success ? 'Deployment Successful!' : 'Deployment Failed'}
+                    {isDeploying
+                      ? "Deploying Feed..."
+                      : deploymentResult?.success
+                        ? "Deployment Successful!"
+                        : "Deployment Failed"}
                   </h3>
                   <img
-                    src={CHAIN_LOGOS[config.blockchain || 'solana']}
+                    src={CHAIN_LOGOS[config.blockchain || "solana"]}
                     alt={config.blockchain}
                     className="w-5 h-5 object-contain"
                   />
@@ -404,8 +462,14 @@ function DeploymentModal({
               </p>
               <div className="mt-6 flex items-center justify-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-feedgod-primary animate-pulse" />
-                <div className="w-2 h-2 rounded-full bg-feedgod-primary animate-pulse" style={{ animationDelay: '0.2s' }} />
-                <div className="w-2 h-2 rounded-full bg-feedgod-primary animate-pulse" style={{ animationDelay: '0.4s' }} />
+                <div
+                  className="w-2 h-2 rounded-full bg-feedgod-primary animate-pulse"
+                  style={{ animationDelay: "0.2s" }}
+                />
+                <div
+                  className="w-2 h-2 rounded-full bg-feedgod-primary animate-pulse"
+                  style={{ animationDelay: "0.4s" }}
+                />
               </div>
             </div>
           ) : deploymentResult?.success ? (
@@ -420,11 +484,13 @@ function DeploymentModal({
                     {deploymentResult.publicKey}
                   </code>
                   <button
-                    onClick={() => onCopy(deploymentResult.publicKey!, 'pubkey')}
+                    onClick={() =>
+                      onCopy(deploymentResult.publicKey!, "pubkey")
+                    }
                     className="p-2 hover:bg-feedgod-pink-100 dark:hover:bg-feedgod-dark-secondary rounded transition-colors flex-shrink-0"
                     title="Copy public key"
                   >
-                    {copiedText === 'pubkey' ? (
+                    {copiedText === "pubkey" ? (
                       <CheckCircle className="w-4 h-4 text-emerald-500" />
                     ) : (
                       <Copy className="w-4 h-4 text-feedgod-pink-500" />
@@ -436,7 +502,10 @@ function DeploymentModal({
               {/* Links */}
               <div className="flex gap-3">
                 <a
-                  href={getSolscanLink(deploymentResult.publicKey!, config.network || 'devnet')}
+                  href={getSolscanLink(
+                    deploymentResult.publicKey!,
+                    config.network || "devnet",
+                  )}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 px-4 py-3 bg-feedgod-pink-100 dark:bg-feedgod-dark-accent hover:bg-feedgod-pink-200 rounded-lg text-feedgod-dark dark:text-white font-medium transition-colors flex items-center justify-center gap-2"
@@ -453,13 +522,18 @@ function DeploymentModal({
                     Integration Code
                   </label>
                   <button
-                    onClick={() => onCopy(
-                      generateIntegrationCode(deploymentResult.publicKey!, config.name || 'Feed'),
-                      'code'
-                    )}
+                    onClick={() =>
+                      onCopy(
+                        generateIntegrationCode(
+                          deploymentResult.publicKey!,
+                          config.name || "Feed",
+                        ),
+                        "code",
+                      )
+                    }
                     className="text-xs text-feedgod-primary hover:text-feedgod-secondary flex items-center gap-1"
                   >
-                    {copiedText === 'code' ? (
+                    {copiedText === "code" ? (
                       <>
                         <CheckCircle className="w-3 h-3" />
                         Copied!
@@ -474,7 +548,10 @@ function DeploymentModal({
                 </div>
                 <div className="bg-feedgod-dark dark:bg-black rounded-lg p-4 overflow-x-auto max-h-48">
                   <pre className="text-xs text-green-400 font-mono whitespace-pre-wrap">
-                    {generateIntegrationCode(deploymentResult.publicKey!, config.name || 'Feed')}
+                    {generateIntegrationCode(
+                      deploymentResult.publicKey!,
+                      config.name || "Feed",
+                    )}
                   </pre>
                 </div>
               </div>
@@ -493,7 +570,7 @@ function DeploymentModal({
                 Deployment Failed
               </p>
               <p className="text-sm text-red-500 bg-red-50 dark:bg-red-500/10 rounded-lg p-3">
-                {deploymentResult?.error || 'Unknown error occurred'}
+                {deploymentResult?.error || "Unknown error occurred"}
               </p>
               <button
                 onClick={onRetry}
@@ -518,15 +595,18 @@ function DeploymentModal({
         )}
       </div>
     </div>
-  )
+  );
 }
 
 /**
  * Main FeedBuilder Component
  * Uses custom hooks for state management, price fetching, and deployment
  */
-export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps) {
-  const [showCustomModal, setShowCustomModal] = useState(false)
+export default function FeedBuilder({
+  config,
+  onConfigChange,
+}: FeedBuilderProps) {
+  const [showCustomModal, setShowCustomModal] = useState(false);
 
   // Custom hooks for separated concerns
   const {
@@ -538,7 +618,7 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
     addSource,
     removeSource,
     updateSourceWeight,
-  } = useFeedConfig({ config, onConfigChange })
+  } = useFeedConfig({ config, onConfigChange });
 
   const {
     currentPrice,
@@ -546,7 +626,7 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
     sourcePrices,
     isLoadingPrices,
     refreshPrices,
-  } = usePriceFetching({ config: localConfig })
+  } = usePriceFetching({ config: localConfig });
 
   const {
     wallet,
@@ -559,14 +639,16 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
     handleDeploy,
     handleCopyToClipboard,
     closeDeploymentModal,
-  } = useDeployment({ config: localConfig })
+  } = useDeployment({ config: localConfig });
 
   if (!localConfig) {
     return (
       <div className="bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-12 text-center">
-        <div className="text-xl font-semibold text-feedgod-primary mb-2">Loading Feed Builder...</div>
+        <div className="text-xl font-semibold text-feedgod-primary mb-2">
+          Loading Feed Builder...
+        </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -582,11 +664,18 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
               Price Feed Builder
             </h2>
             <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
-              Aggregate real-time price data from multiple sources into reliable on-chain oracles
+              Aggregate real-time price data from multiple sources into reliable
+              on-chain oracles
             </p>
           </div>
         </div>
       </div>
+
+      {/* Network Mismatch Banner */}
+      <NetworkMismatchBanner
+        requiredBlockchain={localConfig.blockchain}
+        requiredNetwork={localConfig.network}
+      />
 
       {/* Price Display */}
       <PriceDisplay
@@ -611,11 +700,15 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Symbol */}
               <div>
-                <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2">Symbol</label>
+                <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2">
+                  Symbol
+                </label>
                 <input
                   type="text"
                   value={localConfig.symbol}
-                  onChange={(e) => handleConfigUpdate({ symbol: e.target.value })}
+                  onChange={(e) =>
+                    handleConfigUpdate({ symbol: e.target.value })
+                  }
                   className="w-full bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg px-4 py-2 text-feedgod-dark dark:text-feedgod-neon-cyan focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:focus:ring-feedgod-neon-pink"
                   placeholder="BTC/USD"
                 />
@@ -623,7 +716,9 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
 
               {/* Name */}
               <div>
-                <label className="block text-sm font-medium text-feedgod-dark mb-2">Feed Name</label>
+                <label className="block text-sm font-medium text-feedgod-dark mb-2">
+                  Feed Name
+                </label>
                 <input
                   type="text"
                   value={localConfig.name}
@@ -642,7 +737,11 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
                 <input
                   type="number"
                   value={localConfig.updateInterval}
-                  onChange={(e) => handleConfigUpdate({ updateInterval: parseInt(e.target.value) || 60 })}
+                  onChange={(e) =>
+                    handleConfigUpdate({
+                      updateInterval: parseInt(e.target.value) || 60,
+                    })
+                  }
                   className="w-full bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg px-4 py-2 text-feedgod-dark dark:text-feedgod-neon-cyan focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:focus:ring-feedgod-neon-pink"
                   min="1"
                 />
@@ -660,7 +759,11 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
                 <input
                   type="number"
                   value={localConfig.decimals}
-                  onChange={(e) => handleConfigUpdate({ decimals: parseInt(e.target.value) || 8 })}
+                  onChange={(e) =>
+                    handleConfigUpdate({
+                      decimals: parseInt(e.target.value) || 8,
+                    })
+                  }
                   className="w-full bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg px-4 py-2 text-feedgod-dark dark:text-feedgod-neon-cyan focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:focus:ring-feedgod-neon-pink"
                   min="0"
                   max="18"
@@ -675,17 +778,28 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
                 <ChainSelector
                   blockchain={localConfig.blockchain}
                   network={localConfig.network}
-                  onBlockchainChange={(blockchain) => handleConfigUpdate({ blockchain })}
+                  onBlockchainChange={(blockchain) =>
+                    handleConfigUpdate({ blockchain })
+                  }
                   onNetworkChange={(network) => handleConfigUpdate({ network })}
                 />
               </div>
 
               {/* Aggregator Type */}
               <div>
-                <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2">Aggregation Method</label>
+                <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2">
+                  Aggregation Method
+                </label>
                 <select
                   value={localConfig.aggregator.type}
-                  onChange={(e) => handleConfigUpdate({ aggregator: { ...localConfig.aggregator, type: e.target.value as 'median' | 'mean' | 'weighted' } })}
+                  onChange={(e) =>
+                    handleConfigUpdate({
+                      aggregator: {
+                        ...localConfig.aggregator,
+                        type: e.target.value as "median" | "mean" | "weighted",
+                      },
+                    })
+                  }
                   className="w-full bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg px-4 py-2 text-feedgod-dark dark:text-feedgod-neon-cyan focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:focus:ring-feedgod-neon-pink"
                 >
                   <option value="median">Median (Most Robust)</option>
@@ -693,34 +807,62 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
                   <option value="weighted">Weighted Average</option>
                 </select>
                 <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mt-1">
-                  {localConfig.aggregator.type === 'median' && 'Uses middle value from all sources'}
-                  {localConfig.aggregator.type === 'mean' && 'Averages all source prices'}
-                  {localConfig.aggregator.type === 'weighted' && 'Weights by source reliability'}
+                  {localConfig.aggregator.type === "median" &&
+                    "Uses middle value from all sources"}
+                  {localConfig.aggregator.type === "mean" &&
+                    "Averages all source prices"}
+                  {localConfig.aggregator.type === "weighted" &&
+                    "Weights by source reliability"}
                 </p>
               </div>
             </div>
 
             {/* Advanced Settings */}
             <div className="mt-6 pt-6 border-t border-feedgod-pink-200 dark:border-feedgod-dark-accent">
-              <h4 className="text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-4">Advanced Settings</h4>
+              <h4 className="text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-4">
+                Advanced Settings
+              </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2">Min Sources Required</label>
+                  <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2">
+                    Min Sources Required
+                  </label>
                   <input
                     type="number"
                     value={localConfig.aggregator.minSources || 2}
-                    onChange={(e) => handleConfigUpdate({ aggregator: { ...localConfig.aggregator, minSources: parseInt(e.target.value) || 2 } })}
+                    onChange={(e) =>
+                      handleConfigUpdate({
+                        aggregator: {
+                          ...localConfig.aggregator,
+                          minSources: parseInt(e.target.value) || 2,
+                        },
+                      })
+                    }
                     className="w-full bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg px-4 py-2 text-feedgod-dark dark:text-feedgod-neon-cyan focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:focus:ring-feedgod-neon-pink"
                     min="1"
                     max={localConfig.dataSources.length}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2">Deviation Threshold (%)</label>
+                  <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2">
+                    Deviation Threshold (%)
+                  </label>
                   <input
                     type="number"
-                    value={localConfig.aggregator.deviationThreshold ? localConfig.aggregator.deviationThreshold * 100 : 5}
-                    onChange={(e) => handleConfigUpdate({ aggregator: { ...localConfig.aggregator, deviationThreshold: (parseFloat(e.target.value) || 5) / 100 } })}
+                    value={
+                      localConfig.aggregator.deviationThreshold
+                        ? localConfig.aggregator.deviationThreshold * 100
+                        : 5
+                    }
+                    onChange={(e) =>
+                      handleConfigUpdate({
+                        aggregator: {
+                          ...localConfig.aggregator,
+                          deviationThreshold:
+                            (parseFloat(e.target.value) || 5) / 100,
+                        },
+                      })
+                    }
                     className="w-full bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg px-4 py-2 text-feedgod-dark dark:text-feedgod-neon-cyan focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:focus:ring-feedgod-neon-pink"
                     min="0"
                     max="100"
@@ -749,20 +891,25 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
           {/* Aggregated Price Summary */}
           <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Aggregated Price</span>
+              <span className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                Aggregated Price
+              </span>
               <span className="text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan capitalize">
                 {localConfig.aggregator.type}
               </span>
             </div>
             {isLoadingPrices || currentPrice === null ? (
-              <p className="text-2xl font-bold text-feedgod-pink-400">Loading...</p>
+              <p className="text-2xl font-bold text-feedgod-pink-400">
+                Loading...
+              </p>
             ) : (
               <p className="text-2xl font-bold text-feedgod-primary dark:text-feedgod-neon-pink">
                 ${formatPrice(currentPrice)}
               </p>
             )}
             <p className="text-xs text-feedgod-pink-500 mt-1">
-              {enabledSources.length} active source{enabledSources.length !== 1 ? 's' : ''}
+              {enabledSources.length} active source
+              {enabledSources.length !== 1 ? "s" : ""}
             </p>
           </div>
 
@@ -786,7 +933,7 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
               onClick={handleDeploy}
               disabled={isDeploying || !isWalletConnected}
               className="flex-1 px-4 py-3 bg-feedgod-primary hover:bg-feedgod-secondary disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-white text-sm font-medium transition-colors flex items-center justify-center gap-2 star-glow-on-hover"
-              title={!isWalletConnected ? 'Connect wallet to deploy' : ''}
+              title={!isWalletConnected ? "Connect wallet to deploy" : ""}
             >
               {isDeploying ? (
                 <>
@@ -796,7 +943,7 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
               ) : (
                 <>
                   <Play className="w-4 h-4" />
-                  {isWalletConnected ? 'Deploy' : 'Connect Wallet'}
+                  {isWalletConnected ? "Deploy" : "Connect Wallet"}
                 </>
               )}
             </button>
@@ -824,5 +971,5 @@ export default function FeedBuilder({ config, onConfigChange }: FeedBuilderProps
         />
       )}
     </div>
-  )
+  );
 }
