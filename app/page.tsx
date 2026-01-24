@@ -37,6 +37,7 @@ import Header from "@/components/Header";
 import ModuleCard from "@/components/ModuleCard";
 import BulkFeedCreator from "@/components/BulkFeedCreator";
 import CommandBar from "@/components/CommandBar";
+import OracleSearchBar from "@/components/OracleSearchBar";
 import { FeedConfig } from "@/types/feed";
 import {
   FunctionConfig,
@@ -526,20 +527,28 @@ export default function Home() {
             </button>
           </div>
 
-          {/* Quick Command Bar - Universal Smart Prompt */}
-          <div className="mb-12 max-w-2xl mx-auto">
-            <CommandBar
-              onModuleNavigate={handleSmartNavigate}
-              onSearch={handleSearch}
-              isHomepage={true}
-              showExamples={true}
-            />
+          {/* Prominent Natural Language Search Bar */}
+          <div className="mb-8 md:mb-12">
+            <div className="text-center mb-6">
+              <h2 className="text-xl md:text-2xl font-bold text-feedgod-dark dark:text-white mb-2">
+                What oracle do you want to build?
+              </h2>
+              <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                Describe what you need in natural language
+              </p>
+            </div>
+            <div className="max-w-3xl mx-auto">
+              <OracleSearchBar
+                onModuleNavigate={handleSmartNavigate}
+                autoFocus
+              />
+            </div>
           </div>
 
           {/* Module Selection Grid */}
           <div className="pb-20">
             <h2 className="text-center text-sm font-medium text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 uppercase tracking-wider mb-8">
-              Choose a module to get started
+              Or choose a module to get started
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               {MODULES.map((module) => (
