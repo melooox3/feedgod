@@ -374,9 +374,6 @@ export default function Home() {
   const handleEnterArena = () => {
     playPickupSound();
     setCurrentView("arena");
-    toast.info(
-      "The Arena is coming soon! Stay tuned for competitive oracle challenges.",
-    );
   };
 
   const handleBackToLanding = () => {
@@ -467,50 +464,58 @@ export default function Home() {
               </div>
             </div>
 
-            {/* The Arena Card */}
-            <div className="group relative p-8 md:p-10 bg-white/60 dark:bg-feedgod-dark-secondary/50 backdrop-blur-sm rounded-2xl border border-feedgod-pink-200/60 dark:border-feedgod-dark-accent/40 hover:border-feedgod-neon-purple/50 dark:hover:border-feedgod-neon-cyan/50 transition-all duration-300 hover:shadow-xl hover:shadow-feedgod-neon-purple/10 dark:hover:shadow-feedgod-neon-cyan/10 overflow-hidden flex flex-col min-h-[400px]">
+            {/* The Arena Card - Gamified Aesthetic */}
+            <div className="group relative p-8 md:p-10 bg-gradient-to-br from-feedgod-neon-purple/5 via-white/60 to-feedgod-neon-cyan/5 dark:from-feedgod-neon-purple/10 dark:via-feedgod-dark-secondary/50 dark:to-feedgod-neon-cyan/10 backdrop-blur-sm rounded-2xl border-2 border-feedgod-neon-purple/30 dark:border-feedgod-neon-cyan/30 hover:border-feedgod-neon-purple/60 dark:hover:border-feedgod-neon-cyan/60 transition-all duration-300 hover:shadow-2xl hover:shadow-feedgod-neon-purple/20 dark:hover:shadow-feedgod-neon-cyan/20 overflow-hidden flex flex-col min-h-[400px]">
+              {/* Animated background effects */}
+              <div className="absolute inset-0 opacity-30 dark:opacity-40 pointer-events-none">
+                <div className="absolute top-0 left-0 w-32 h-32 bg-feedgod-neon-purple/20 dark:bg-feedgod-neon-purple/30 rounded-full blur-3xl animate-pulse" />
+                <div
+                  className="absolute bottom-0 right-0 w-40 h-40 bg-feedgod-neon-cyan/20 dark:bg-feedgod-neon-cyan/30 rounded-full blur-3xl animate-pulse"
+                  style={{ animationDelay: "1s" }}
+                />
+              </div>
+
               {/* Background decorative icon */}
               <div className="absolute -bottom-8 -right-8 pointer-events-none">
                 <Swords
-                  className="w-48 h-48 text-feedgod-neon-purple/[0.08] dark:text-feedgod-neon-cyan/[0.08] transform -rotate-12 group-hover:-rotate-6 group-hover:scale-110 transition-all duration-500"
+                  className="w-48 h-48 text-feedgod-neon-purple/[0.12] dark:text-feedgod-neon-cyan/[0.15] transform -rotate-12 group-hover:-rotate-6 group-hover:scale-110 transition-all duration-500"
                   strokeWidth={1}
                 />
               </div>
 
               {/* Gradient overlay on hover */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-feedgod-neon-purple/5 dark:from-feedgod-neon-cyan/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-feedgod-neon-purple/10 dark:from-feedgod-neon-cyan/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
               <div className="relative z-10 flex flex-col flex-1">
-                {/* Icon */}
-                <div className="w-16 h-16 mb-6 rounded-xl bg-feedgod-neon-purple/10 dark:bg-feedgod-neon-cyan/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                {/* Icon with glow effect */}
+                <div className="w-16 h-16 mb-6 rounded-xl bg-gradient-to-br from-feedgod-neon-purple/20 to-feedgod-neon-cyan/20 dark:from-feedgod-neon-purple/30 dark:to-feedgod-neon-cyan/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-feedgod-neon-purple/20 dark:shadow-feedgod-neon-cyan/30">
                   <Swords className="w-8 h-8 text-feedgod-neon-purple dark:text-feedgod-neon-cyan" />
                 </div>
 
                 {/* Title */}
-                <h2 className="text-2xl md:text-3xl font-bold text-feedgod-dark dark:text-white mb-3 group-hover:text-feedgod-neon-purple dark:group-hover:text-feedgod-neon-cyan transition-colors">
+                <h2 className="text-2xl md:text-3xl font-bold text-feedgod-dark dark:text-white mb-2 group-hover:text-feedgod-neon-purple dark:group-hover:text-feedgod-neon-cyan transition-colors">
                   The Arena
                 </h2>
 
-                {/* Description */}
-                <p className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 leading-relaxed mb-6">
-                  Compete against other oracle builders in timed challenges.
-                  Prove your skills, climb the leaderboard, and earn rewards for
-                  building the fastest, most accurate oracles.
+                {/* Tagline */}
+                <p className="text-lg font-semibold text-feedgod-neon-purple dark:text-feedgod-neon-cyan mb-4 tracking-wide">
+                  Predict. Win. Earn.
                 </p>
 
-                {/* Coming soon badge */}
-                <div className="flex-1 flex flex-col justify-end">
-                  <div className="mb-6 flex items-center gap-2">
-                    <span className="px-3 py-1 text-xs font-medium bg-feedgod-neon-purple/10 dark:bg-feedgod-neon-cyan/10 text-feedgod-neon-purple dark:text-feedgod-neon-cyan rounded-full">
-                      Coming Soon
-                    </span>
-                  </div>
+                {/* Description */}
+                <p className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 leading-relaxed mb-6">
+                  Enter prediction markets powered by on-chain oracles. Make
+                  predictions on real-world events, compete with other traders,
+                  and earn rewards when you&apos;re right.
+                </p>
 
+                {/* CTA Section */}
+                <div className="flex-1 flex flex-col justify-end">
                   <button
                     onClick={handleEnterArena}
-                    className="w-full py-4 px-6 bg-feedgod-neon-purple dark:bg-feedgod-neon-cyan text-white dark:text-feedgod-dark-bg font-semibold rounded-xl hover:bg-feedgod-neon-purple/90 dark:hover:bg-feedgod-neon-cyan/90 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-feedgod-neon-purple/20 dark:shadow-feedgod-neon-cyan/20"
+                    className="w-full py-4 px-6 bg-gradient-to-r from-feedgod-neon-purple to-feedgod-neon-cyan dark:from-feedgod-neon-cyan dark:to-feedgod-neon-purple text-white font-bold rounded-xl hover:opacity-90 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-xl shadow-feedgod-neon-purple/30 dark:shadow-feedgod-neon-cyan/30 text-lg tracking-wide"
                   >
-                    Enter The Arena
+                    ⚔️ Enter The Arena
                   </button>
                 </div>
               </div>
@@ -592,6 +597,215 @@ export default function Home() {
                 </div>
               </>
             )}
+          </div>
+        </div>
+      ) : currentView === "arena" ? (
+        // Arena market listing view
+        <div className="container mx-auto px-4 py-8 max-w-6xl">
+          {/* Back to landing */}
+          <div className="py-6">
+            <button
+              onClick={handleBackToLanding}
+              className="inline-flex items-center gap-2 text-feedgod-pink-500 dark:text-feedgod-neon-cyan/80 hover:text-feedgod-neon-purple dark:hover:text-feedgod-neon-cyan transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span className="text-sm font-medium">Back to home</span>
+            </button>
+          </div>
+
+          {/* Arena Header */}
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-3 mb-4">
+              <Swords className="w-10 h-10 text-feedgod-neon-purple dark:text-feedgod-neon-cyan" />
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-feedgod-dark dark:text-white">
+                The Arena
+              </h1>
+            </div>
+            <p className="text-xl font-semibold text-feedgod-neon-purple dark:text-feedgod-neon-cyan mb-2">
+              Predict. Win. Earn.
+            </p>
+            <p className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 max-w-2xl mx-auto">
+              Browse active prediction markets and place your bets on real-world
+              outcomes.
+            </p>
+          </div>
+
+          {/* Market Categories */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Crypto Markets */}
+            <div className="group relative p-6 bg-gradient-to-br from-feedgod-neon-purple/5 to-transparent dark:from-feedgod-neon-purple/10 dark:to-feedgod-dark-secondary/50 backdrop-blur-sm rounded-2xl border border-feedgod-neon-purple/20 dark:border-feedgod-neon-purple/30 hover:border-feedgod-neon-purple/50 transition-all duration-300 hover:shadow-lg hover:shadow-feedgod-neon-purple/10">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-xl bg-feedgod-neon-purple/10 dark:bg-feedgod-neon-purple/20 flex items-center justify-center">
+                  <TrendingUp className="w-6 h-6 text-feedgod-neon-purple" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-feedgod-dark dark:text-white">
+                    Crypto
+                  </h3>
+                  <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/60">
+                    12 active markets
+                  </p>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                    BTC &gt; $100k by Feb?
+                  </span>
+                  <span className="font-medium text-green-500">68%</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                    ETH flips BTC 2025?
+                  </span>
+                  <span className="font-medium text-red-400">12%</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Sports Markets */}
+            <div className="group relative p-6 bg-gradient-to-br from-feedgod-neon-cyan/5 to-transparent dark:from-feedgod-neon-cyan/10 dark:to-feedgod-dark-secondary/50 backdrop-blur-sm rounded-2xl border border-feedgod-neon-cyan/20 dark:border-feedgod-neon-cyan/30 hover:border-feedgod-neon-cyan/50 transition-all duration-300 hover:shadow-lg hover:shadow-feedgod-neon-cyan/10">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-xl bg-feedgod-neon-cyan/10 dark:bg-feedgod-neon-cyan/20 flex items-center justify-center">
+                  <Trophy className="w-6 h-6 text-feedgod-neon-cyan dark:text-feedgod-neon-cyan" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-feedgod-dark dark:text-white">
+                    Sports
+                  </h3>
+                  <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/60">
+                    24 active markets
+                  </p>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                    Super Bowl winner?
+                  </span>
+                  <span className="font-medium text-feedgod-neon-purple dark:text-feedgod-neon-cyan">
+                    Live
+                  </span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                    NBA Finals MVP?
+                  </span>
+                  <span className="font-medium text-feedgod-neon-purple dark:text-feedgod-neon-cyan">
+                    Live
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Politics Markets */}
+            <div className="group relative p-6 bg-gradient-to-br from-feedgod-primary/5 to-transparent dark:from-feedgod-neon-pink/10 dark:to-feedgod-dark-secondary/50 backdrop-blur-sm rounded-2xl border border-feedgod-primary/20 dark:border-feedgod-neon-pink/30 hover:border-feedgod-primary/50 dark:hover:border-feedgod-neon-pink/50 transition-all duration-300 hover:shadow-lg hover:shadow-feedgod-primary/10 dark:hover:shadow-feedgod-neon-pink/10">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-xl bg-feedgod-primary/10 dark:bg-feedgod-neon-pink/20 flex items-center justify-center">
+                  <Scale className="w-6 h-6 text-feedgod-primary dark:text-feedgod-neon-pink" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-feedgod-dark dark:text-white">
+                    Politics
+                  </h3>
+                  <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/60">
+                    8 active markets
+                  </p>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                    Fed rate cut Mar?
+                  </span>
+                  <span className="font-medium text-green-500">42%</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                    TikTok ban 2025?
+                  </span>
+                  <span className="font-medium text-red-400">28%</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Weather Markets */}
+            <div className="group relative p-6 bg-gradient-to-br from-blue-500/5 to-transparent dark:from-blue-400/10 dark:to-feedgod-dark-secondary/50 backdrop-blur-sm rounded-2xl border border-blue-500/20 dark:border-blue-400/30 hover:border-blue-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-xl bg-blue-500/10 dark:bg-blue-400/20 flex items-center justify-center">
+                  <Cloud className="w-6 h-6 text-blue-500 dark:text-blue-400" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-feedgod-dark dark:text-white">
+                    Weather
+                  </h3>
+                  <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/60">
+                    6 active markets
+                  </p>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                    NYC snow &gt; 12&quot; Jan?
+                  </span>
+                  <span className="font-medium text-green-500">55%</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                    LA wildfire Feb?
+                  </span>
+                  <span className="font-medium text-red-400">31%</span>
+                </div>
+              </div>
+            </div>
+
+            {/* AI/Tech Markets */}
+            <div className="group relative p-6 bg-gradient-to-br from-amber-500/5 to-transparent dark:from-amber-400/10 dark:to-feedgod-dark-secondary/50 backdrop-blur-sm rounded-2xl border border-amber-500/20 dark:border-amber-400/30 hover:border-amber-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/10">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-xl bg-amber-500/10 dark:bg-amber-400/20 flex items-center justify-center">
+                  <Brain className="w-6 h-6 text-amber-500 dark:text-amber-400" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-feedgod-dark dark:text-white">
+                    AI & Tech
+                  </h3>
+                  <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/60">
+                    15 active markets
+                  </p>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                    GPT-5 release Q1?
+                  </span>
+                  <span className="font-medium text-green-500">73%</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                    Apple AR glasses 2025?
+                  </span>
+                  <span className="font-medium text-red-400">22%</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Create Your Own */}
+            <div
+              onClick={() => handleModuleSelect("prediction")}
+              className="group relative p-6 bg-gradient-to-br from-feedgod-neon-purple/5 via-transparent to-feedgod-neon-cyan/5 dark:from-feedgod-neon-purple/10 dark:via-feedgod-dark-secondary/50 dark:to-feedgod-neon-cyan/10 backdrop-blur-sm rounded-2xl border-2 border-dashed border-feedgod-neon-purple/30 dark:border-feedgod-neon-cyan/30 hover:border-feedgod-neon-purple/60 dark:hover:border-feedgod-neon-cyan/60 transition-all duration-300 hover:shadow-lg cursor-pointer flex flex-col items-center justify-center text-center min-h-[180px]"
+            >
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-feedgod-neon-purple/10 to-feedgod-neon-cyan/10 dark:from-feedgod-neon-purple/20 dark:to-feedgod-neon-cyan/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                <Plus className="w-6 h-6 text-feedgod-neon-purple dark:text-feedgod-neon-cyan" />
+              </div>
+              <h3 className="font-bold text-feedgod-dark dark:text-white mb-1">
+                Create Market
+              </h3>
+              <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/60">
+                Launch your own prediction market
+              </p>
+            </div>
           </div>
         </div>
       ) : (
