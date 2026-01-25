@@ -133,14 +133,14 @@ export default function OracleDetailModal({ oracle, isOpen, onClose }: OracleDet
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
       onClick={handleBackdropClick}
     >
-      <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-white dark:bg-feedgod-dark-secondary rounded-2xl border border-feedgod-pink-200 dark:border-feedgod-dark-accent shadow-2xl">
+      <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-feedgod-dark-secondary dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary rounded-2xl border border-feedgod-purple-200 dark:border-feedgod-dark-accent dark:border-feedgod-purple-200 dark:border-feedgod-dark-accent shadow-2xl">
         {/* Header */}
-        <div className="sticky top-0 bg-white dark:bg-feedgod-dark-secondary border-b border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 z-10">
+        <div className="sticky top-0 bg-feedgod-dark-secondary dark:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary border-b border-feedgod-purple-200 dark:border-feedgod-dark-accent dark:border-feedgod-purple-200 dark:border-feedgod-dark-accent p-6 z-10">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-4">
               <div className={`w-14 h-14 rounded-xl flex items-center justify-center ${
                 oracle.type === 'feed' ? 'bg-gradient-to-br from-emerald-400 to-emerald-600' :
-                oracle.type === 'prediction' ? 'bg-gradient-to-br from-purple-400 to-purple-600' :
+                oracle.type === 'prediction' ? 'bg-gradient-to-br from-feedgod-secondary to-feedgod-primary' :
                 oracle.type === 'vrf' ? 'bg-gradient-to-br from-amber-400 to-amber-600' :
                 oracle.type === 'weather' ? 'bg-gradient-to-br from-sky-400 to-sky-600' :
                 'bg-gradient-to-br from-pink-400 to-pink-600'
@@ -149,14 +149,14 @@ export default function OracleDetailModal({ oracle, isOpen, onClose }: OracleDet
               </div>
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <h2 className="text-xl font-bold text-feedgod-dark dark:text-white">
+                  <h2 className="text-xl font-bold text-white">
                     {oracle.name}
                   </h2>
                   <span className={`text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full border ${typeColor}`}>
                     {getOracleTypeLabel(oracle.type)}
                   </span>
                 </div>
-                <p className="text-sm font-mono text-feedgod-primary dark:text-feedgod-neon-cyan">
+                <p className="text-sm font-mono text-feedgod-primary dark:text-feedgod-primary ">
                   {oracle.symbol}
                 </p>
               </div>
@@ -164,20 +164,20 @@ export default function OracleDetailModal({ oracle, isOpen, onClose }: OracleDet
             
             <button
               onClick={() => { playPickupSound(); onClose(); }}
-              className="p-2 hover:bg-feedgod-pink-100 dark:hover:bg-feedgod-dark-accent rounded-lg transition-colors"
+              className="p-2 hover:bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg transition-colors"
             >
-              <X className="w-5 h-5 text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70" />
+              <X className="w-5 h-5 text-gray-400" />
             </button>
           </div>
         </div>
         
         <div className="p-6 space-y-6">
           {/* Current Value - Hero */}
-          <div className="bg-gradient-to-br from-feedgod-primary/10 to-purple-500/10 rounded-xl p-6 border border-feedgod-primary/20">
+          <div className="bg-gradient-to-br from-feedgod-primary dark:text-feedgod-primary/10 to-feedgod-primary/10 rounded-xl p-6 border border-feedgod-primary dark:text-feedgod-primary/20">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mb-1">Current Value</p>
-                <p className="text-4xl font-bold text-feedgod-dark dark:text-white font-mono">
+                <p className="text-sm text-gray-400 mb-1">Current Value</p>
+                <p className="text-4xl font-bold text-white font-mono">
                   {formatOracleValue(oracle)}
                 </p>
               </div>
@@ -186,7 +186,7 @@ export default function OracleDetailModal({ oracle, isOpen, onClose }: OracleDet
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                   <span className="text-sm font-medium">Live</span>
                 </div>
-                <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/60">
+                <p className="text-xs text-gray-500">
                   Updated {formatDate(oracle.lastUpdate)}
                 </p>
               </div>
@@ -196,8 +196,8 @@ export default function OracleDetailModal({ oracle, isOpen, onClose }: OracleDet
           {/* Description */}
           {oracle.description && (
             <div>
-              <h3 className="text-sm font-semibold text-feedgod-dark dark:text-feedgod-neon-cyan mb-2">Description</h3>
-              <p className="text-feedgod-pink-600 dark:text-feedgod-neon-cyan/80">
+              <h3 className="text-sm font-semibold text-white mb-2">Description</h3>
+              <p className="text-gray-300">
                 {oracle.description}
               </p>
             </div>
@@ -205,8 +205,8 @@ export default function OracleDetailModal({ oracle, isOpen, onClose }: OracleDet
           
           {/* Details Grid */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <div className="bg-feedgod-pink-50 dark:bg-feedgod-dark-accent/50 rounded-lg p-4">
-              <div className="flex items-center gap-2 text-feedgod-pink-500 dark:text-feedgod-neon-cyan/60 mb-1">
+            <div className="bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent/50 rounded-lg p-4">
+              <div className="flex items-center gap-2 text-gray-500 mb-1">
                 <Zap className="w-4 h-4" />
                 <span className="text-xs">Network</span>
               </div>
@@ -216,18 +216,18 @@ export default function OracleDetailModal({ oracle, isOpen, onClose }: OracleDet
                   alt=""
                   className="w-4 h-4 object-contain"
                 />
-                <p className="text-sm font-medium text-feedgod-dark dark:text-white capitalize">
+                <p className="text-sm font-medium text-white capitalize">
                   {oracle.network.replace('-', ' ')}
                 </p>
               </div>
             </div>
             
-            <div className="bg-feedgod-pink-50 dark:bg-feedgod-dark-accent/50 rounded-lg p-4">
-              <div className="flex items-center gap-2 text-feedgod-pink-500 dark:text-feedgod-neon-cyan/60 mb-1">
+            <div className="bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent/50 rounded-lg p-4">
+              <div className="flex items-center gap-2 text-gray-500 mb-1">
                 <Clock className="w-4 h-4" />
                 <span className="text-xs">Update Interval</span>
               </div>
-              <p className="text-sm font-medium text-feedgod-dark dark:text-white">
+              <p className="text-sm font-medium text-white">
                 {oracle.updateInterval === 0 ? 'On-demand' :
                  oracle.updateInterval && oracle.updateInterval < 60 ? `${oracle.updateInterval}s` :
                  oracle.updateInterval && oracle.updateInterval < 3600 ? `${oracle.updateInterval / 60}m` :
@@ -235,41 +235,41 @@ export default function OracleDetailModal({ oracle, isOpen, onClose }: OracleDet
               </p>
             </div>
             
-            <div className="bg-feedgod-pink-50 dark:bg-feedgod-dark-accent/50 rounded-lg p-4">
-              <div className="flex items-center gap-2 text-feedgod-pink-500 dark:text-feedgod-neon-cyan/60 mb-1">
+            <div className="bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent/50 rounded-lg p-4">
+              <div className="flex items-center gap-2 text-gray-500 mb-1">
                 <Database className="w-4 h-4" />
                 <span className="text-xs">Sources</span>
               </div>
-              <p className="text-sm font-medium text-feedgod-dark dark:text-white">
+              <p className="text-sm font-medium text-white">
                 {oracle.sources.join(', ')}
               </p>
             </div>
             
-            <div className="bg-feedgod-pink-50 dark:bg-feedgod-dark-accent/50 rounded-lg p-4">
-              <div className="flex items-center gap-2 text-feedgod-pink-500 dark:text-feedgod-neon-cyan/60 mb-1">
+            <div className="bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent/50 rounded-lg p-4">
+              <div className="flex items-center gap-2 text-gray-500 mb-1">
                 <Calendar className="w-4 h-4" />
                 <span className="text-xs">Created</span>
               </div>
-              <p className="text-sm font-medium text-feedgod-dark dark:text-white">
+              <p className="text-sm font-medium text-white">
                 {new Date(oracle.createdAt).toLocaleDateString()}
               </p>
             </div>
             
-            <div className="bg-feedgod-pink-50 dark:bg-feedgod-dark-accent/50 rounded-lg p-4">
-              <div className="flex items-center gap-2 text-feedgod-pink-500 dark:text-feedgod-neon-cyan/60 mb-1">
+            <div className="bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent/50 rounded-lg p-4">
+              <div className="flex items-center gap-2 text-gray-500 mb-1">
                 <span className="text-xs">Decimals</span>
               </div>
-              <p className="text-sm font-medium text-feedgod-dark dark:text-white">
+              <p className="text-sm font-medium text-white">
                 {oracle.decimals ?? 'N/A'}
               </p>
             </div>
             
-            <div className="bg-feedgod-pink-50 dark:bg-feedgod-dark-accent/50 rounded-lg p-4">
-              <div className="flex items-center gap-2 text-feedgod-pink-500 dark:text-feedgod-neon-cyan/60 mb-1">
+            <div className="bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent/50 rounded-lg p-4">
+              <div className="flex items-center gap-2 text-gray-500 mb-1">
                 <User className="w-4 h-4" />
                 <span className="text-xs">Creator</span>
               </div>
-              <p className="text-sm font-medium text-feedgod-dark dark:text-white font-mono truncate" title={oracle.creator}>
+              <p className="text-sm font-medium text-white font-mono truncate" title={oracle.creator}>
                 {oracle.creator.slice(0, 8)}...{oracle.creator.slice(-4)}
               </p>
             </div>
@@ -277,19 +277,19 @@ export default function OracleDetailModal({ oracle, isOpen, onClose }: OracleDet
           
           {/* Public Key */}
           <div>
-            <h3 className="text-sm font-semibold text-feedgod-dark dark:text-feedgod-neon-cyan mb-2">Public Key</h3>
-            <div className="flex items-center gap-2 bg-feedgod-pink-50 dark:bg-feedgod-dark-accent/50 rounded-lg p-3">
-              <code className="flex-1 text-sm font-mono text-feedgod-pink-600 dark:text-feedgod-neon-cyan/80 break-all">
+            <h3 className="text-sm font-semibold text-white mb-2">Public Key</h3>
+            <div className="flex items-center gap-2 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent/50 rounded-lg p-3">
+              <code className="flex-1 text-sm font-mono text-gray-300 break-all">
                 {oracle.publicKey}
               </code>
               <button
                 onClick={() => handleCopy(oracle.publicKey, 'pubkey')}
-                className="p-2 hover:bg-feedgod-pink-100 dark:hover:bg-feedgod-dark-accent rounded transition-colors flex-shrink-0"
+                className="p-2 hover:bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded transition-colors flex-shrink-0"
               >
                 {copied === 'pubkey' ? (
                   <CheckCircle className="w-4 h-4 text-emerald-500" />
                 ) : (
-                  <Copy className="w-4 h-4 text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70" />
+                  <Copy className="w-4 h-4 text-gray-400" />
                 )}
               </button>
             </div>
@@ -297,7 +297,7 @@ export default function OracleDetailModal({ oracle, isOpen, onClose }: OracleDet
           
           {/* Integration Code */}
           <div>
-            <h3 className="text-sm font-semibold text-feedgod-dark dark:text-feedgod-neon-cyan mb-3">Integration Code</h3>
+            <h3 className="text-sm font-semibold text-white mb-3">Integration Code</h3>
             
             {/* Language tabs */}
             <div className="flex gap-2 mb-3">
@@ -307,8 +307,8 @@ export default function OracleDetailModal({ oracle, isOpen, onClose }: OracleDet
                   onClick={() => { playPickupSound(); setActiveCodeTab(lang); }}
                   className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
                     activeCodeTab === lang
-                      ? 'bg-feedgod-primary text-white'
-                      : 'bg-feedgod-pink-100 dark:bg-feedgod-dark-accent text-feedgod-pink-600 dark:text-feedgod-neon-cyan/70 hover:bg-feedgod-pink-200'
+                      ? 'bg-feedgod-primary dark:text-feedgod-primary text-white'
+                      : 'bg-feedgod-dark-accent text-gray-400 hover:bg-feedgod-dark-accent/80'
                   }`}
                 >
                   {lang.charAt(0).toUpperCase() + lang.slice(1)}
@@ -318,19 +318,19 @@ export default function OracleDetailModal({ oracle, isOpen, onClose }: OracleDet
             
             {/* Code block */}
             <div className="relative">
-              <div className="bg-feedgod-dark dark:bg-black rounded-lg p-4 overflow-x-auto">
+              <div className="bg-feedgod-dark-secondary dark:bg-black rounded-lg p-4 overflow-x-auto">
                 <pre className="text-sm text-green-400 font-mono whitespace-pre-wrap">
                   {generateCodeSnippet(oracle, activeCodeTab)}
                 </pre>
               </div>
               <button
                 onClick={() => handleCopy(generateCodeSnippet(oracle, activeCodeTab), 'code')}
-                className="absolute top-3 right-3 p-2 bg-feedgod-dark-secondary/80 hover:bg-feedgod-dark-accent rounded transition-colors"
+                className="absolute top-3 right-3 p-2 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/80 hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded transition-colors"
               >
                 {copied === 'code' ? (
                   <CheckCircle className="w-4 h-4 text-emerald-500" />
                 ) : (
-                  <Copy className="w-4 h-4 text-feedgod-neon-cyan/70" />
+                  <Copy className="w-4 h-4 text-gray-400" />
                 )}
               </button>
             </div>
@@ -342,14 +342,14 @@ export default function OracleDetailModal({ oracle, isOpen, onClose }: OracleDet
               href={`https://explorer.solana.com/address/${oracle.publicKey}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 px-4 py-3 bg-feedgod-pink-100 dark:bg-feedgod-dark-accent hover:bg-feedgod-pink-200 dark:hover:bg-feedgod-dark-accent/80 rounded-lg text-feedgod-dark dark:text-white font-medium transition-colors flex items-center justify-center gap-2"
+              className="flex-1 px-4 py-3 bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent dark:hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent/80 rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2"
             >
               <ExternalLink className="w-4 h-4" />
               View on Explorer
             </a>
             <button
               onClick={() => { playPickupSound(); onClose(); }}
-              className="flex-1 px-4 py-3 bg-feedgod-primary hover:bg-feedgod-secondary rounded-lg text-white font-medium transition-colors"
+              className="flex-1 px-4 py-3 gradient-bg hover:opacity-90 rounded-lg text-white font-medium transition-all"
             >
               Close
             </button>

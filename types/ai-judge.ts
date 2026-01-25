@@ -12,6 +12,10 @@ export type TrustedSource =
   | 'government' 
   | 'custom'
 
+// Icon names from Lucide
+export type ResolutionIconName = 'Scale' | 'Hash' | 'ListChecks' | 'FileText'
+export type SourceIconName = 'Newspaper' | 'XLogo' | 'BookOpen' | 'Cloud' | 'Trophy' | 'TrendingUp' | 'Landmark' | 'Link'
+
 export interface AIJudgeConfig {
   id?: string
   name: string
@@ -43,7 +47,8 @@ export interface AIResolutionRequest {
   trustedSources: TrustedSource[]
   customSources?: string[]
   categories?: string[]
-  currentDate: string
+  additionalContext?: string
+  currentDate?: string
 }
 
 export interface AIResolutionResponse {
@@ -61,35 +66,35 @@ export const RESOLUTION_TYPES: {
   value: ResolutionType
   label: string
   description: string
-  icon: string
+  iconName: ResolutionIconName
   example: string
 }[] = [
   {
     value: 'binary',
     label: 'Yes / No',
     description: 'Simple true/false questions',
-    icon: '⚖️',
+    iconName: 'Scale',
     example: 'Did Taylor Swift release a new album this week?',
   },
   {
     value: 'numeric',
     label: 'Number',
     description: 'Questions with numeric answers',
-    icon: '🔢',
+    iconName: 'Hash',
     example: 'What is Bitcoin\'s price today?',
   },
   {
     value: 'categorical',
     label: 'Multiple Choice',
     description: 'Select from predefined options',
-    icon: '📋',
+    iconName: 'ListChecks',
     example: 'Who won the Super Bowl?',
   },
   {
     value: 'text',
     label: 'Free Text',
     description: 'Open-ended text responses',
-    icon: '📝',
+    iconName: 'FileText',
     example: 'What was the headline news today?',
   },
 ]
@@ -99,55 +104,55 @@ export const TRUSTED_SOURCES: {
   value: TrustedSource
   label: string
   description: string
-  icon: string
+  iconName: SourceIconName
 }[] = [
   {
     value: 'news',
     label: 'News Outlets',
     description: 'Major news sources (AP, Reuters, BBC)',
-    icon: '📰',
+    iconName: 'Newspaper',
   },
   {
     value: 'twitter',
-    label: 'Twitter/X',
+    label: 'X (Twitter)',
     description: 'Social media posts and trends',
-    icon: '𝕏',
+    iconName: 'XLogo',
   },
   {
     value: 'wikipedia',
     label: 'Wikipedia',
     description: 'Encyclopedia entries',
-    icon: '📚',
+    iconName: 'BookOpen',
   },
   {
     value: 'weather',
     label: 'Weather Services',
     description: 'Weather data providers',
-    icon: '🌤️',
+    iconName: 'Cloud',
   },
   {
     value: 'sports',
     label: 'Sports Data',
     description: 'Sports scores and results',
-    icon: '🏆',
+    iconName: 'Trophy',
   },
   {
     value: 'finance',
     label: 'Financial Data',
     description: 'Market data and prices',
-    icon: '📈',
+    iconName: 'TrendingUp',
   },
   {
     value: 'government',
     label: 'Government Sources',
     description: 'Official government data',
-    icon: '🏛️',
+    iconName: 'Landmark',
   },
   {
     value: 'custom',
     label: 'Custom URLs',
     description: 'Specify your own sources',
-    icon: '🔗',
+    iconName: 'Link',
   },
 ]
 
@@ -165,46 +170,45 @@ export const EXAMPLE_QUESTIONS: {
     category: 'Entertainment',
   },
   {
-    question: 'Is the general sentiment about Bitcoin bullish today?',
-    type: 'binary',
-    sources: ['twitter', 'news', 'finance'],
-    category: 'Crypto',
+    question: 'What was the closing price of NVIDIA stock today?',
+    type: 'numeric',
+    sources: ['finance'],
+    category: 'Finance',
   },
   {
-    question: 'Did it snow in New York City today?',
-    type: 'binary',
-    sources: ['weather', 'news'],
-    category: 'Weather',
+    question: 'Who won the most recent Grammy for Album of the Year?',
+    type: 'categorical',
+    sources: ['news', 'wikipedia'],
+    category: 'Entertainment',
   },
   {
-    question: 'Who won the Super Bowl?',
+    question: 'Which team won the latest NBA Finals?',
     type: 'categorical',
     sources: ['sports', 'news'],
     category: 'Sports',
   },
   {
-    question: 'What is the current price of Ethereum in USD?',
+    question: 'Did it rain in London today?',
+    type: 'binary',
+    sources: ['weather'],
+    category: 'Weather',
+  },
+  {
+    question: 'What was the highest temperature in Dubai this week?',
     type: 'numeric',
-    sources: ['finance'],
-    category: 'Crypto',
+    sources: ['weather'],
+    category: 'Weather',
   },
   {
-    question: 'Has Elon Musk tweeted about Dogecoin in the last 24 hours?',
+    question: 'Did Elon Musk tweet about cryptocurrency today?',
     type: 'binary',
     sources: ['twitter'],
     category: 'Crypto',
   },
   {
-    question: 'Did any country declare a national holiday today?',
-    type: 'binary',
-    sources: ['news', 'government'],
-    category: 'World Events',
-  },
-  {
-    question: 'What was the top trending topic on Twitter today?',
-    type: 'text',
-    sources: ['twitter'],
-    category: 'Social',
+    question: 'What was the US unemployment rate announced this month?',
+    type: 'numeric',
+    sources: ['government', 'news'],
+    category: 'Economy',
   },
 ]
-

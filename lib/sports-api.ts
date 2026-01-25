@@ -184,19 +184,22 @@ export function formatMatchTime(date: Date): string {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
 }
 
+// Sport icon names for Lucide components
+export type SportIconName = 'Circle' | 'Dribbble' | 'Goal' | 'Flag' | 'Gamepad2' | 'Trophy'
+
 /**
- * Get sport icon
+ * Get sport icon name for Lucide
  */
-export function getSportIcon(sport: SportCategory): string {
-  const icons: Record<SportCategory, string> = {
-    soccer: '⚽',
-    basketball: '🏀',
-    american_football: '🏈',
-    hockey: '🏒',
-    baseball: '⚾',
-    esports: '🎮',
+export function getSportIconName(sport: SportCategory): SportIconName {
+  const icons: Record<SportCategory, SportIconName> = {
+    soccer: 'Circle',
+    basketball: 'Dribbble',
+    american_football: 'Goal',
+    hockey: 'Flag',
+    baseball: 'Circle',
+    esports: 'Gamepad2',
   }
-  return icons[sport] || '🏆'
+  return icons[sport] || 'Trophy'
 }
 
 /**
@@ -281,4 +284,5 @@ export function generateMockEsportsMatches(): Match[] {
   
   return matches
 }
+
 

@@ -8,6 +8,9 @@ export type TikTokMetric = 'followers' | 'following' | 'likes' | 'views' | 'vide
 
 export type SocialMetric = TwitterMetric | YouTubeMetric | TikTokMetric
 
+// Icon names - XLogo is custom, others from Lucide
+export type SocialIconName = 'XLogo' | 'Youtube' | 'Music'
+
 export interface SocialProfile {
   platform: SocialPlatform
   username: string
@@ -45,18 +48,18 @@ export interface SocialOracleConfig {
   updatedAt?: Date
 }
 
-// Platform metadata
+// Platform metadata with icon names
 export const SOCIAL_PLATFORMS: { 
   value: SocialPlatform
   label: string
-  icon: string
+  iconName: SocialIconName
   color: string
   metrics: { value: string; label: string; description: string }[]
 }[] = [
   {
     value: 'twitter',
-    label: 'Twitter / X',
-    icon: '𝕏',
+    label: 'X (Twitter)',
+    iconName: 'XLogo',
     color: 'from-gray-800 to-black',
     metrics: [
       { value: 'followers', label: 'Followers', description: 'Total follower count' },
@@ -71,7 +74,7 @@ export const SOCIAL_PLATFORMS: {
   {
     value: 'youtube',
     label: 'YouTube',
-    icon: '▶️',
+    iconName: 'Youtube',
     color: 'from-red-500 to-red-700',
     metrics: [
       { value: 'subscribers', label: 'Subscribers', description: 'Channel subscriber count' },
@@ -84,7 +87,7 @@ export const SOCIAL_PLATFORMS: {
   {
     value: 'tiktok',
     label: 'TikTok',
-    icon: '🎵',
+    iconName: 'Music',
     color: 'from-pink-500 to-cyan-400',
     metrics: [
       { value: 'followers', label: 'Followers', description: 'Total follower count' },

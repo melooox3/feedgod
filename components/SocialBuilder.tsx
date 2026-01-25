@@ -19,17 +19,29 @@ import {
   AtSign,
   Link as LinkIcon,
   TrendingUp,
-  Zap
+  Zap,
+  Youtube,
+  Music,
+  LucideIcon
 } from 'lucide-react'
+import XLogo from './XLogo'
 import { 
   SocialPlatform, 
   SocialProfile,
   SocialOracleConfig,
   SocialMetric,
+  SocialIconName,
   SOCIAL_PLATFORMS,
   POPULAR_ACCOUNTS,
   getMetricsForPlatform
 } from '@/types/social'
+
+// Social platform icon mapping (XLogo is custom for X/Twitter, others from Lucide)
+const SOCIAL_ICON_MAP: Record<SocialIconName, LucideIcon | typeof XLogo> = {
+  XLogo,
+  Youtube,
+  Music,
+}
 import { Blockchain, Network } from '@/types/feed'
 import { 
   fetchSocialProfile, 
@@ -40,7 +52,6 @@ import {
 } from '@/lib/social-api'
 import { playPickupSound } from '@/lib/sound-utils'
 import { useCostEstimate } from '@/lib/use-cost-estimate'
-import { useToast } from './Toast'
 import ChainSelector from './ChainSelector'
 
 type BuilderStep = 'select' | 'configure' | 'preview'
@@ -58,8 +69,8 @@ function CostEstimateDisplay({ blockchain, network }: { blockchain: string; netw
 
   if (isLoading || !estimate) {
     return (
-      <div className="px-4 py-3 bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent">
-        <div className="flex items-center gap-2 text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+      <div className="px-4 py-3 bg-[#252620] rounded-lg border border-[#3a3b35]">
+        <div className="flex items-center gap-2 text-sm text-gray-400">
           <DollarSign className="w-4 h-4 animate-pulse" />
           <span>Calculating cost...</span>
         </div>
@@ -68,14 +79,14 @@ function CostEstimateDisplay({ blockchain, network }: { blockchain: string; netw
   }
 
   return (
-    <div className="px-4 py-3 bg-feedgod-pink-50 dark:bg-feedgod-dark-secondary rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent">
+    <div className="px-4 py-3 bg-[#252620] rounded-lg border border-[#3a3b35]">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+        <div className="flex items-center gap-2 text-sm text-gray-400">
           <DollarSign className="w-4 h-4" />
           <span>Estimated Cost:</span>
         </div>
         <div className="text-right">
-          <div className="text-lg font-bold text-feedgod-primary dark:text-feedgod-neon-pink">
+          <div className="text-base font-semibold text-white">
             {estimate.estimatedCost} {estimate.currency}
           </div>
         </div>
@@ -99,19 +110,18 @@ function PlatformCard({
       onClick={onClick}
       className={`p-6 rounded-xl border-2 transition-all text-center ${
         isSelected
-          ? 'border-feedgod-primary dark:border-feedgod-neon-pink bg-feedgod-primary/5'
-          : 'border-feedgod-pink-200 dark:border-feedgod-dark-accent bg-white/60 dark:bg-feedgod-dark-secondary/80 hover:border-feedgod-primary/50'
+          ? 'border-feedgod-primary dark:text-feedgod-primary dark:border-feedgod-primary dark:text-feedgod-primary bg-feedgod-primary dark:text-feedgod-primary/5'
+          : 'border-[#3a3b35] bg-[#252620]/80 hover:border-feedgod-primary dark:text-feedgod-primary/50'
       }`}
     >
       <div className={`w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br ${platform.color} flex items-center justify-center mb-3 shadow-lg`}>
-        {platform.value === 'twitter' ? (
-          <span className="text-3xl font-black text-white drop-shadow-md">𝕏</span>
-        ) : (
-          <span className="text-3xl">{platform.icon}</span>
-        )}
+        {(() => {
+          const PlatformIcon = SOCIAL_ICON_MAP[platform.iconName]
+          return <PlatformIcon className="w-8 h-8 text-white" />
+        })()}
       </div>
-      <h3 className="font-bold text-feedgod-dark dark:text-white">{platform.label}</h3>
-      <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mt-1">
+      <h3 className="font-bold text-white">{platform.label}</h3>
+      <p className="text-xs text-gray-400 mt-1">
         {platform.metrics.length} metrics available
       </p>
     </button>
@@ -137,7 +147,7 @@ function ProfilePreview({ profile, selectedMetric }: { profile: SocialProfile; s
   const platformInfo = SOCIAL_PLATFORMS.find(p => p.value === profile.platform)
   
   return (
-    <div className="relative bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-xl border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
+    <div className="relative bg-[#252620]/80 rounded-xl border border-[#3a3b35] p-6 backdrop-blur-sm">
       {/* Demo badge on card */}
       <div className="absolute top-3 right-3 z-10">
         <span className="px-2 py-0.5 bg-amber-400 text-amber-900 text-[10px] font-bold rounded shadow-sm">DEMO</span>
@@ -146,22 +156,25 @@ function ProfilePreview({ profile, selectedMetric }: { profile: SocialProfile; s
         <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${platformInfo?.color || 'from-gray-400 to-gray-600'} flex items-center justify-center flex-shrink-0 shadow-lg`}>
           {profile.profileImage ? (
             <img src={profile.profileImage} alt="" className="w-full h-full object-cover rounded-xl" />
-          ) : profile.platform === 'twitter' ? (
-            <span className="text-2xl font-black text-white drop-shadow-md">𝕏</span>
+          ) : platformInfo?.iconName ? (
+            (() => {
+              const PlatformIcon = SOCIAL_ICON_MAP[platformInfo.iconName]
+              return <PlatformIcon className="w-7 h-7 text-white" />
+            })()
           ) : (
-            <span className="text-2xl">{platformInfo?.icon}</span>
+            <User className="w-7 h-7 text-white" />
           )}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <h3 className="font-bold text-feedgod-dark dark:text-white text-lg truncate">
+            <h3 className="font-bold text-white text-lg truncate">
               {profile.displayName}
             </h3>
             {profile.verified && (
-              <CheckCircle className="w-5 h-5 text-blue-500 flex-shrink-0" />
+              <CheckCircle className="w-5 h-5 text-feedgod-primary flex-shrink-0" />
             )}
           </div>
-          <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+          <p className="text-sm text-gray-400">
             @{profile.username}
           </p>
         </div>
@@ -174,21 +187,21 @@ function ProfilePreview({ profile, selectedMetric }: { profile: SocialProfile; s
             key={metric}
             className={`p-3 rounded-lg text-center ${
               selectedMetric === metric 
-                ? 'bg-feedgod-primary/10 border border-feedgod-primary' 
-                : 'bg-feedgod-pink-50 dark:bg-feedgod-dark-accent'
+                ? 'bg-feedgod-primary dark:text-feedgod-primary/10 border border-feedgod-primary dark:text-feedgod-primary' 
+                : 'bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent'
             }`}
           >
-            <p className="text-xl font-bold text-feedgod-dark dark:text-white">
+            <p className="text-xl font-bold text-white">
               {formatMetricValue(value)}
             </p>
-            <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 capitalize">
+            <p className="text-xs text-gray-400 capitalize">
               {getMetricLabel(metric as SocialMetric)}
             </p>
           </div>
         ))}
       </div>
       
-      <p className="text-xs text-feedgod-pink-400 dark:text-feedgod-neon-cyan/50 mt-3">
+      <p className="text-xs text-gray-400 dark:text-feedgod-secondary/70 /50 mt-3">
         Last updated: {profile.lastUpdated.toLocaleTimeString()}
       </p>
     </div>
@@ -196,7 +209,6 @@ function ProfilePreview({ profile, selectedMetric }: { profile: SocialProfile; s
 }
 
 export default function SocialBuilder() {
-  const toast = useToast()
   const [step, setStep] = useState<BuilderStep>('select')
   
   // Selection state
@@ -322,7 +334,7 @@ export default function SocialBuilder() {
   const handleDeploy = () => {
     playPickupSound()
     console.log('Deploying social oracle:', { ...oracleConfig, profile })
-    toast.success('Social Oracle deployed! (Demo - in production this would deploy to Switchboard)')
+    alert('Social Oracle deployed! (Demo - in production this would deploy to Switchboard)')
   }
   
   const handleSave = () => {
@@ -337,7 +349,7 @@ export default function SocialBuilder() {
     const oracles = saved ? JSON.parse(saved) : []
     oracles.push(config)
     localStorage.setItem('savedSocialOracles', JSON.stringify(oracles))
-    toast.success('Social Oracle configuration saved!')
+    alert('Social Oracle saved! View it in your Profile tab.')
   }
   
   const handleRefresh = async () => {
@@ -374,18 +386,18 @@ export default function SocialBuilder() {
   return (
     <div className="space-y-6">
       {/* Module Header */}
-      <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
+      <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center">
-              <Users className="w-5 h-5 text-white" />
+            <div className="w-9 h-9 rounded-lg bg-[#ff0d6e] flex items-center justify-center">
+              <Users className="w-4 h-4 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-feedgod-primary dark:text-feedgod-neon-pink">
+              <h2 className="text-lg font-semibold text-white">
                 Social Media Oracle Builder
               </h2>
-              <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
-                Track Twitter, YouTube, and TikTok metrics on-chain
+              <p className="text-sm text-gray-400">
+                Track X, YouTube, and TikTok metrics on-chain
               </p>
             </div>
           </div>
@@ -393,19 +405,19 @@ export default function SocialBuilder() {
           {/* Step indicator */}
           <div className="flex items-center gap-2">
             <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-              step === 'select' ? 'bg-feedgod-primary text-white' : 'bg-feedgod-pink-100 dark:bg-feedgod-dark-accent text-feedgod-pink-500'
+              step === 'select' ? 'bg-feedgod-primary dark:text-feedgod-primary text-white' : 'bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent text-gray-400'
             }`}>
               1. Select
             </div>
-            <ChevronRight className="w-4 h-4 text-feedgod-pink-300" />
+            <ChevronRight className="w-4 h-4 text-feedgod-purple-300 dark:border-feedgod-dark-accent" />
             <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-              step === 'configure' ? 'bg-feedgod-primary text-white' : 'bg-feedgod-pink-100 dark:bg-feedgod-dark-accent text-feedgod-pink-500'
+              step === 'configure' ? 'bg-feedgod-primary dark:text-feedgod-primary text-white' : 'bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent text-gray-400'
             }`}>
               2. Configure
             </div>
-            <ChevronRight className="w-4 h-4 text-feedgod-pink-300" />
+            <ChevronRight className="w-4 h-4 text-feedgod-purple-300 dark:border-feedgod-dark-accent" />
             <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-              step === 'preview' ? 'bg-feedgod-primary text-white' : 'bg-feedgod-pink-100 dark:bg-feedgod-dark-accent text-feedgod-pink-500'
+              step === 'preview' ? 'bg-feedgod-primary dark:text-feedgod-primary text-white' : 'bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent text-gray-400'
             }`}>
               3. Deploy
             </div>
@@ -416,8 +428,8 @@ export default function SocialBuilder() {
       {step === 'select' && (
         <div className="space-y-6">
           {/* Platform Selection */}
-          <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-            <h3 className="text-lg font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+          <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+            <h3 className="text-sm font-medium text-gray-300 mb-4">
               Select Platform
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -434,28 +446,28 @@ export default function SocialBuilder() {
 
           {/* Username/URL Input */}
           {selectedPlatform && (
-            <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+            <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h3 className="text-sm font-medium text-gray-300 mb-4">
                 Enter Username or URL
               </h3>
               
               {/* Input */}
               <div className="flex gap-3">
                 <div className="flex-1 relative">
-                  <AtSign className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-feedgod-pink-400" />
+                  <AtSign className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-feedgod-secondary/70" />
                   <input
                     type="text"
                     value={targetInput}
                     onChange={(e) => setTargetInput(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleFetchProfile()}
                     placeholder={`Enter ${selectedPlatform} username or profile URL...`}
-                    className="w-full pl-10 pr-4 py-3 bg-feedgod-pink-50 dark:bg-feedgod-dark-accent border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg text-feedgod-dark dark:text-white placeholder-feedgod-pink-400 focus:outline-none focus:ring-2 focus:ring-feedgod-primary"
+                    className="w-full pl-10 pr-4 py-3 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent border border-[#3a3b35] rounded-lg text-white placeholder-feedgod-feedgod-secondary dark:text-feedgod-secondary/70 focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary"
                   />
                 </div>
                 <button
                   onClick={handleFetchProfile}
                   disabled={isLoading || !targetInput.trim()}
-                  className="px-6 py-3 bg-feedgod-primary hover:bg-feedgod-secondary disabled:opacity-50 rounded-lg text-white font-medium transition-colors flex items-center gap-2"
+                  className="px-6 py-3 gradient-bg hover:opacity-90 disabled:opacity-50 rounded-lg text-white font-medium transition-all flex items-center gap-2"
                 >
                   {isLoading ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
@@ -474,7 +486,7 @@ export default function SocialBuilder() {
               {/* Suggestions */}
               {suggestions.length > 0 && !profile && (
                 <div className="mt-4">
-                  <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 mb-2">
+                  <p className="text-xs text-gray-400 mb-2">
                     Popular accounts:
                   </p>
                   <div className="flex flex-wrap gap-2">
@@ -482,7 +494,7 @@ export default function SocialBuilder() {
                       <button
                         key={account.username}
                         onClick={() => handleSuggestionClick(account)}
-                        className="px-3 py-1.5 bg-feedgod-pink-100 dark:bg-feedgod-dark-accent hover:bg-feedgod-pink-200 rounded-full text-sm text-feedgod-dark dark:text-white transition-colors"
+                        className="px-3 py-1.5 bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-full text-sm text-white transition-colors"
                       >
                         @{account.username}
                       </button>
@@ -504,8 +516,8 @@ export default function SocialBuilder() {
               
               <div className="space-y-4">
                 {/* Metric Selection */}
-                <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-4 backdrop-blur-sm">
-                  <h4 className="text-sm font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-3">
+                <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-4 backdrop-blur-sm">
+                  <h4 className="text-sm font-medium text-gray-400 mb-3">
                     Select Metric to Track
                   </h4>
                   <div className="space-y-2">
@@ -517,19 +529,19 @@ export default function SocialBuilder() {
                           onClick={() => { playPickupSound(); setSelectedMetric(metric.value as SocialMetric); }}
                           className={`w-full p-3 rounded-lg text-left transition-all ${
                             selectedMetric === metric.value
-                              ? 'bg-feedgod-primary/10 border border-feedgod-primary'
-                              : 'bg-feedgod-pink-50 dark:bg-feedgod-dark-accent hover:bg-feedgod-pink-100'
+                              ? 'bg-feedgod-primary dark:text-feedgod-primary/10 border border-feedgod-primary dark:text-feedgod-primary'
+                              : 'bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent hover:bg-feedgod-purple-100 dark:bg-feedgod-dark-accent'
                           }`}
                         >
                           <div className="flex items-center justify-between">
-                            <span className="font-medium text-feedgod-dark dark:text-white text-sm">
+                            <span className="font-medium text-white text-sm">
                               {metric.label}
                             </span>
-                            <span className="text-feedgod-primary dark:text-feedgod-neon-pink font-bold">
+                            <span className="gradient-text font-bold">
                               {formatMetricValue(profile.metrics[metric.value] || 0)}
                             </span>
                           </div>
-                          <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/60 mt-1">
+                          <p className="text-xs text-gray-400 /60 mt-1">
                             {metric.description}
                           </p>
                         </button>
@@ -541,7 +553,7 @@ export default function SocialBuilder() {
                 <button
                   onClick={handleConfigure}
                   disabled={!selectedMetric}
-                  className="w-full px-4 py-3 bg-feedgod-primary hover:bg-feedgod-secondary disabled:opacity-50 rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2"
+                  className="w-full px-4 py-3 gradient-bg hover:opacity-90 disabled:opacity-50 rounded-lg text-white font-medium transition-all flex items-center justify-center gap-2"
                 >
                   Configure Oracle
                   <ChevronRight className="w-4 h-4" />
@@ -561,35 +573,35 @@ export default function SocialBuilder() {
             <ProfilePreview profile={profile} selectedMetric={selectedMetric || undefined} />
 
             {/* Oracle Settings */}
-            <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+            <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h3 className="text-sm font-medium text-gray-300 mb-4">
                 Oracle Settings
               </h3>
               
               <div className="space-y-4">
                 {/* Oracle Name */}
                 <div>
-                  <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2">
+                  <label className="block text-sm font-medium text-white mb-2">
                     Oracle Name
                   </label>
                   <input
                     type="text"
                     value={oracleConfig.name || ''}
                     onChange={(e) => setOracleConfig(prev => ({ ...prev, name: e.target.value }))}
-                    className="w-full bg-feedgod-pink-50 dark:bg-feedgod-dark-accent border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg px-4 py-2 text-feedgod-dark dark:text-white focus:outline-none focus:ring-2 focus:ring-feedgod-primary"
+                    className="w-full bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent border border-[#3a3b35] rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary"
                   />
                 </div>
                 
                 {/* Update Interval */}
                 <div>
-                  <label className="block text-sm font-medium text-feedgod-dark dark:text-feedgod-neon-cyan mb-2 flex items-center gap-2">
+                  <label className="block text-sm font-medium text-white mb-2 flex items-center gap-2">
                     <Clock className="w-4 h-4" />
                     Update Interval
                   </label>
                   <select
                     value={oracleConfig.updateInterval}
                     onChange={(e) => setOracleConfig(prev => ({ ...prev, updateInterval: parseInt(e.target.value) }))}
-                    className="w-full bg-feedgod-pink-50 dark:bg-feedgod-dark-accent border border-feedgod-pink-200 dark:border-feedgod-dark-accent rounded-lg px-4 py-2 text-feedgod-dark dark:text-white"
+                    className="w-full bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent border border-[#3a3b35] rounded-lg px-4 py-2 text-white"
                   >
                     <option value="300">Every 5 minutes</option>
                     <option value="900">Every 15 minutes</option>
@@ -613,45 +625,45 @@ export default function SocialBuilder() {
 
           {/* Right - Summary & Actions */}
           <div className="space-y-4">
-            <div className="bg-gradient-to-br from-blue-400/10 via-purple-500/10 to-pink-500/10 rounded-lg border border-purple-400/20 p-6">
-              <h4 className="text-sm font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+            <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-6">
+              <h4 className="text-sm font-medium text-gray-400 mb-4">
                 Oracle Summary
               </h4>
               
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Platform</span>
-                  <span className="text-feedgod-dark dark:text-white font-medium flex items-center gap-1">
+                  <span className="text-gray-400">Platform</span>
+                  <span className="text-white font-medium flex items-center gap-1">
                     {getPlatformIcon(selectedPlatform!)} {selectedPlatform}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Account</span>
-                  <span className="text-feedgod-dark dark:text-white font-medium">
+                  <span className="text-gray-400">Account</span>
+                  <span className="text-white font-medium">
                     @{profile.username}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Metric</span>
-                  <span className="text-feedgod-dark dark:text-white font-medium">
+                  <span className="text-gray-400">Metric</span>
+                  <span className="text-white font-medium">
                     {getMetricLabel(selectedMetric!)}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Current Value</span>
-                  <span className="text-feedgod-primary dark:text-feedgod-neon-pink font-bold">
+                  <span className="text-gray-400">Current Value</span>
+                  <span className="gradient-text font-bold">
                     {formatMetricValue(profile.metrics[selectedMetric!] || 0)}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Chain</span>
+                  <span className="text-gray-400">Chain</span>
                   <div className="flex items-center gap-1.5">
                     <img 
                       src={CHAIN_LOGOS[oracleConfig.blockchain || 'solana']}
                       alt={oracleConfig.blockchain}
                       className="w-4 h-4 object-contain"
                     />
-                    <span className="text-feedgod-dark dark:text-white font-medium capitalize">
+                    <span className="text-white font-medium capitalize">
                       {oracleConfig.blockchain}
                     </span>
                   </div>
@@ -667,14 +679,14 @@ export default function SocialBuilder() {
             <div className="flex flex-col gap-3">
               <button
                 onClick={handlePreview}
-                className="w-full px-4 py-3 bg-feedgod-primary hover:bg-feedgod-secondary rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2"
+                className="w-full px-4 py-3 gradient-bg hover:opacity-90 rounded-lg text-white font-medium transition-all flex items-center justify-center gap-2"
               >
                 Preview & Deploy
                 <ChevronRight className="w-4 h-4" />
               </button>
               <button
                 onClick={handleBack}
-                className="w-full px-4 py-2 text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 hover:text-feedgod-primary transition-colors"
+                className="w-full px-4 py-2 text-sm text-gray-400 hover:text-feedgod-primary dark:text-feedgod-primary transition-colors"
               >
                 Back to Select
               </button>
@@ -687,12 +699,12 @@ export default function SocialBuilder() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Config Preview */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+            <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h3 className="text-sm font-medium text-gray-300 mb-4">
                 Switchboard Oracle Configuration
               </h3>
               
-              <div className="bg-feedgod-dark dark:bg-black rounded-lg p-4 overflow-x-auto">
+              <div className="bg-feedgod-dark-secondary dark:bg-black rounded-lg p-4 overflow-x-auto">
                 <pre className="text-sm text-green-400 font-mono">
                   {JSON.stringify(generateConfig(), null, 2)}
                 </pre>
@@ -700,45 +712,45 @@ export default function SocialBuilder() {
             </div>
 
             {/* Use Cases */}
-            <div className="bg-white/60 dark:bg-feedgod-dark-secondary/80 rounded-lg border border-feedgod-pink-200 dark:border-feedgod-dark-accent p-6 backdrop-blur-sm">
-              <h4 className="text-sm font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+            <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+              <h4 className="text-sm font-medium text-gray-400 mb-4">
                 Use Cases for This Oracle
               </h4>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 bg-feedgod-pink-50 dark:bg-feedgod-dark-accent rounded-lg">
+                <div className="p-4 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
                     <TrendingUp className="w-5 h-5 text-emerald-500" />
-                    <span className="font-medium text-feedgod-dark dark:text-white">Social Tokens</span>
+                    <span className="font-medium text-white">Social Tokens</span>
                   </div>
-                  <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                  <p className="text-xs text-gray-400">
                     Tie token value to follower milestones
                   </p>
                 </div>
-                <div className="p-4 bg-feedgod-pink-50 dark:bg-feedgod-dark-accent rounded-lg">
+                <div className="p-4 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
                     <Zap className="w-5 h-5 text-amber-500" />
-                    <span className="font-medium text-feedgod-dark dark:text-white">Creator DAOs</span>
+                    <span className="font-medium text-white">Creator DAOs</span>
                   </div>
-                  <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                  <p className="text-xs text-gray-400">
                     Governance weighted by social reach
                   </p>
                 </div>
-                <div className="p-4 bg-feedgod-pink-50 dark:bg-feedgod-dark-accent rounded-lg">
+                <div className="p-4 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
                     <Heart className="w-5 h-5 text-red-500" />
-                    <span className="font-medium text-feedgod-dark dark:text-white">Engagement Betting</span>
+                    <span className="font-medium text-white">Engagement Betting</span>
                   </div>
-                  <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                  <p className="text-xs text-gray-400">
                     Predict viral content performance
                   </p>
                 </div>
-                <div className="p-4 bg-feedgod-pink-50 dark:bg-feedgod-dark-accent rounded-lg">
+                <div className="p-4 bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
-                    <Users className="w-5 h-5 text-blue-500" />
-                    <span className="font-medium text-feedgod-dark dark:text-white">Milestone Rewards</span>
+                    <Users className="w-5 h-5 text-feedgod-primary" />
+                    <span className="font-medium text-white">Milestone Rewards</span>
                   </div>
-                  <p className="text-xs text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
+                  <p className="text-xs text-gray-400">
                     Auto-release funds at follower goals
                   </p>
                 </div>
@@ -748,27 +760,27 @@ export default function SocialBuilder() {
 
           {/* Right - Actions */}
           <div className="space-y-4">
-            <div className="bg-gradient-to-br from-blue-400/10 via-purple-500/10 to-pink-500/10 rounded-lg border border-purple-400/20 p-6">
-              <h4 className="text-sm font-semibold text-feedgod-primary dark:text-feedgod-neon-pink mb-4">
+            <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-6">
+              <h4 className="text-sm font-medium text-gray-400 mb-4">
                 Final Summary
               </h4>
               
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Target</span>
-                  <span className="text-feedgod-dark dark:text-white font-medium">
+                  <span className="text-gray-400">Target</span>
+                  <span className="text-white font-medium">
                     @{profile.username}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Tracking</span>
-                  <span className="text-feedgod-dark dark:text-white font-medium">
+                  <span className="text-gray-400">Tracking</span>
+                  <span className="text-white font-medium">
                     {getMetricLabel(selectedMetric!)}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Updates</span>
-                  <span className="text-feedgod-dark dark:text-white font-medium">
+                  <span className="text-gray-400">Updates</span>
+                  <span className="text-white font-medium">
                     {oracleConfig.updateInterval === 300 ? 'Every 5m' :
                      oracleConfig.updateInterval === 900 ? 'Every 15m' :
                      oracleConfig.updateInterval === 1800 ? 'Every 30m' :
@@ -777,14 +789,14 @@ export default function SocialBuilder() {
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">Chain</span>
+                  <span className="text-gray-400">Chain</span>
                   <div className="flex items-center gap-1.5">
                     <img 
                       src={CHAIN_LOGOS[oracleConfig.blockchain || 'solana']}
                       alt={oracleConfig.blockchain}
                       className="w-4 h-4 object-contain"
                     />
-                    <span className="text-feedgod-dark dark:text-white font-medium capitalize">
+                    <span className="text-white font-medium capitalize">
                       {oracleConfig.blockchain}
                     </span>
                   </div>
@@ -800,21 +812,21 @@ export default function SocialBuilder() {
             <div className="flex flex-col gap-3">
               <button
                 onClick={handleDeploy}
-                className="w-full px-4 py-3 bg-feedgod-primary hover:bg-feedgod-secondary rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2"
+                className="w-full px-4 py-3 gradient-bg hover:opacity-90 rounded-lg text-white font-medium transition-all flex items-center justify-center gap-2"
               >
                 <Play className="w-4 h-4" />
                 Deploy Oracle
               </button>
               <button
                 onClick={handleSave}
-                className="w-full px-4 py-3 bg-feedgod-pink-100 dark:bg-feedgod-dark-accent hover:bg-feedgod-pink-200 rounded-lg text-feedgod-dark dark:text-white font-medium transition-colors flex items-center justify-center gap-2"
+                className="w-full px-4 py-3 bg-feedgod-purple-100 dark:bg-feedgod-dark-accent dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2"
               >
                 <Save className="w-4 h-4" />
                 Save Configuration
               </button>
               <button
                 onClick={handleBack}
-                className="w-full px-4 py-2 text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 hover:text-feedgod-primary transition-colors"
+                className="w-full px-4 py-2 text-sm text-gray-400 hover:text-feedgod-primary dark:text-feedgod-primary transition-colors"
               >
                 Back to Configure
               </button>

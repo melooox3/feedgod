@@ -38,7 +38,7 @@ const TABS: { id: BuilderType; label: string; icon: typeof Database; description
 
 export default function TabNavigation({ activeTab, onTabChange }: TabNavigationProps) {
   return (
-    <div className="border-b border-feedgod-pink-200 dark:border-feedgod-dark-accent bg-white/60 dark:bg-feedgod-dark-secondary/80 backdrop-blur-sm rounded-t-lg">
+    <div className="border-b border-feedgod-purple-200 dark:border-feedgod-dark-accent dark:border-feedgod-purple-200 dark:border-feedgod-dark-accent bg-[#252620]/80 backdrop-blur-sm rounded-t-lg">
       <div className="flex gap-1 px-2 pt-2">
         {TABS.map((tab) => {
           const Icon = tab.icon
@@ -51,8 +51,8 @@ export default function TabNavigation({ activeTab, onTabChange }: TabNavigationP
               }}
               className={`flex items-center gap-2 px-4 py-3 rounded-t-lg relative ${
                 activeTab === tab.id
-                  ? 'bg-feedgod-pink-50 dark:bg-feedgod-dark-accent text-feedgod-primary dark:text-feedgod-neon-pink border-b-2 border-feedgod-primary dark:border-feedgod-neon-pink'
-                  : 'text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 hover:text-feedgod-primary dark:hover:text-feedgod-neon-pink hover:bg-feedgod-pink-50/50 dark:hover:bg-feedgod-dark-accent/50'
+                  ? 'bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary dark:bg-feedgod-purple-200 dark:border-feedgod-dark-accent gradient-text border-b-2 border-feedgod-primary dark:text-feedgod-primary dark:border-feedgod-primary dark:text-feedgod-primary'
+                  : 'text-gray-400 /70 hover:text-feedgod-primary dark:text-feedgod-primary dark:hover:text-feedgod-primary dark:text-feedgod-primary hover:bg-feedgod-purple-50 dark:bg-feedgod-dark-secondary/50 dark:hover:bg-feedgod-purple-200 dark:border-feedgod-dark-accent/50'
               } star-glow-on-hover`}
               title={tab.description}
             >

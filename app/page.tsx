@@ -1,831 +1,331 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import dynamic from "next/dynamic";
-import {
-  Database,
-  Code,
-  Dice6,
-  Key,
-  ArrowLeft,
-  Plus,
-  Target,
-  TrendingUp,
-  Scale,
-  Terminal,
-  Sparkles,
-  Shield,
-  Cloud,
-  Thermometer,
-  Trophy,
-  Gamepad2,
-  Users,
-  Heart,
-  Brain,
-  Zap,
-  Globe,
-  Link2,
-  Loader2,
-  Wrench,
-  Swords,
-  Search,
-} from "lucide-react";
-
-import { BuilderErrorBoundary } from "@/components/ErrorBoundary";
-import { useToast } from "@/components/Toast";
-import Header from "@/components/Header";
-import ModuleCard from "@/components/ModuleCard";
-import ModuleTiles from "@/components/ModuleTiles";
-import BulkFeedCreator from "@/components/BulkFeedCreator";
-import CommandBar from "@/components/CommandBar";
-import OracleSearchBar from "@/components/OracleSearchBar";
-import { FeedConfig } from "@/types/feed";
-import {
-  FunctionConfig,
-  VRFConfig,
-  SecretConfig,
-  BuilderType,
-  ParsedPrompt,
-} from "@/types/switchboard";
-import { playPickupSound } from "@/lib/sound-utils";
-import { logger } from "@/lib/logger";
-
-// Loading fallback for dynamically imported builders
-function BuilderLoadingFallback(): JSX.Element {
-  return (
-    <div className="flex items-center justify-center min-h-[400px]">
-      <div className="text-center">
-        <Loader2 className="w-8 h-8 text-feedgod-primary animate-spin mx-auto mb-4" />
-        <p className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
-          Loading builder...
-        </p>
-      </div>
-    </div>
-  );
-}
-
-// Lazy load builder components - only one is shown at a time
-const FeedBuilder = dynamic(() => import("@/components/FeedBuilder"), {
-  loading: () => <BuilderLoadingFallback />,
-  ssr: false,
-});
-const FunctionBuilder = dynamic(() => import("@/components/FunctionBuilder"), {
-  loading: () => <BuilderLoadingFallback />,
-  ssr: false,
-});
-const VRFBuilder = dynamic(() => import("@/components/VRFBuilder"), {
-  loading: () => <BuilderLoadingFallback />,
-  ssr: false,
-});
-const SecretBuilder = dynamic(() => import("@/components/SecretBuilder"), {
-  loading: () => <BuilderLoadingFallback />,
-  ssr: false,
-});
-const PredictionMarketBuilder = dynamic(
-  () => import("@/components/PredictionMarketBuilder"),
-  { loading: () => <BuilderLoadingFallback />, ssr: false },
-);
-const WeatherBuilder = dynamic(() => import("@/components/WeatherBuilder"), {
-  loading: () => <BuilderLoadingFallback />,
-  ssr: false,
-});
-const SportsBuilder = dynamic(() => import("@/components/SportsBuilder"), {
-  loading: () => <BuilderLoadingFallback />,
-  ssr: false,
-});
-const SocialBuilder = dynamic(() => import("@/components/SocialBuilder"), {
-  loading: () => <BuilderLoadingFallback />,
-  ssr: false,
-});
-const AIJudgeBuilder = dynamic(() => import("@/components/AIJudgeBuilder"), {
-  loading: () => <BuilderLoadingFallback />,
-  ssr: false,
-});
-const CustomAPIBuilder = dynamic(
-  () => import("@/components/CustomAPIBuilder"),
-  { loading: () => <BuilderLoadingFallback />, ssr: false },
-);
+import { useState, useEffect } from 'react'
+import { Database, Code, Dice6, Key, ArrowLeft, Plus, Target, TrendingUp, Scale, Terminal, Sparkles, Shield, Cloud, Thermometer, Trophy, Gamepad2, Users, Heart, AtSign, Brain, Zap, Globe, Link2, Landmark, Vote } from 'lucide-react'
+import FeedBuilder from '@/components/FeedBuilder'
+import FunctionBuilder from '@/components/FunctionBuilder'
+import VRFBuilder from '@/components/VRFBuilder'
+import SecretBuilder from '@/components/SecretBuilder'
+import PredictionMarketBuilder from '@/components/PredictionMarketBuilder'
+import WeatherBuilder from '@/components/WeatherBuilder'
+import SportsBuilder from '@/components/SportsBuilder'
+import SocialBuilder from '@/components/SocialBuilder'
+import AIJudgeBuilder from '@/components/AIJudgeBuilder'
+import CustomAPIBuilder from '@/components/CustomAPIBuilder'
+import GovernanceBuilder from '@/components/GovernanceBuilder'
+import CommandBar from '@/components/CommandBar'
+import Header from '@/components/Header'
+import HeroSection from '@/components/HeroSection'
+import ModuleCard from '@/components/ModuleCard'
+import BulkFeedCreator from '@/components/BulkFeedCreator'
+import { FeedConfig } from '@/types/feed'
+import { FunctionConfig, VRFConfig, SecretConfig, BuilderType } from '@/types/switchboard'
+import { playPickupSound } from '@/lib/sound-utils'
 
 const MODULES = [
   {
-    id: "feed" as BuilderType,
-    title: "Price Feeds",
-    description:
-      "Aggregate real-time price data from multiple sources into reliable on-chain oracles.",
+    id: 'feed' as BuilderType,
+    title: 'Price Feeds',
+    description: 'Aggregate real-time price data from multiple sources into reliable on-chain oracles.',
     icon: Database,
     backgroundIcon: TrendingUp,
   },
   {
-    id: "prediction" as BuilderType,
-    title: "Prediction Markets",
-    description:
-      "Create oracles for Polymarket & Kalshi markets. Resolve bets on-chain.",
+    id: 'prediction' as BuilderType,
+    title: 'Prediction Markets',
+    description: 'Create oracles for Polymarket & Kalshi markets. Resolve bets on-chain.',
     icon: Target,
     backgroundIcon: Scale,
   },
   {
-    id: "function" as BuilderType,
-    title: "Functions",
-    description:
-      "Run custom off-chain computation and push results on-chain with verifiable execution.",
-    icon: Code,
-    backgroundIcon: Terminal,
-  },
-  {
-    id: "vrf" as BuilderType,
-    title: "VRF",
-    description:
-      "Generate verifiable random numbers for games, NFTs, and fair selection mechanisms.",
-    icon: Dice6,
-    backgroundIcon: Sparkles,
-  },
-  {
-    id: "secret" as BuilderType,
-    title: "Secrets",
-    description:
-      "Securely store and manage API keys and sensitive data for your oracle functions.",
-    icon: Key,
-    backgroundIcon: Shield,
-  },
-  {
-    id: "weather" as BuilderType,
-    title: "Weather",
-    description:
-      "Deploy real-time weather data oracles for any city. Power insurance, gaming, and DeFi.",
-    icon: Cloud,
-    backgroundIcon: Thermometer,
-  },
-  {
-    id: "sports" as BuilderType,
-    title: "Sports",
-    description:
-      "Create oracles for sports match outcomes. Soccer, NBA, NFL, and esports supported.",
+    id: 'sports' as BuilderType,
+    title: 'Sports',
+    description: 'Create oracles for sports match outcomes. Soccer, NBA, NFL, and esports supported.',
     icon: Trophy,
     backgroundIcon: Gamepad2,
   },
   {
-    id: "social" as BuilderType,
-    title: "Social Media",
-    description:
-      "Track Twitter, YouTube, and TikTok metrics on-chain. Followers, engagement, viral content.",
-    icon: Users,
-    backgroundIcon: Heart,
+    id: 'governance' as BuilderType,
+    title: 'Governance Oracle',
+    description: 'Create oracles that trigger DAO actions based on real-world data. If this, then DAO.',
+    icon: Landmark,
+    backgroundIcon: Vote,
   },
   {
-    id: "ai-judge" as BuilderType,
-    title: "AI Judge",
-    description:
-      "Any question → on-chain answer. AI resolves real-world events without custom code.",
+    id: 'ai-judge' as BuilderType,
+    title: 'AI Judge',
+    description: 'Any question → on-chain answer. AI resolves real-world events without custom code.',
     icon: Brain,
     backgroundIcon: Zap,
   },
   {
-    id: "custom-api" as BuilderType,
-    title: "Custom API",
-    description:
-      "Turn any JSON API into an on-chain oracle. Click to select values, auto-generate paths.",
+    id: 'weather' as BuilderType,
+    title: 'Weather',
+    description: 'Deploy real-time weather data oracles for any city. Power insurance, gaming, and DeFi.',
+    icon: Cloud,
+    backgroundIcon: Thermometer,
+  },
+  {
+    id: 'custom-api' as BuilderType,
+    title: 'Custom API',
+    description: 'Turn any JSON API into an on-chain oracle. Click to select values, auto-generate paths.',
     icon: Globe,
     backgroundIcon: Link2,
   },
-];
-
-type HomeView = "landing" | "builder" | "arena";
+  {
+    id: 'social' as BuilderType,
+    title: 'Social Media',
+    description: 'Track X, YouTube, and TikTok metrics on-chain. Followers, engagement, viral content.',
+    icon: Users,
+    backgroundIcon: Heart,
+  },
+  {
+    id: 'function' as BuilderType,
+    title: 'Functions',
+    description: 'Run custom off-chain computation and push results on-chain with verifiable execution.',
+    icon: Code,
+    backgroundIcon: Terminal,
+  },
+  {
+    id: 'vrf' as BuilderType,
+    title: 'VRF',
+    description: 'Generate verifiable random numbers for games, NFTs, and fair selection mechanisms.',
+    icon: Dice6,
+    backgroundIcon: Sparkles,
+  },
+  {
+    id: 'secret' as BuilderType,
+    title: 'Secrets',
+    description: 'Securely store and manage API keys and sensitive data for your oracle functions.',
+    icon: Key,
+    backgroundIcon: Shield,
+  },
+]
 
 export default function Home() {
-  const [currentView, setCurrentView] = useState<HomeView>("landing");
-  const [activeModule, setActiveModule] = useState<BuilderType | null>(null);
-  const [feedConfig, setFeedConfig] = useState<FeedConfig | null>(null);
-  const [functionConfig, setFunctionConfig] = useState<FunctionConfig | null>(
-    null,
-  );
-  const [vrfConfig, setVRFConfig] = useState<VRFConfig | null>(null);
-  const [secretConfig, setSecretConfig] = useState<SecretConfig | null>(null);
-  const [showBulkCreator, setShowBulkCreator] = useState(false);
-  const [showAllModules, setShowAllModules] = useState(false);
-  const toast = useToast();
+  const [activeModule, setActiveModule] = useState<BuilderType | null>(null)
+  const [feedConfig, setFeedConfig] = useState<FeedConfig | null>(null)
+  const [functionConfig, setFunctionConfig] = useState<FunctionConfig | null>(null)
+  const [vrfConfig, setVRFConfig] = useState<VRFConfig | null>(null)
+  const [secretConfig, setSecretConfig] = useState<SecretConfig | null>(null)
+  const [showBulkCreator, setShowBulkCreator] = useState(false)
 
   // Load config from sessionStorage if available (from profile page)
   useEffect(() => {
-    const loadConfig = sessionStorage.getItem("loadConfig");
-    if (!loadConfig) return;
-
-    try {
-      const parsed = JSON.parse(loadConfig);
-      const type = (parsed.type || "feed") as BuilderType;
-
-      const parseDates = (config: Record<string, unknown>) => ({
-        ...config,
-        createdAt: config.createdAt
-          ? new Date(config.createdAt as string)
-          : new Date(),
-        updatedAt: config.updatedAt
-          ? new Date(config.updatedAt as string)
-          : new Date(),
-      });
-
-      switch (type) {
-        case "feed":
-          setFeedConfig(parseDates(parsed) as FeedConfig);
-          break;
-        case "function":
-          setFunctionConfig(parseDates(parsed) as FunctionConfig);
-          break;
-        case "vrf":
-          setVRFConfig(parseDates(parsed) as VRFConfig);
-          break;
-        case "secret":
-          setSecretConfig(parseDates(parsed) as SecretConfig);
-          break;
-        default:
-          return;
+    const loadConfig = sessionStorage.getItem('loadConfig')
+    if (loadConfig) {
+      try {
+        const parsed = JSON.parse(loadConfig)
+        const type = parsed.type || 'feed'
+        
+        if (type === 'feed') {
+          setFeedConfig({
+            ...parsed,
+            createdAt: parsed.createdAt ? new Date(parsed.createdAt) : new Date(),
+            updatedAt: parsed.updatedAt ? new Date(parsed.updatedAt) : new Date(),
+          })
+          setActiveModule('feed')
+        } else if (type === 'function') {
+          setFunctionConfig({
+            ...parsed,
+            createdAt: parsed.createdAt ? new Date(parsed.createdAt) : new Date(),
+            updatedAt: parsed.updatedAt ? new Date(parsed.updatedAt) : new Date(),
+          })
+          setActiveModule('function')
+        } else if (type === 'vrf') {
+          setVRFConfig({
+            ...parsed,
+            createdAt: parsed.createdAt ? new Date(parsed.createdAt) : new Date(),
+            updatedAt: parsed.updatedAt ? new Date(parsed.updatedAt) : new Date(),
+          })
+          setActiveModule('vrf')
+        } else if (type === 'secret') {
+          setSecretConfig({
+            ...parsed,
+            createdAt: parsed.createdAt ? new Date(parsed.createdAt) : new Date(),
+            updatedAt: parsed.updatedAt ? new Date(parsed.updatedAt) : new Date(),
+          })
+          setActiveModule('secret')
+        }
+        
+        sessionStorage.removeItem('loadConfig')
+      } catch (e) {
+        console.error('Error loading config:', e)
       }
-      setCurrentView("builder");
-      setActiveModule(type);
-      sessionStorage.removeItem("loadConfig");
-    } catch (e) {
-      logger.config.error("Error loading config:", e);
     }
-  }, []);
+  }, [])
+
+  // Scroll to top when module changes
+  useEffect(() => {
+    if (activeModule) {
+      window.scrollTo({ top: 0, behavior: 'instant' })
+    }
+  }, [activeModule])
 
   const handleSearch = (query: string) => {
-    logger.router.debug("Searching for:", query);
-    toast.info(
-      `Searching for: ${query} (In production, this would search existing Switchboard resources)`,
-    );
-  };
+    console.log('Searching for:', query)
+    alert(`Searching for: ${query}\n\n(In production, this would search existing Switchboard resources)`)
+  }
 
   const handleBulkFeedsGenerated = (feeds: FeedConfig[]) => {
-    const savedFeeds = localStorage.getItem("savedFeeds");
-    const existingFeeds = savedFeeds ? JSON.parse(savedFeeds) : [];
-
-    feeds.forEach((feed) => {
+    const savedFeeds = localStorage.getItem('savedFeeds')
+    const existingFeeds = savedFeeds ? JSON.parse(savedFeeds) : []
+    
+    feeds.forEach(feed => {
       const feedToSave = {
         ...feed,
-        id:
-          feed.id ||
-          `feed-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        id: feed.id || `feed-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-      };
-      existingFeeds.push(feedToSave);
-    });
-
-    localStorage.setItem("savedFeeds", JSON.stringify(existingFeeds));
-    toast.success(
-      `Successfully created ${feeds.length} feeds! Check your profile to manage them.`,
-    );
-    setShowBulkCreator(false);
-  };
+      }
+      existingFeeds.push(feedToSave)
+    })
+    
+    localStorage.setItem('savedFeeds', JSON.stringify(existingFeeds))
+    alert(`Successfully created ${feeds.length} feeds! Check your profile to manage them.`)
+    setShowBulkCreator(false)
+  }
 
   const handleBack = () => {
-    playPickupSound();
-    setActiveModule(null);
-    // Stay in builder view when going back from a module
-  };
+    playPickupSound()
+    setActiveModule(null)
+  }
 
   const handleModuleSelect = (moduleId: BuilderType) => {
-    playPickupSound();
-    setCurrentView("builder");
-    setActiveModule(moduleId);
-  };
+    playPickupSound()
+    setActiveModule(moduleId)
+  }
 
   // Smart module navigation from universal prompt
-  const handleSmartNavigate = (module: BuilderType, parsed?: ParsedPrompt) => {
-    playPickupSound();
-    setCurrentView("builder");
-    setActiveModule(module);
-
+  const handleSmartNavigate = (module: BuilderType, parsed?: any) => {
+    playPickupSound()
+    setActiveModule(module)
+    
     // Pre-fill module state if parsed data is available
-    // This could be extended to pass the parsed data to each builder
-    logger.router.debug("Smart navigate to:", module, "with parsed:", parsed);
-
+    console.log('Smart navigate to:', module, 'with parsed:', parsed)
+    
     // Store parsed data in session storage for the builder to pick up
     if (parsed) {
-      sessionStorage.setItem(
-        "smartPromptData",
-        JSON.stringify({ module, parsed }),
-      );
+      sessionStorage.setItem('smartPromptData', JSON.stringify({ module, parsed }))
     }
-  };
+  }
+
+  const handleConfigGenerated = (config: any, type: BuilderType) => {
+    switch (type) {
+      case 'feed':
+        setFeedConfig(config)
+        setActiveModule('feed')
+        break
+      case 'function':
+        setFunctionConfig(config)
+        setActiveModule('function')
+        break
+      case 'vrf':
+        setVRFConfig(config)
+        setActiveModule('vrf')
+        break
+      case 'secret':
+        setSecretConfig(config)
+        setActiveModule('secret')
+        break
+    }
+  }
 
   const renderBuilder = () => {
-    const builderContent = (() => {
-      switch (activeModule) {
-        case "feed":
-          return (
-            <FeedBuilder config={feedConfig} onConfigChange={setFeedConfig} />
-          );
-        case "prediction":
-          return <PredictionMarketBuilder />;
-        case "function":
-          return (
-            <FunctionBuilder
-              config={functionConfig}
-              onConfigChange={setFunctionConfig}
-            />
-          );
-        case "vrf":
-          return (
-            <VRFBuilder config={vrfConfig} onConfigChange={setVRFConfig} />
-          );
-        case "secret":
-          return (
-            <SecretBuilder
-              config={secretConfig}
-              onConfigChange={setSecretConfig}
-            />
-          );
-        case "weather":
-          return <WeatherBuilder />;
-        case "sports":
-          return <SportsBuilder />;
-        case "social":
-          return <SocialBuilder />;
-        case "ai-judge":
-          return <AIJudgeBuilder />;
-        case "custom-api":
-          return <CustomAPIBuilder />;
-        default:
-          return null;
-      }
-    })();
-
-    if (!builderContent) return null;
-
-    // Wrap builder in error boundary with module-specific name
-    return (
-      <BuilderErrorBoundary name={getModuleTitle()} key={activeModule}>
-        {builderContent}
-      </BuilderErrorBoundary>
-    );
-  };
+    switch (activeModule) {
+      case 'feed':
+        return <FeedBuilder config={feedConfig} onConfigChange={setFeedConfig} />
+      case 'prediction':
+        return <PredictionMarketBuilder />
+      case 'function':
+        return <FunctionBuilder config={functionConfig} onConfigChange={setFunctionConfig} />
+      case 'vrf':
+        return <VRFBuilder config={vrfConfig} onConfigChange={setVRFConfig} />
+      case 'secret':
+        return <SecretBuilder config={secretConfig} onConfigChange={setSecretConfig} />
+      case 'weather':
+        return <WeatherBuilder />
+      case 'sports':
+        return <SportsBuilder />
+      case 'social':
+        return <SocialBuilder />
+      case 'ai-judge':
+        return <AIJudgeBuilder />
+      case 'custom-api':
+        return <CustomAPIBuilder />
+      case 'governance':
+        return <GovernanceBuilder />
+      default:
+        return null
+    }
+  }
 
   const getModuleTitle = () => {
-    const activeModuleConfig = MODULES.find((m) => m.id === activeModule);
-    return activeModuleConfig?.title || "";
-  };
-
-  const handleEnterBuilder = () => {
-    playPickupSound();
-    setCurrentView("builder");
-    setShowAllModules(false);
-  };
-
-  const handleEnterArena = () => {
-    playPickupSound();
-    setCurrentView("arena");
-  };
-
-  const handleBackToLanding = () => {
-    playPickupSound();
-    setCurrentView("landing");
-    setActiveModule(null);
-    setShowAllModules(false);
-  };
+    const module = MODULES.find(m => m.id === activeModule)
+    return module?.title || ''
+  }
 
   return (
     <main className="min-h-screen">
       <Header />
-
-      {currentView === "landing" && !activeModule ? (
-        // 50/50 Split Landing View
-        <div className="container mx-auto px-4 py-8 md:py-16 max-w-6xl">
-          {/* Hero tagline */}
-          <div className="text-center mb-12 md:mb-16">
-            <h1
-              className="text-3xl md:text-5xl lg:text-6xl text-feedgod-primary dark:text-feedgod-neon-pink mb-4"
-              style={{
-                fontFamily: "Arial, sans-serif",
-                fontWeight: 900,
-                letterSpacing: "-2px",
-                lineHeight: "1.2",
-              }}
-            >
-              create oracles like a god
-            </h1>
-            <p className="text-sm md:text-base text-feedgod-pink-500 dark:text-feedgod-neon-cyan/80 max-w-2xl mx-auto">
-              <span className="text-feedgod-dark dark:text-white font-medium">
-                Any data. Any chain. No code.
-              </span>
-            </p>
+      
+      {!activeModule ? (
+        // Landing view: Hero + Module Grid
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <HeroSection />
           </div>
-
-          {/* 50/50 Split Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-            {/* The Builder Card */}
-            <div className="group relative p-8 md:p-10 bg-white/60 dark:bg-feedgod-dark-secondary/50 backdrop-blur-sm rounded-2xl border border-feedgod-pink-200/60 dark:border-feedgod-dark-accent/40 hover:border-feedgod-primary/50 dark:hover:border-feedgod-neon-pink/50 transition-all duration-300 hover:shadow-xl hover:shadow-feedgod-primary/10 dark:hover:shadow-feedgod-neon-pink/10 overflow-hidden flex flex-col min-h-[400px]">
-              {/* Background decorative icon */}
-              <div className="absolute -bottom-8 -right-8 pointer-events-none">
-                <Wrench
-                  className="w-48 h-48 text-feedgod-primary/[0.06] dark:text-feedgod-neon-pink/[0.08] transform rotate-12 group-hover:rotate-6 group-hover:scale-110 transition-all duration-500"
-                  strokeWidth={1}
+          
+          {/* Command Bar - centered with breathing room */}
+          <div className="mb-16 max-w-xl mx-auto">
+            <CommandBar
+              onModuleNavigate={handleSmartNavigate}
+              onSearch={handleSearch}
+              isHomepage={true}
+              showExamples={true}
+            />
+          </div>
+          
+          {/* Module Selection Grid */}
+          <div className="pb-24 max-w-4xl mx-auto">
+            {/* Section header - eyebrow style */}
+            <div className="text-center mb-10">
+              <span className="eyebrow">Start to build</span>
+            </div>
+            
+            {/* Grid with consistent spacing */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 animate-fade-in animate-delay-4">
+              {MODULES.map((module) => (
+                <ModuleCard
+                  key={module.id}
+                  icon={module.icon}
+                  backgroundIcon={module.backgroundIcon}
+                  title={module.title}
+                  description={module.description}
+                  onClick={() => handleModuleSelect(module.id)}
                 />
-              </div>
-
-              {/* Gradient overlay on hover */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-feedgod-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-              <div className="relative z-10 flex flex-col flex-1">
-                {/* Icon */}
-                <div className="w-16 h-16 mb-6 rounded-xl bg-feedgod-pink-100/80 dark:bg-feedgod-dark-accent/50 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <Wrench className="w-8 h-8 text-feedgod-primary dark:text-feedgod-neon-pink" />
-                </div>
-
-                {/* Title */}
-                <h2 className="text-2xl md:text-3xl font-bold text-feedgod-dark dark:text-white mb-3 group-hover:text-feedgod-primary dark:group-hover:text-feedgod-neon-pink transition-colors">
-                  The Builder
-                </h2>
-
-                {/* Description */}
-                <p className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 leading-relaxed mb-6">
-                  Create custom oracles with our visual builder. Deploy price
-                  feeds, prediction markets, VRF, weather data, sports outcomes,
-                  and more — all without writing code.
-                </p>
-
-                {/* Search bar preview */}
-                <div className="flex-1 flex flex-col justify-end">
-                  <div className="relative mb-6">
-                    <div className="flex items-center gap-3 px-4 py-3 bg-feedgod-pink-50/80 dark:bg-feedgod-dark-accent/30 rounded-xl border border-feedgod-pink-200/50 dark:border-feedgod-dark-accent/50">
-                      <Search className="w-5 h-5 text-feedgod-pink-400 dark:text-feedgod-neon-cyan/50" />
-                      <span className="text-feedgod-pink-400 dark:text-feedgod-neon-cyan/50 text-sm">
-                        Describe your oracle or search existing feeds...
-                      </span>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={handleEnterBuilder}
-                    className="w-full py-4 px-6 bg-feedgod-primary dark:bg-feedgod-neon-pink text-white font-semibold rounded-xl hover:bg-feedgod-primary/90 dark:hover:bg-feedgod-neon-pink/90 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-feedgod-primary/20 dark:shadow-feedgod-neon-pink/20"
-                  >
-                    Enter The Builder
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* The Arena Card - Gamified Aesthetic */}
-            <div className="group relative p-8 md:p-10 bg-gradient-to-br from-feedgod-neon-purple/5 via-white/60 to-feedgod-neon-cyan/5 dark:from-feedgod-neon-purple/10 dark:via-feedgod-dark-secondary/50 dark:to-feedgod-neon-cyan/10 backdrop-blur-sm rounded-2xl border-2 border-feedgod-neon-purple/30 dark:border-feedgod-neon-cyan/30 hover:border-feedgod-neon-purple/60 dark:hover:border-feedgod-neon-cyan/60 transition-all duration-300 hover:shadow-2xl hover:shadow-feedgod-neon-purple/20 dark:hover:shadow-feedgod-neon-cyan/20 overflow-hidden flex flex-col min-h-[400px]">
-              {/* Animated background effects */}
-              <div className="absolute inset-0 opacity-30 dark:opacity-40 pointer-events-none">
-                <div className="absolute top-0 left-0 w-32 h-32 bg-feedgod-neon-purple/20 dark:bg-feedgod-neon-purple/30 rounded-full blur-3xl animate-pulse" />
-                <div
-                  className="absolute bottom-0 right-0 w-40 h-40 bg-feedgod-neon-cyan/20 dark:bg-feedgod-neon-cyan/30 rounded-full blur-3xl animate-pulse"
-                  style={{ animationDelay: "1s" }}
-                />
-              </div>
-
-              {/* Background decorative icon */}
-              <div className="absolute -bottom-8 -right-8 pointer-events-none">
-                <Swords
-                  className="w-48 h-48 text-feedgod-neon-purple/[0.12] dark:text-feedgod-neon-cyan/[0.15] transform -rotate-12 group-hover:-rotate-6 group-hover:scale-110 transition-all duration-500"
-                  strokeWidth={1}
-                />
-              </div>
-
-              {/* Gradient overlay on hover */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-feedgod-neon-purple/10 dark:from-feedgod-neon-cyan/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-              <div className="relative z-10 flex flex-col flex-1">
-                {/* Icon with glow effect */}
-                <div className="w-16 h-16 mb-6 rounded-xl bg-gradient-to-br from-feedgod-neon-purple/20 to-feedgod-neon-cyan/20 dark:from-feedgod-neon-purple/30 dark:to-feedgod-neon-cyan/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-feedgod-neon-purple/20 dark:shadow-feedgod-neon-cyan/30">
-                  <Swords className="w-8 h-8 text-feedgod-neon-purple dark:text-feedgod-neon-cyan" />
-                </div>
-
-                {/* Title */}
-                <h2 className="text-2xl md:text-3xl font-bold text-feedgod-dark dark:text-white mb-2 group-hover:text-feedgod-neon-purple dark:group-hover:text-feedgod-neon-cyan transition-colors">
-                  The Arena
-                </h2>
-
-                {/* Tagline */}
-                <p className="text-lg font-semibold text-feedgod-neon-purple dark:text-feedgod-neon-cyan mb-4 tracking-wide">
-                  Predict. Win. Earn.
-                </p>
-
-                {/* Description */}
-                <p className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 leading-relaxed mb-6">
-                  Enter prediction markets powered by on-chain oracles. Make
-                  predictions on real-world events, compete with other traders,
-                  and earn rewards when you&apos;re right.
-                </p>
-
-                {/* CTA Section */}
-                <div className="flex-1 flex flex-col justify-end">
-                  <button
-                    onClick={handleEnterArena}
-                    className="w-full py-4 px-6 bg-gradient-to-r from-feedgod-neon-purple to-feedgod-neon-cyan dark:from-feedgod-neon-cyan dark:to-feedgod-neon-purple text-white font-bold rounded-xl hover:opacity-90 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-xl shadow-feedgod-neon-purple/30 dark:shadow-feedgod-neon-cyan/30 text-lg tracking-wide"
-                  >
-                    ⚔️ Enter The Arena
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : currentView === "builder" && !activeModule ? (
-        // Builder view: Module Selection
-        <div className="container mx-auto px-4 max-w-5xl">
-          {/* Back to landing */}
-          <div className="py-6">
-            <button
-              onClick={handleBackToLanding}
-              className="inline-flex items-center gap-2 text-feedgod-pink-500 dark:text-feedgod-neon-cyan/80 hover:text-feedgod-primary dark:hover:text-feedgod-neon-pink transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              <span className="text-sm font-medium">Back to home</span>
-            </button>
-          </div>
-
-          {/* Prominent Natural Language Search Bar */}
-          <div className="mb-8 md:mb-12">
-            <div className="text-center mb-6">
-              <h2 className="text-xl md:text-2xl font-bold text-feedgod-dark dark:text-white mb-2">
-                What oracle do you want to build?
-              </h2>
-              <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
-                Describe what you need in natural language
-              </p>
-            </div>
-            <div className="max-w-3xl mx-auto">
-              <OracleSearchBar
-                onModuleNavigate={handleSmartNavigate}
-                autoFocus
-              />
-            </div>
-          </div>
-
-          {/* Module Tiles Grid */}
-          <div className="pb-20">
-            {!showAllModules ? (
-              <div className="max-w-3xl mx-auto">
-                <ModuleTiles
-                  modules={MODULES.map((m) => ({
-                    id: m.id,
-                    title: m.title,
-                    icon: m.icon,
-                  }))}
-                  onModuleSelect={(id) => handleModuleSelect(id as BuilderType)}
-                  onViewAll={() => setShowAllModules(true)}
-                  maxVisible={8}
-                />
-              </div>
-            ) : (
-              <>
-                <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-sm font-medium text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 uppercase tracking-wider">
-                    All Modules
-                  </h2>
-                  <button
-                    onClick={() => setShowAllModules(false)}
-                    className="text-sm font-medium text-feedgod-primary dark:text-feedgod-neon-pink hover:text-feedgod-primary/80 dark:hover:text-feedgod-neon-pink/80 transition-colors flex items-center gap-1"
-                  >
-                    <ArrowLeft className="w-4 h-4" />
-                    Show less
-                  </button>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                  {MODULES.map((module) => (
-                    <ModuleCard
-                      key={module.id}
-                      icon={module.icon}
-                      backgroundIcon={module.backgroundIcon}
-                      title={module.title}
-                      description={module.description}
-                      onClick={() => handleModuleSelect(module.id)}
-                    />
-                  ))}
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      ) : currentView === "arena" ? (
-        // Arena market listing view
-        <div className="container mx-auto px-4 py-8 max-w-6xl">
-          {/* Back to landing */}
-          <div className="py-6">
-            <button
-              onClick={handleBackToLanding}
-              className="inline-flex items-center gap-2 text-feedgod-pink-500 dark:text-feedgod-neon-cyan/80 hover:text-feedgod-neon-purple dark:hover:text-feedgod-neon-cyan transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              <span className="text-sm font-medium">Back to home</span>
-            </button>
-          </div>
-
-          {/* Arena Header */}
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-3 mb-4">
-              <Swords className="w-10 h-10 text-feedgod-neon-purple dark:text-feedgod-neon-cyan" />
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-feedgod-dark dark:text-white">
-                The Arena
-              </h1>
-            </div>
-            <p className="text-xl font-semibold text-feedgod-neon-purple dark:text-feedgod-neon-cyan mb-2">
-              Predict. Win. Earn.
-            </p>
-            <p className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70 max-w-2xl mx-auto">
-              Browse active prediction markets and place your bets on real-world
-              outcomes.
-            </p>
-          </div>
-
-          {/* Market Categories */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Crypto Markets */}
-            <div className="group relative p-6 bg-gradient-to-br from-feedgod-neon-purple/5 to-transparent dark:from-feedgod-neon-purple/10 dark:to-feedgod-dark-secondary/50 backdrop-blur-sm rounded-2xl border border-feedgod-neon-purple/20 dark:border-feedgod-neon-purple/30 hover:border-feedgod-neon-purple/50 transition-all duration-300 hover:shadow-lg hover:shadow-feedgod-neon-purple/10">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-xl bg-feedgod-neon-purple/10 dark:bg-feedgod-neon-purple/20 flex items-center justify-center">
-                  <TrendingUp className="w-6 h-6 text-feedgod-neon-purple" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-feedgod-dark dark:text-white">
-                    Crypto
-                  </h3>
-                  <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/60">
-                    12 active markets
-                  </p>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
-                    BTC &gt; $100k by Feb?
-                  </span>
-                  <span className="font-medium text-green-500">68%</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
-                    ETH flips BTC 2025?
-                  </span>
-                  <span className="font-medium text-red-400">12%</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Sports Markets */}
-            <div className="group relative p-6 bg-gradient-to-br from-feedgod-neon-cyan/5 to-transparent dark:from-feedgod-neon-cyan/10 dark:to-feedgod-dark-secondary/50 backdrop-blur-sm rounded-2xl border border-feedgod-neon-cyan/20 dark:border-feedgod-neon-cyan/30 hover:border-feedgod-neon-cyan/50 transition-all duration-300 hover:shadow-lg hover:shadow-feedgod-neon-cyan/10">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-xl bg-feedgod-neon-cyan/10 dark:bg-feedgod-neon-cyan/20 flex items-center justify-center">
-                  <Trophy className="w-6 h-6 text-feedgod-neon-cyan dark:text-feedgod-neon-cyan" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-feedgod-dark dark:text-white">
-                    Sports
-                  </h3>
-                  <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/60">
-                    24 active markets
-                  </p>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
-                    Super Bowl winner?
-                  </span>
-                  <span className="font-medium text-feedgod-neon-purple dark:text-feedgod-neon-cyan">
-                    Live
-                  </span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
-                    NBA Finals MVP?
-                  </span>
-                  <span className="font-medium text-feedgod-neon-purple dark:text-feedgod-neon-cyan">
-                    Live
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Politics Markets */}
-            <div className="group relative p-6 bg-gradient-to-br from-feedgod-primary/5 to-transparent dark:from-feedgod-neon-pink/10 dark:to-feedgod-dark-secondary/50 backdrop-blur-sm rounded-2xl border border-feedgod-primary/20 dark:border-feedgod-neon-pink/30 hover:border-feedgod-primary/50 dark:hover:border-feedgod-neon-pink/50 transition-all duration-300 hover:shadow-lg hover:shadow-feedgod-primary/10 dark:hover:shadow-feedgod-neon-pink/10">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-xl bg-feedgod-primary/10 dark:bg-feedgod-neon-pink/20 flex items-center justify-center">
-                  <Scale className="w-6 h-6 text-feedgod-primary dark:text-feedgod-neon-pink" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-feedgod-dark dark:text-white">
-                    Politics
-                  </h3>
-                  <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/60">
-                    8 active markets
-                  </p>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
-                    Fed rate cut Mar?
-                  </span>
-                  <span className="font-medium text-green-500">42%</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
-                    TikTok ban 2025?
-                  </span>
-                  <span className="font-medium text-red-400">28%</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Weather Markets */}
-            <div className="group relative p-6 bg-gradient-to-br from-blue-500/5 to-transparent dark:from-blue-400/10 dark:to-feedgod-dark-secondary/50 backdrop-blur-sm rounded-2xl border border-blue-500/20 dark:border-blue-400/30 hover:border-blue-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-xl bg-blue-500/10 dark:bg-blue-400/20 flex items-center justify-center">
-                  <Cloud className="w-6 h-6 text-blue-500 dark:text-blue-400" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-feedgod-dark dark:text-white">
-                    Weather
-                  </h3>
-                  <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/60">
-                    6 active markets
-                  </p>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
-                    NYC snow &gt; 12&quot; Jan?
-                  </span>
-                  <span className="font-medium text-green-500">55%</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
-                    LA wildfire Feb?
-                  </span>
-                  <span className="font-medium text-red-400">31%</span>
-                </div>
-              </div>
-            </div>
-
-            {/* AI/Tech Markets */}
-            <div className="group relative p-6 bg-gradient-to-br from-amber-500/5 to-transparent dark:from-amber-400/10 dark:to-feedgod-dark-secondary/50 backdrop-blur-sm rounded-2xl border border-amber-500/20 dark:border-amber-400/30 hover:border-amber-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/10">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-xl bg-amber-500/10 dark:bg-amber-400/20 flex items-center justify-center">
-                  <Brain className="w-6 h-6 text-amber-500 dark:text-amber-400" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-feedgod-dark dark:text-white">
-                    AI & Tech
-                  </h3>
-                  <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/60">
-                    15 active markets
-                  </p>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
-                    GPT-5 release Q1?
-                  </span>
-                  <span className="font-medium text-green-500">73%</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-feedgod-pink-500 dark:text-feedgod-neon-cyan/70">
-                    Apple AR glasses 2025?
-                  </span>
-                  <span className="font-medium text-red-400">22%</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Create Your Own */}
-            <div
-              onClick={() => handleModuleSelect("prediction")}
-              className="group relative p-6 bg-gradient-to-br from-feedgod-neon-purple/5 via-transparent to-feedgod-neon-cyan/5 dark:from-feedgod-neon-purple/10 dark:via-feedgod-dark-secondary/50 dark:to-feedgod-neon-cyan/10 backdrop-blur-sm rounded-2xl border-2 border-dashed border-feedgod-neon-purple/30 dark:border-feedgod-neon-cyan/30 hover:border-feedgod-neon-purple/60 dark:hover:border-feedgod-neon-cyan/60 transition-all duration-300 hover:shadow-lg cursor-pointer flex flex-col items-center justify-center text-center min-h-[180px]"
-            >
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-feedgod-neon-purple/10 to-feedgod-neon-cyan/10 dark:from-feedgod-neon-purple/20 dark:to-feedgod-neon-cyan/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                <Plus className="w-6 h-6 text-feedgod-neon-purple dark:text-feedgod-neon-cyan" />
-              </div>
-              <h3 className="font-bold text-feedgod-dark dark:text-white mb-1">
-                Create Market
-              </h3>
-              <p className="text-sm text-feedgod-pink-500 dark:text-feedgod-neon-cyan/60">
-                Launch your own prediction market
-              </p>
+              ))}
             </div>
           </div>
         </div>
       ) : (
         // Builder view
-        <div className="container mx-auto px-4 py-6">
+        <div className="max-w-7xl mx-auto px-4 py-6">
           {/* Breadcrumb / Back navigation */}
           <div className="flex items-center justify-between mb-6">
             <button
               onClick={handleBack}
-              className="inline-flex items-center gap-2 text-feedgod-pink-500 dark:text-feedgod-neon-cyan/80 hover:text-feedgod-primary dark:hover:text-feedgod-neon-pink transition-colors"
+              className="inline-flex items-center gap-2 text-gray-400 hover:text-feedgod-primary transition-colors duration-150"
             >
               <ArrowLeft className="w-4 h-4" />
               <span className="text-sm font-medium">Back to modules</span>
             </button>
-
+            
             <div className="flex items-center gap-3">
-              {activeModule === "feed" && (
+              {activeModule === 'feed' && (
                 <button
                   onClick={() => setShowBulkCreator(true)}
-                  className="px-4 py-2 bg-feedgod-pink-100 dark:bg-feedgod-dark-secondary hover:bg-feedgod-pink-200 dark:hover:bg-feedgod-dark-accent rounded-lg text-feedgod-dark dark:text-feedgod-neon-cyan text-sm font-medium transition-colors flex items-center gap-2"
+                  className="px-4 py-2 bg-[#252620] hover:bg-[#2a2b25] border border-[#3a3b35] hover:border-[#4a4b45] rounded-lg text-white text-sm font-medium transition-all duration-150 flex items-center gap-2"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Bulk Create</span>
@@ -836,7 +336,7 @@ export default function Home() {
 
           {/* Module Title */}
           <div className="mb-6">
-            <h1 className="text-2xl font-bold text-feedgod-dark dark:text-white">
+            <h1 className="text-xl font-semibold text-white tracking-tight">
               {getModuleTitle()}
             </h1>
           </div>
@@ -849,12 +349,12 @@ export default function Home() {
               onVRFGenerated={setVRFConfig}
               onSecretGenerated={setSecretConfig}
               onSearch={handleSearch}
-              activeTab={activeModule ?? undefined}
+              activeTab={activeModule}
             />
           </div>
 
           {/* Builder Content */}
-          <div className="bg-white/40 dark:bg-feedgod-dark-secondary/30 rounded-2xl border border-feedgod-pink-200/50 dark:border-feedgod-dark-accent/30 backdrop-blur-sm p-6">
+          <div className="bg-[#252620]/50 rounded-xl border border-[#3a3b35] backdrop-blur-sm p-6">
             {renderBuilder()}
           </div>
         </div>
@@ -867,5 +367,5 @@ export default function Home() {
         onFeedsGenerated={handleBulkFeedsGenerated}
       />
     </main>
-  );
+  )
 }

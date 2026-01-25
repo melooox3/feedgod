@@ -1,0 +1,139 @@
+{
+  "name": "FeedGod Homepage",
+  "description": "The FeedGod Homepage serves as the unified entry point for two distinct user experiences: The Builder (oracle deployment utility for developers) and The Arena (prediction market platform for traders).",
+  "branchName": "ralph/feedgod-homepage",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Create homepage layout with 50/50 split",
+      "description": "As a visitor, I want to see both The Builder and The Arena options with equal prominence so that I can quickly identify which experience suits my needs.",
+      "acceptanceCriteria": [
+        "Homepage displays two distinct sections/cards for Builder and Arena",
+        "Both sections have equal visual weight (size, positioning)",
+        "Builder section includes search bar and brief description",
+        "Arena section includes 'Enter Arena' CTA and brief description",
+        "Layout is responsive (stacks vertically on mobile)",
+        "pnpm typecheck passes",
+        "pnpm lint passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": "",
+      "dependsOn": [],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-002",
+      "title": "Implement wallet connection component",
+      "description": "As a user, I want to connect my wallet from the homepage so that my connection persists when I navigate to Builder or Arena.",
+      "acceptanceCriteria": [
+        "Wallet connect button visible in navigation/header",
+        "Uses existing wallet adapter setup in codebase",
+        "Connection state stored in global context/store",
+        "Connected wallet address displayed (truncated format)",
+        "Disconnect option available",
+        "Connection persists across page navigation",
+        "pnpm typecheck passes",
+        "pnpm lint passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": "",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-003",
+      "title": "Implement natural language search bar",
+      "description": "As a developer, I want to search for oracle types using natural language so that I can quickly find the module I need.",
+      "acceptanceCriteria": [
+        "Search bar prominently displayed in Builder section",
+        "Accepts natural language input (e.g., 'BTC price', 'ETH/USD')",
+        "Shows autocomplete/suggestions as user types",
+        "Matches search terms to available Switchboard oracle modules",
+        "Pressing Enter or clicking a result navigates to Builder with module pre-selected",
+        "pnpm typecheck passes",
+        "pnpm lint passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": "",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-004",
+      "title": "Display clickable module tiles",
+      "description": "As a developer, I want to see popular oracle modules as clickable tiles so that I can quickly select one without searching.",
+      "acceptanceCriteria": [
+        "Display grid of module tiles below search bar",
+        "Each tile shows module name and icon/visual",
+        "Tiles are clickable and navigate to Builder with module pre-selected",
+        "Show at least 6-8 popular modules",
+        "'View All' option to see complete module list",
+        "pnpm typecheck passes",
+        "pnpm lint passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": "",
+      "dependsOn": [
+        "US-003"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-005",
+      "title": "Implement Arena entry CTA",
+      "description": "As a trader, I want a clear call-to-action to enter The Arena so that I can quickly access prediction markets.",
+      "acceptanceCriteria": [
+        "'Enter Arena' button/CTA prominently displayed",
+        "Visual styling differentiates it from Builder section (gamified aesthetic)",
+        "Clicking CTA navigates to Arena market listing view",
+        "Brief tagline explains Arena purpose (e.g., 'Predict. Win. Earn.')",
+        "pnpm typecheck passes",
+        "pnpm lint passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 5,
+      "passes": true,
+      "notes": "",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-006",
+      "title": "Implement network detection and switching",
+      "description": "As a user, I want the app to detect my connected network and prompt me to switch if needed so that I can interact with the correct chain.",
+      "acceptanceCriteria": [
+        "App detects currently connected chain on wallet connection",
+        "If chain doesn't match required network, show switch prompt",
+        "Switch prompt includes button to trigger network switch in wallet",
+        "After successful switch, UI updates to reflect correct network",
+        "Handle switch rejection gracefully with user feedback",
+        "pnpm typecheck passes",
+        "pnpm lint passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": "",
+      "dependsOn": [
+        "US-002"
+      ]
+    }
+  ],
+  "metadata": {
+    "updatedAt": "2026-01-24T14:21:33.942Z"
+  }
+}

@@ -64,7 +64,7 @@ export interface SecretConfig {
   userId?: string
 }
 
-export type BuilderType = 'feed' | 'function' | 'vrf' | 'secret' | 'prediction' | 'weather' | 'sports' | 'social' | 'ai-judge' | 'custom-api'
+export type BuilderType = 'feed' | 'function' | 'vrf' | 'secret' | 'prediction' | 'weather' | 'sports' | 'social' | 'ai-judge' | 'custom-api' | 'governance'
 
 // Parsed prompt data from intent detection
 export interface ParsedPrompt {

@@ -36,8 +36,8 @@ export default function AggregatorPanel({ config, onUpdate }: AggregatorPanelPro
               onClick={() => updateAggregator({ type })}
               className={`p-4 rounded-lg border-2 transition-colors text-left ${
                 aggregator.type === type
-                  ? 'border-switchboard-primary bg-switchboard-primary/10'
-                  : 'border-switchboard-dark-lighter bg-switchboard-dark-lighter hover:border-switchboard-dark-lighter/80'
+                  ? 'border-feedgod-primary dark:text-feedgod-primary bg-feedgod-primary dark:text-feedgod-primary/10'
+                  : 'border-feedgod-dark-secondary bg-feedgod-dark-secondary hover:border-feedgod-dark-secondary/80'
               }`}
             >
               <div className="font-medium text-white capitalize">{type}</div>
@@ -60,7 +60,7 @@ export default function AggregatorPanel({ config, onUpdate }: AggregatorPanelPro
             type="number"
             value={aggregator.minSources || 2}
             onChange={(e) => updateAggregator({ minSources: parseInt(e.target.value) || 2 })}
-            className="w-full bg-switchboard-dark-lighter border border-switchboard-dark-lighter rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-switchboard-primary"
+            className="w-full bg-feedgod-dark-secondary border border-feedgod-dark-secondary rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary"
             min="1"
             max={config.dataSources.length}
           />
@@ -77,7 +77,7 @@ export default function AggregatorPanel({ config, onUpdate }: AggregatorPanelPro
             type="number"
             value={aggregator.deviationThreshold ? aggregator.deviationThreshold * 100 : 5}
             onChange={(e) => updateAggregator({ deviationThreshold: (parseFloat(e.target.value) || 5) / 100 })}
-            className="w-full bg-switchboard-dark-lighter border border-switchboard-dark-lighter rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-switchboard-primary"
+            className="w-full bg-feedgod-dark-secondary border border-feedgod-dark-secondary rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary"
             min="0"
             max="100"
             step="0.1"
@@ -88,7 +88,7 @@ export default function AggregatorPanel({ config, onUpdate }: AggregatorPanelPro
         </div>
       </div>
 
-      <div className="bg-switchboard-dark-lighter rounded-lg p-4 border border-switchboard-dark-lighter">
+      <div className="bg-feedgod-dark-secondary rounded-lg p-4 border border-feedgod-dark-secondary">
         <h4 className="text-sm font-medium text-white mb-2">Current Configuration</h4>
         <div className="space-y-1 text-sm text-gray-400">
           <div>Type: <span className="text-white capitalize">{aggregator.type}</span></div>
