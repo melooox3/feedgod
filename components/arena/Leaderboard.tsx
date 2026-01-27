@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Trophy, Medal, Award, Crown, Flame, TrendingUp } from 'lucide-react'
-import { getLeaderboard, getArenaUser, formatSwtch, formatPoints } from '@/lib/arena-storage'
+import { getLeaderboard, getArenaUser, formatSwtch, formatPoints } from '@/lib/arena/arena-storage'
 import { LeaderboardEntry } from '@/types/arena'
 
 type TimeFilter = 'weekly' | 'monthly' | 'alltime'

@@ -7,7 +7,7 @@ import {
   formatValue,
   isValidUrl,
   generateJobDefinition
-} from '@/lib/custom-api'
+} from '@/lib/api/custom-api'
 import type { TransformStep } from '@/types/custom-api'
 
 describe('custom-api', () => {

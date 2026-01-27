@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
-import { usePriceFetching, PRICE_REFRESH_INTERVAL } from '@/hooks/usePriceFetching'
+import { usePriceFetching, PRICE_REFRESH_INTERVAL } from '@/lib/hooks/usePriceFetching'
 import type { FeedConfig } from '@/types/feed'
 
 // Mock price-api module
-vi.mock('@/lib/price-api', () => ({
+vi.mock('@/lib/api/price-api', () => ({
   fetchSurgePrice: vi.fn().mockResolvedValue({
     price: 95000,
     volume24h: 50000000000,
@@ -28,7 +28,7 @@ vi.mock('@/lib/logger', () => ({
   },
 }))
 
-import { fetchSurgePrice, fetchSourcePrice } from '@/lib/price-api'
+import { fetchSurgePrice, fetchSourcePrice } from '@/lib/api/price-api'
 
 describe('usePriceFetching', () => {
   const mockConfig: FeedConfig = {

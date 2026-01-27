@@ -9,8 +9,8 @@ import {
   subtractFromBalance, 
   getUserId, 
   DEMO_MODE 
-} from '@/lib/arena-wallet'
-import { playPickupSound } from '@/lib/sound-utils'
+} from '@/lib/arena/arena-wallet'
+import { playPickupSound } from '@/lib/utils/sound-utils'
 
 interface WithdrawModalProps {
   isOpen: boolean

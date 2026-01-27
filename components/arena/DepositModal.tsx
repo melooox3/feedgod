@@ -11,8 +11,8 @@ import {
   formatUsdc,
   DEMO_MODE,
   WALLET_CONFIG
-} from '@/lib/arena-wallet'
-import { playPickupSound } from '@/lib/sound-utils'
+} from '@/lib/arena/arena-wallet'
+import { playPickupSound } from '@/lib/utils/sound-utils'
 
 interface DepositModalProps {
   isOpen: boolean

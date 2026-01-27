@@ -8,7 +8,7 @@ import {
   getWeatherIcon,
   formatTemperature,
   formatWeatherValue
-} from '@/lib/weather-api'
+} from '@/lib/api/weather-api'
 import type { City, WeatherMetric } from '@/types/weather'
 
 const mockCity: City = {

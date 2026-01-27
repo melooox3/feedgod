@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Flame, Trophy } from 'lucide-react'
-import { getUserStats, formatSwtch, formatPoints } from '@/lib/arena-storage'
+import { getUserStats, formatSwtch, formatPoints } from '@/lib/arena/arena-storage'
 
 interface PointsDisplayProps {
   compact?: boolean

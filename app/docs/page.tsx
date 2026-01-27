@@ -37,7 +37,7 @@ import {
   AlertTriangle,
   Info
 } from 'lucide-react'
-import Header from '@/components/Header'
+import Header from '@/components/navigation/Header'
 
 // Navigation structure
 const NAV_SECTIONS = [

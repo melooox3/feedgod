@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { cn, formatPrice, formatTimeAgo } from '@/lib/utils'
+import { cn, formatPrice, formatTimeAgo } from '@/lib/utils/utils'
 
 describe('cn', () => {
   it('merges class names correctly', () => {

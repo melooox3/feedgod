@@ -2,25 +2,25 @@
 
 import { useState, useEffect } from 'react'
 import { Database, Code, Dice6, Key, ArrowLeft, Plus, Target, TrendingUp, Scale, Terminal, Sparkles, Shield, Cloud, Thermometer, Trophy, Gamepad2, Users, Heart, AtSign, Brain, Zap, Globe, Link2, Landmark, Vote } from 'lucide-react'
-import FeedBuilder from '@/components/FeedBuilder'
-import FunctionBuilder from '@/components/FunctionBuilder'
-import VRFBuilder from '@/components/VRFBuilder'
-import SecretBuilder from '@/components/SecretBuilder'
-import PredictionMarketBuilder from '@/components/PredictionMarketBuilder'
-import WeatherBuilder from '@/components/WeatherBuilder'
-import SportsBuilder from '@/components/SportsBuilder'
-import SocialBuilder from '@/components/SocialBuilder'
-import AIJudgeBuilder from '@/components/AIJudgeBuilder'
-import CustomAPIBuilder from '@/components/CustomAPIBuilder'
-import GovernanceBuilder from '@/components/GovernanceBuilder'
-import CommandBar from '@/components/CommandBar'
-import Header from '@/components/Header'
-import HeroSection from '@/components/HeroSection'
-import ModuleCard from '@/components/ModuleCard'
-import BulkFeedCreator from '@/components/BulkFeedCreator'
+import FeedBuilder from '@/components/builders/FeedBuilder'
+import FunctionBuilder from '@/components/builders/FunctionBuilder'
+import VRFBuilder from '@/components/builders/VRFBuilder'
+import SecretBuilder from '@/components/builders/SecretBuilder'
+import PredictionMarketBuilder from '@/components/builders/PredictionMarketBuilder'
+import WeatherBuilder from '@/components/builders/WeatherBuilder'
+import SportsBuilder from '@/components/builders/SportsBuilder'
+import SocialBuilder from '@/components/builders/SocialBuilder'
+import AIJudgeBuilder from '@/components/builders/AIJudgeBuilder'
+import CustomAPIBuilder from '@/components/builders/CustomAPIBuilder'
+import GovernanceBuilder from '@/components/builders/GovernanceBuilder'
+import CommandBar from '@/components/navigation/CommandBar'
+import Header from '@/components/navigation/Header'
+import HeroSection from '@/components/layout/HeroSection'
+import ModuleCard from '@/components/cards/ModuleCard'
+import BulkFeedCreator from '@/components/forms/BulkFeedCreator'
 import { FeedConfig } from '@/types/feed'
 import { FunctionConfig, VRFConfig, SecretConfig, BuilderType } from '@/types/switchboard'
-import { playPickupSound } from '@/lib/sound-utils'
+import { playPickupSound } from '@/lib/utils/sound-utils'
 
 const MODULES = [
   {
@@ -287,7 +287,7 @@ export default function Home() {
           </div>
           
           {/* Module Selection Grid */}
-          <div className="pb-24 max-w-4xl mx-auto">
+          <div id="modules" className="pb-24 max-w-4xl mx-auto scroll-mt-24">
             {/* Section header - eyebrow style */}
             <div className="text-center mb-10">
               <span className="eyebrow">Start to build</span>

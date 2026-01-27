@@ -1,0 +1,262 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { Play, Save, Settings, Key, Eye, EyeOff } from 'lucide-react'
+import { SecretConfig } from '@/types/switchboard'
+import { playPickupSound } from '@/lib/utils/sound-utils'
+import { useToast } from '@/components/shared/Toast'
+import ChainSelector from '@/components/selectors/ChainSelector'
+
+interface SecretBuilderProps {
+  config: SecretConfig | null
+  onConfigChange: (config: SecretConfig) => void
+}
+
+export default function SecretBuilder({ config, onConfigChange }: SecretBuilderProps) {
+  const [localConfig, setLocalConfig] = useState<SecretConfig | null>(config)
+  const [showValue, setShowValue] = useState(false)
+  const toast = useToast()
+
+  useEffect(() => {
+    if (config) {
+      setLocalConfig(config)
+    } else {
+      const defaultConfig: SecretConfig = {
+        name: 'My Secret',
+        description: '',
+        key: 'API_KEY',
+        value: '',
+        type: 'api_key',
+        scope: 'global',
+        associatedResources: [],
+        blockchain: 'solana',
+        network: 'mainnet',
+        enabled: true,
+      }
+      setLocalConfig(defaultConfig)
+      onConfigChange(defaultConfig)
+    }
+  }, [config, onConfigChange])
+
+  const handleConfigUpdate = (updates: Partial<SecretConfig>) => {
+    setLocalConfig(prev => {
+      if (!prev) return prev
+      const updated = { ...prev, ...updates }
+      onConfigChange(updated)
+      return updated
+    })
+  }
+
+  const handleSave = async () => {
+    if (!localConfig) return
+    playPickupSound()
+    const secretToSave: SecretConfig = {
+      ...localConfig,
+      id: localConfig.id || `secret-${Date.now()}`,
+      updatedAt: new Date(),
+      createdAt: localConfig.createdAt || new Date(),
+    }
+    
+    const savedSecrets = localStorage.getItem('savedSecrets')
+    const secrets = savedSecrets ? JSON.parse(savedSecrets) : []
+    const existingIndex = secrets.findIndex((s: SecretConfig) => s.id === secretToSave.id)
+    
+    if (existingIndex >= 0) {
+      secrets[existingIndex] = secretToSave
+    } else {
+      secrets.push(secretToSave)
+    }
+    
+    localStorage.setItem('savedSecrets', JSON.stringify(secrets))
+    toast.success('Secret saved! Check your profile to manage saved secrets.')
+  }
+
+  const handleDeploy = async () => {
+    playPickupSound()
+    if (!localConfig) return
+    console.log('Deploying secret:', localConfig)
+    toast.success('Secret deployed! (Demo - in production, this would deploy to Switchboard)')
+  }
+
+  if (!localConfig) {
+    return (
+      <div className="bg-[#252620] rounded-lg border border-[#3a3b35] p-12 text-center">
+        <div className="text-xl font-semibold text-feedgod-primary dark:text-feedgod-primary mb-2">Loading Secrets...</div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Module Header */}
+      <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-lg bg-[#ff0d6e] flex items-center justify-center">
+            <Key className="w-4 h-4 text-white" />
+          </div>
+          <div>
+            <h2 className="text-lg font-semibold text-white">
+              Secrets
+            </h2>
+            <p className="text-sm text-gray-400">
+              Securely store and manage API keys and sensitive data for your oracle functions
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Column - Configuration */}
+        <div className="lg:col-span-2 space-y-6">
+          <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <Settings className="w-5 h-5 text-feedgod-primary dark:text-feedgod-primary" />
+              Secret Configuration
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-400 mb-2">Secret Name</label>
+                <input
+                  type="text"
+                  value={localConfig.name}
+                  onChange={(e) => handleConfigUpdate({ name: e.target.value })}
+                  className="w-full bg-[#252620] border border-[#3a3b35] rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary dark:focus:ring-feedgod-primary dark:text-feedgod-primary"
+                  placeholder="My Secret"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-400 mb-2">Key Name</label>
+                <input
+                  type="text"
+                  value={localConfig.key}
+                  onChange={(e) => handleConfigUpdate({ key: e.target.value })}
+                  className="w-full bg-[#252620] border border-[#3a3b35] rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary dark:focus:ring-feedgod-primary dark:text-feedgod-primary font-mono text-sm"
+                  placeholder="API_KEY"
+                />
+                <p className="text-xs text-gray-400 mt-1">Environment variable name</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-400 mb-2">Secret Type</label>
+                <select
+                  value={localConfig.type}
+                  onChange={(e) => handleConfigUpdate({ type: e.target.value as SecretConfig['type'] })}
+                  className="w-full bg-[#252620] border border-[#3a3b35] rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary dark:focus:ring-feedgod-primary dark:text-feedgod-primary"
+                >
+                  <option value="api_key">API Key</option>
+                  <option value="private_key">Private Key</option>
+                  <option value="webhook_url">Webhook URL</option>
+                  <option value="database_url">Database URL</option>
+                  <option value="custom">Custom</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-400 mb-2">Scope</label>
+                <select
+                  value={localConfig.scope}
+                  onChange={(e) => handleConfigUpdate({ scope: e.target.value as SecretConfig['scope'] })}
+                  className="w-full bg-[#252620] border border-[#3a3b35] rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary dark:focus:ring-feedgod-primary dark:text-feedgod-primary"
+                >
+                  <option value="global">Global</option>
+                  <option value="function">Function Only</option>
+                  <option value="feed">Feed Only</option>
+                </select>
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-400 mb-2">Secret Value</label>
+                <div className="relative">
+                  <input
+                    type={showValue ? 'text' : 'password'}
+                    value={localConfig.value}
+                    onChange={(e) => handleConfigUpdate({ value: e.target.value })}
+                    className="w-full bg-[#252620] border border-[#3a3b35] rounded-lg px-4 py-2 pr-10 text-white focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary dark:focus:ring-feedgod-primary dark:text-feedgod-primary font-mono text-sm"
+                    placeholder="Enter your secret value..."
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowValue(!showValue)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-feedgod-primary dark:text-feedgod-primary transition-colors star-glow-on-hover"
+                  >
+                    {showValue ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+                <p className="text-xs text-gray-400 mt-1">⚠️ This value will be encrypted when saved</p>
+              </div>
+            </div>
+
+            {/* Chain Selector */}
+            <div className="mt-4">
+              <ChainSelector
+                blockchain={localConfig.blockchain}
+                network={localConfig.network}
+                onBlockchainChange={(blockchain) => handleConfigUpdate({ blockchain })}
+                onNetworkChange={(network) => handleConfigUpdate({ network })}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column - Info & Actions */}
+        <div className="space-y-6">
+          <div className="bg-[#252620]/80 rounded-lg border border-[#3a3b35] p-6 backdrop-blur-sm">
+            <h3 className="text-base font-semibold text-white mb-3 flex items-center gap-2">
+              <Key className="w-5 h-5 text-feedgod-primary dark:text-feedgod-primary" />
+              Secret Info
+            </h3>
+            <div className="space-y-3">
+              <div>
+                <p className="text-sm text-gray-400 mb-1">Description</p>
+                <textarea
+                  value={localConfig.description || ''}
+                  onChange={(e) => handleConfigUpdate({ description: e.target.value })}
+                  className="w-full bg-[#252620] border border-[#3a3b35] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-feedgod-primary dark:text-feedgod-primary dark:focus:ring-feedgod-primary dark:text-feedgod-primary"
+                  placeholder="What is this secret used for?"
+                  rows={3}
+                />
+              </div>
+              <div className="pt-4 border-t border-[#3a3b35]">
+                <p className="text-sm text-gray-400 mb-2">Configuration</p>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Type:</span>
+                    <span className="text-white font-medium capitalize">{localConfig.type.replace('_', ' ')}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Scope:</span>
+                    <span className="text-white font-medium capitalize">{localConfig.scope}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Key:</span>
+                    <span className="text-white font-medium font-mono text-xs">{localConfig.key}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <button
+              onClick={handleSave}
+              className="flex-1 px-4 py-3 bg-feedgod-purple-200 dark:border-feedgod-dark-accent hover:bg-feedgod-purple-300 dark:border-feedgod-dark-accent rounded-lg text-white text-sm font-medium transition-colors flex items-center justify-center gap-2 star-glow-on-hover"
+            >
+              <Save className="w-4 h-4" />
+              Save
+            </button>
+            <button
+              onClick={handleDeploy}
+              className="flex-1 px-4 py-3 gradient-bg hover:opacity-90 rounded-lg text-white text-sm font-medium transition-all flex items-center justify-center gap-2 star-glow-on-hover"
+            >
+              <Play className="w-4 h-4" />
+              Deploy
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+

@@ -1,13 +1,13 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { 
-  Swords, 
-  ShoppingCart, 
-  Gamepad2, 
-  Plane, 
-  Cloud, 
-  Users, 
+import {
+  Swords,
+  ShoppingCart,
+  Gamepad2,
+  Plane,
+  Cloud,
+  Users,
   UtensilsCrossed,
   RefreshCw,
   Sparkles,
@@ -15,10 +15,11 @@ import {
   Wallet,
   ArrowUpToLine,
   ArrowDownToLine,
-  Lock
+  Lock,
+  Search
 } from 'lucide-react'
 import { useAppKit, useAppKitAccount } from '@reown/appkit/react'
-import Header from '@/components/Header'
+import Header from '@/components/navigation/Header'
 import ArenaMarketCard from '@/components/arena/ArenaMarketCard'
 import Leaderboard from '@/components/arena/Leaderboard'
 import PointsDisplay from '@/components/arena/PointsDisplay'
@@ -27,11 +28,14 @@ import PredictionModal from '@/components/arena/PredictionModal'
 import DepositModal from '@/components/arena/DepositModal'
 import WithdrawModal from '@/components/arena/WithdrawModal'
 import YourPositions from '@/components/arena/YourPositions'
-import { Market, MarketCategory, CATEGORY_INFO, PredictionDirection, ARENA_CONFIG } from '@/types/arena'
-import { getAllMarkets, updateMarketValue, getMarketsByCategory } from '@/lib/arena-api'
-import { getUserStats } from '@/lib/arena-storage'
-import { getArenaBalance, getUserId, initializeUserBalance, DEMO_MODE } from '@/lib/arena-wallet'
-import { playPickupSound } from '@/lib/sound-utils'
+import QuickOnboarding from '@/components/arena/QuickOnboarding'
+import FeaturedMarkets from '@/components/arena/FeaturedMarkets'
+import { Market, MarketCategory, PredictionDirection } from '@/types/arena'
+import { getAllMarkets, updateMarketValue, getMarketsByCategory } from '@/lib/arena/arena-api'
+import { resolvePredictionsForMarket } from '@/lib/arena/arena-storage'
+import { resolveExpiredMarkets } from '@/lib/arena/arena-resolver'
+import { getArenaBalance, getUserId, initializeUserBalance, DEMO_MODE } from '@/lib/arena/arena-wallet'
+import { playPickupSound } from '@/lib/utils/sound-utils'
 
 const CATEGORY_TABS: { value: MarketCategory | 'all'; label: string; icon: typeof ShoppingCart }[] = [
   { value: 'all', label: 'All Markets', icon: Sparkles },
@@ -81,6 +85,9 @@ export default function ArenaPage() {
   const [isLoading, setIsLoading] = useState(false) // Start with false since we have data
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date())
   const [arenaBalance, setArenaBalance] = useState(0)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [sortBy, setSortBy] = useState<'ending' | 'volume' | 'odds'>('ending')
+  const [showOnboarding, setShowOnboarding] = useState(true)
 
   // Load arena balance
   useEffect(() => {
@@ -117,7 +124,35 @@ export default function ArenaPage() {
       setMarkets(prev => prev.map(market => updateMarketValue(market)))
       setLastUpdate(new Date())
     }, 30000)
-    
+
+    return () => clearInterval(interval)
+  }, [])
+
+  // Check for and resolve expired markets
+  useEffect(() => {
+    const checkResolutions = () => {
+      setMarkets(prev => {
+        const { markets: updatedMarkets, newlyResolved } = resolveExpiredMarkets(prev)
+
+        // For each newly resolved market, resolve user predictions
+        newlyResolved.forEach(({ market, winningDirection }) => {
+          resolvePredictionsForMarket(
+            market.id,
+            winningDirection,
+            market
+          )
+        })
+
+        return updatedMarkets
+      })
+    }
+
+    // Check every 5 seconds for market resolutions
+    const interval = setInterval(checkResolutions, 5000)
+
+    // Also check immediately on mount
+    checkResolutions()
+
     return () => clearInterval(interval)
   }, [])
 
@@ -168,7 +203,33 @@ export default function ArenaPage() {
     setArenaBalance(getArenaBalance(userId))
   }
 
-  const filteredMarkets = getMarketsByCategory(markets, selectedCategory)
+  // Filter by category
+  const categoryFiltered = getMarketsByCategory(markets, selectedCategory)
+
+  // Filter by search query
+  const searchedMarkets = searchQuery
+    ? categoryFiltered.filter(m =>
+        m.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        m.description.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : categoryFiltered
+
+  // Sort markets
+  const filteredMarkets = [...searchedMarkets].sort((a, b) => {
+    switch (sortBy) {
+      case 'ending':
+        return new Date(a.resolveAt).getTime() - new Date(b.resolveAt).getTime()
+      case 'volume':
+        return (b.totalUpPoints + b.totalDownPoints) - (a.totalUpPoints + a.totalDownPoints)
+      case 'odds':
+        // Best odds = most lopsided pool ratio
+        const aRatio = Math.max(a.totalUpPoints, a.totalDownPoints) / (Math.min(a.totalUpPoints, a.totalDownPoints) || 1)
+        const bRatio = Math.max(b.totalUpPoints, b.totalDownPoints) / (Math.min(b.totalUpPoints, b.totalDownPoints) || 1)
+        return bRatio - aRatio
+      default:
+        return 0
+    }
+  })
 
   return (
     <main className="min-h-screen bg-[#1D1E19]">
@@ -210,6 +271,9 @@ export default function ArenaPage() {
             </button>
           </div>
         )}
+
+        {/* Featured Markets Carousel */}
+        <FeaturedMarkets markets={markets} onPredict={handlePredict} />
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Main Content - Markets */}
@@ -255,7 +319,33 @@ export default function ArenaPage() {
                 <span className="hidden sm:inline">Refresh</span>
               </button>
             </div>
-            
+
+            {/* Search and Sort Controls */}
+            <div className="flex flex-col sm:flex-row gap-3">
+              {/* Search Input */}
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                <input
+                  type="text"
+                  placeholder="Search markets..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 bg-[#252620] border border-[#3a3b35] rounded-lg text-sm text-white placeholder-gray-500 focus:outline-none focus:border-feedgod-primary transition-colors"
+                />
+              </div>
+
+              {/* Sort Dropdown */}
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as 'ending' | 'volume' | 'odds')}
+                className="px-3 py-2 bg-[#252620] border border-[#3a3b35] rounded-lg text-sm text-gray-300 focus:outline-none focus:border-feedgod-primary transition-colors cursor-pointer"
+              >
+                <option value="ending">Ending Soon</option>
+                <option value="volume">Highest Volume</option>
+                <option value="odds">Best Odds</option>
+              </select>
+            </div>
+
             {/* Last Update */}
             <p className="text-[10px] text-gray-600">
               Last updated: {lastUpdate.toLocaleTimeString()}
@@ -353,6 +443,22 @@ export default function ArenaPage() {
         onSuccess={handleWithdrawSuccess}
         currentArenaBalance={arenaBalance}
       />
+
+      {/* Quick Onboarding Modal */}
+      {showOnboarding && (
+        <QuickOnboarding
+          onComplete={() => setShowOnboarding(false)}
+          onStartBetting={() => {
+            // Pre-select first hot market
+            const hotMarket = markets.find(m => m.status === 'open')
+            if (hotMarket) {
+              setSelectedMarket(hotMarket)
+              setPredictionDirection('up')
+              setIsModalOpen(true)
+            }
+          }}
+        />
+      )}
     </main>
   )
 }

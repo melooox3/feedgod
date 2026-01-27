@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react'
 import { useAppKitAccount } from '@reown/appkit/react'
 import { useRouter } from 'next/navigation'
 import { Heart, Trash2, Edit, ArrowLeft, Database, Code, Dice6, Key, Target, Cloud, Trophy, Users, Brain, Globe, LayoutGrid, LucideIcon } from 'lucide-react'
-import Header from '@/components/Header'
+import Header from '@/components/navigation/Header'
 import { FeedConfig } from '@/types/feed'
 import { FunctionConfig, VRFConfig, SecretConfig, BuilderType } from '@/types/switchboard'
-import { playPickupSound } from '@/lib/sound-utils'
+import { playPickupSound } from '@/lib/utils/sound-utils'
 
 type ProfileTab = 'all' | 'feed' | 'function' | 'vrf' | 'secret' | 'prediction' | 'weather' | 'sports' | 'social' | 'ai-judge' | 'custom-api'
 

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { detectIntent, getModuleInfo, EXAMPLE_PROMPTS } from '@/lib/prompt-router'
+import { detectIntent, getModuleInfo, EXAMPLE_PROMPTS } from '@/lib/ai/prompt-router'
 
 describe('prompt-router', () => {
   describe('detectIntent', () => {

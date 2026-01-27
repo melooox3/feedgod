@@ -22,9 +22,9 @@ import {
   LucideIcon
 } from 'lucide-react'
 import { Market, MarketIconName, CATEGORY_INFO, PredictionDirection } from '@/types/arena'
-import { formatValue, getTimeRemaining } from '@/lib/arena-api'
-import { getPendingPredictionForMarket } from '@/lib/arena-storage'
-import { playPickupSound } from '@/lib/sound-utils'
+import { formatValue, getTimeRemaining } from '@/lib/arena/arena-api'
+import { getPendingPredictionForMarket } from '@/lib/arena/arena-storage'
+import { playPickupSound } from '@/lib/utils/sound-utils'
 
 // Icon mapping
 const ICON_MAP: Record<MarketIconName, LucideIcon> = {

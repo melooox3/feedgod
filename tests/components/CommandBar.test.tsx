@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import CommandBar from '@/components/CommandBar'
+import CommandBar from '@/components/navigation/CommandBar'
 
 // Mock dependencies
-vi.mock('@/lib/ai-assistant-extended', () => ({
+vi.mock('@/lib/ai/ai-assistant-extended', () => ({
   generateFromPrompt: vi.fn().mockResolvedValue({
     name: 'Generated Feed',
     symbol: 'TEST/USD',
@@ -18,7 +18,7 @@ vi.mock('@/lib/ai-assistant-extended', () => ({
   }),
 }))
 
-vi.mock('@/lib/prompt-router', () => ({
+vi.mock('@/lib/ai/prompt-router', () => ({
   detectIntent: vi.fn().mockImplementation((query: string) => {
     if (query.includes('BTC') || query.includes('price')) {
       return { module: 'feed', label: 'Price Feed', icon: '\uD83D\uDCCA', parsed: {} }
@@ -37,7 +37,7 @@ vi.mock('@/lib/prompt-router', () => ({
   ],
 }))
 
-vi.mock('@/lib/sound-utils', () => ({
+vi.mock('@/lib/utils/sound-utils', () => ({
   playPickupSound: vi.fn(),
 }))
 

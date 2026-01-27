@@ -6,7 +6,7 @@ import {
   fetchKrakenPrice,
   fetchSourcePrice,
   generateChartData
-} from '@/lib/price-api'
+} from '@/lib/api/price-api'
 
 describe('price-api', () => {
   beforeEach(() => {
@@ -18,51 +18,47 @@ describe('price-api', () => {
   })
 
   describe('fetchSurgePrice', () => {
-    it('returns price data for valid symbol', async () => {
-      const mockResponse = {
-        success: true,
-        data: {
-          symbol: 'BTC/USD',
-          price: 95000,
-        },
-      }
+    it('returns price data for supported symbol via Crossbar', async () => {
+      // Mock Crossbar API response (array with results)
+      const mockCrossbarResponse = [
+        { results: ['95000.00'] }
+      ]
 
-      vi.mocked(fetch).mockResolvedValueOnce({
+      vi.mocked(fetch).mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve(mockResponse),
+        json: () => Promise.resolve(mockCrossbarResponse),
       } as Response)
 
       const result = await fetchSurgePrice('BTC/USD')
 
       expect(result).toBeDefined()
       expect(result?.price).toBe(95000)
-      expect(result?.lastUpdate).toBeInstanceOf(Date)
+      expect(result?.timestamp).toBeInstanceOf(Date)
     })
 
-    it('returns null for invalid response', async () => {
-      vi.mocked(fetch).mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve({ success: false }),
-      } as Response)
-
+    it('returns null for unsupported symbol', async () => {
+      // Unsupported symbols return null before making any API call
       const result = await fetchSurgePrice('INVALID/USD')
       expect(result).toBeNull()
     })
 
-    it('returns null on API error', async () => {
-      vi.mocked(fetch).mockResolvedValueOnce({
+    it('returns error status on API failure', async () => {
+      vi.mocked(fetch).mockResolvedValue({
         ok: false,
       } as Response)
 
       const result = await fetchSurgePrice('BTC/USD')
-      expect(result).toBeNull()
+      // Returns error object when API fails but symbol is supported
+      expect(result?.status).toBe('error')
+      expect(result?.price).toBe(0)
     })
 
-    it('returns null on network error', async () => {
-      vi.mocked(fetch).mockRejectedValueOnce(new Error('Network error'))
+    it('returns error status on network error', async () => {
+      vi.mocked(fetch).mockRejectedValue(new Error('Network error'))
 
       const result = await fetchSurgePrice('BTC/USD')
-      expect(result).toBeNull()
+      expect(result?.status).toBe('error')
+      expect(result?.price).toBe(0)
     })
   })
 
@@ -146,9 +142,14 @@ describe('price-api', () => {
 
   describe('fetchSourcePrice', () => {
     it('returns price from surge source', async () => {
-      vi.mocked(fetch).mockResolvedValueOnce({
+      // Mock Crossbar API response format (array with results)
+      const mockCrossbarResponse = [
+        { results: ['95000.00'] }
+      ]
+
+      vi.mocked(fetch).mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({ success: true, data: { price: 95000 } }),
+        json: () => Promise.resolve(mockCrossbarResponse),
       } as Response)
 
       const result = await fetchSourcePrice('surge', 'BTC/USD')

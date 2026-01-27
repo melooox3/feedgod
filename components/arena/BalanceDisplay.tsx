@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react'
 import { Wallet, PieChart } from 'lucide-react'
 import { useAppKitAccount } from '@reown/appkit/react'
-import { getArenaBalance, getUserId, formatUsdc } from '@/lib/arena-wallet'
-import { getArenaUser } from '@/lib/arena-storage'
+import { getArenaBalance, getUserId, formatUsdc } from '@/lib/arena/arena-wallet'
+import { getArenaUser } from '@/lib/arena/arena-storage'
 
 export default function BalanceDisplay() {
   const { address } = useAppKitAccount()

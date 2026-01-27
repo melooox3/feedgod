@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react'
 import { X, TrendingUp, TrendingDown, AlertCircle } from 'lucide-react'
 import { useAppKitAccount } from '@reown/appkit/react'
 import { Market, ARENA_CONFIG, PredictionDirection } from '@/types/arena'
-import { placePrediction } from '@/lib/arena-storage'
-import { getArenaBalance, subtractFromBalance, getUserId, formatUsdc } from '@/lib/arena-wallet'
-import { calculatePotentialPayout, formatValue, getTimeRemaining } from '@/lib/arena-api'
-import { playPickupSound } from '@/lib/sound-utils'
+import { placePrediction } from '@/lib/arena/arena-storage'
+import { getArenaBalance, subtractFromBalance, getUserId, formatUsdc } from '@/lib/arena/arena-wallet'
+import { calculatePotentialPayout, formatValue, getTimeRemaining } from '@/lib/arena/arena-api'
+import { playPickupSound } from '@/lib/utils/sound-utils'
 
 interface PredictionModalProps {
   market: Market

@@ -14,11 +14,11 @@ import {
   Trophy
 } from 'lucide-react'
 import { useAppKit, useAppKitAccount } from '@reown/appkit/react'
-import { getTimeRemaining } from '@/lib/arena-api'
-import { getUserPredictions, markPredictionClaimed, formatSwtch } from '@/lib/arena-storage'
-import { addToBalance, getUserId, DEMO_MODE } from '@/lib/arena-wallet'
+import { getTimeRemaining } from '@/lib/arena/arena-api'
+import { getUserPredictions, markPredictionClaimed, formatSwtch } from '@/lib/arena/arena-storage'
+import { addToBalance, getUserId, DEMO_MODE } from '@/lib/arena/arena-wallet'
 import { Prediction } from '@/types/arena'
-import { playPickupSound } from '@/lib/sound-utils'
+import { playPickupSound } from '@/lib/utils/sound-utils'
 
 interface YourPositionsProps {
   onClaimSuccess?: () => void

@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
-import { useFeedConfig, AVAILABLE_SOURCES, DEFAULT_CONFIG } from '@/hooks/useFeedConfig'
+import { useFeedConfig, AVAILABLE_SOURCES, DEFAULT_CONFIG } from '@/lib/hooks/useFeedConfig'
 import type { FeedConfig, DataSource } from '@/types/feed'
 
 // Mock sound utility
-vi.mock('@/lib/sound-utils', () => ({
+vi.mock('@/lib/utils/sound-utils', () => ({
   playPickupSound: vi.fn(),
 }))
 

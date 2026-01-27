@@ -30,13 +30,13 @@ import {
   TrendingUp,
   LucideIcon
 } from 'lucide-react'
-import Header from '@/components/Header'
-import OracleCard from '@/components/OracleCard'
-import OracleDetailModal from '@/components/OracleDetailModal'
-import LiveOracleCard from '@/components/LiveOracleCard'
-import OracleSparkline from '@/components/OracleSparkline'
+import Header from '@/components/navigation/Header'
+import OracleCard from '@/components/cards/OracleCard'
+import OracleDetailModal from '@/components/modals/OracleDetailModal'
+import LiveOracleCard from '@/components/cards/LiveOracleCard'
+import OracleSparkline from '@/components/charts/OracleSparkline'
 import { Oracle, OracleType, OracleStats } from '@/types/oracle'
-import { fetchAllOracles, fetchOracleStats } from '@/lib/explore-api'
+import { fetchAllOracles, fetchOracleStats } from '@/lib/api/explore-api'
 import { 
   MonitoredOracle,
   getMockDeployedOracles, 
@@ -49,10 +49,10 @@ import {
   getTimeSinceUpdate,
   getMonitoredPriceSymbols,
   updateOraclesWithRealPrices
-} from '@/lib/oracle-monitor'
-import { playPickupSound } from '@/lib/sound-utils'
-import { usePrices } from '@/lib/use-prices'
-import { getPriceFeedSymbols, updatePriceCache } from '@/lib/explore-api'
+} from '@/lib/utils/oracle-monitor'
+import { playPickupSound } from '@/lib/utils/sound-utils'
+import { usePrices } from '@/lib/hooks/use-prices'
+import { getPriceFeedSymbols, updatePriceCache } from '@/lib/api/explore-api'
 
 type TabType = 'my-oracles' | 'all-oracles'
 type FilterType = OracleType | 'all'
