@@ -423,8 +423,7 @@ export function updatePriceCache(symbol: string, price: number, change24h: numbe
  * Prices will be placeholder values - use usePrices hook to get real prices
  */
 export async function fetchAllOracles(filters?: OracleFilters): Promise<Oracle[]> {
-  // Small delay to simulate API
-  await new Promise(resolve => setTimeout(resolve, 100))
+  // No delay - data is local
   
   // Build oracles with current values
   let oracles: Oracle[] = oracleMetadata.map(meta => {
@@ -499,7 +498,7 @@ export async function fetchAllOracles(filters?: OracleFilters): Promise<Oracle[]
  * Fetch a single oracle by ID
  */
 export async function fetchOracleById(id: string): Promise<Oracle | null> {
-  await new Promise(resolve => setTimeout(resolve, 50))
+  // No delay - data is local
   
   const meta = oracleMetadata.find(o => o.id === id)
   if (!meta) return null
@@ -524,7 +523,7 @@ export async function fetchOracleById(id: string): Promise<Oracle | null> {
  * Get oracle statistics
  */
 export async function fetchOracleStats(): Promise<OracleStats> {
-  await new Promise(resolve => setTimeout(resolve, 50))
+  // No delay - data is local
   
   return {
     totalOracles: oracleMetadata.length,

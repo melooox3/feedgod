@@ -261,8 +261,8 @@ export default function Home() {
   }
 
   const getModuleTitle = () => {
-    const module = MODULES.find(m => m.id === activeModule)
-    return module?.title || ''
+    const selectedModule = MODULES.find(m => m.id === activeModule)
+    return selectedModule?.title || ''
   }
 
   return (

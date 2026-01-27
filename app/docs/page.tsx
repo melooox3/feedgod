@@ -359,7 +359,7 @@ export default function DocsPage() {
           <section data-section="overview" className="mb-12">
             <h1 className="text-2xl font-semibold text-white mb-3">FeedGod Documentation</h1>
             <p className="text-sm text-gray-400 mb-4 leading-relaxed">
-              FeedGod is the universal oracle factory for Solana. Create any data feed, prediction market oracle, or custom data source — no code required. Built on Switchboard's decentralized oracle infrastructure.
+              FeedGod is the universal oracle factory for Solana. Create any data feed, prediction market oracle, or custom data source — no code required. Built on Switchboard&apos;s decentralized oracle infrastructure.
             </p>
             
             <InfoBox variant="info" title="What makes FeedGod unique?">
@@ -787,7 +787,7 @@ export default function DocsPage() {
               </div>
               
               <InfoBox variant="warning">
-                Custom oracle feeds you create don't appear in Arena — this protects users from manipulation.
+                Custom oracle feeds you create don&apos;t appear in Arena — this protects users from manipulation.
               </InfoBox>
             </div>
 

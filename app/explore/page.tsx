@@ -191,7 +191,7 @@ function OracleListRow({ oracle, onRefresh }: { oracle: MonitoredOracle; onRefre
 // Cache keys
 const ORACLES_CACHE_KEY = 'explore_oracles_cache'
 const MY_ORACLES_CACHE_KEY = 'explore_my_oracles_cache'
-const CACHE_DURATION = 60000 // 1 minute
+const CACHE_DURATION = 300000 // 5 minutes - increased for better UX
 
 export default function ExplorePage() {
   const [activeTab, setActiveTab] = useState<TabType>('my-oracles')
@@ -275,10 +275,22 @@ export default function ExplorePage() {
     }
   }, [prices])
   
-  // Load explore oracles - only show loading if we have no data
+  // Load explore oracles - skip if valid cache exists (for initial load)
   useEffect(() => {
     if (activeTab === 'all-oracles') {
       const loadData = async () => {
+        // Check if we have valid cached data for default filters (initial load optimization)
+        const isDefaultFilters = typeFilter === 'all' && searchQuery === '' && sortBy === 'newest'
+        
+        if (isDefaultFilters && oracles.length > 0) {
+          // We already have cached data from initialization, just load stats
+          if (!exploreStats) {
+            const statsData = await fetchOracleStats()
+            setExploreStats(statsData)
+          }
+          return
+        }
+        
         // Only show loading spinner if we don't have cached data
         if (oracles.length === 0) {
           setIsExploreLoading(true)
@@ -707,8 +719,26 @@ export default function ExplorePage() {
             
             {/* Results */}
             {isExploreLoading ? (
-              <div className="flex items-center justify-center py-16">
-                <Loader2 className="w-5 h-5 animate-spin text-gray-400" />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="bg-[#252620] rounded-lg border border-[#3a3b35] p-4 h-48 animate-pulse">
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-[#3a3b35]" />
+                      <div className="flex-1 space-y-2">
+                        <div className="h-4 bg-[#3a3b35] rounded w-3/4" />
+                        <div className="h-3 bg-[#3a3b35] rounded w-1/2" />
+                      </div>
+                    </div>
+                    <div className="mt-4 space-y-2">
+                      <div className="h-3 bg-[#3a3b35] rounded w-full" />
+                      <div className="h-3 bg-[#3a3b35] rounded w-2/3" />
+                    </div>
+                    <div className="mt-4 flex gap-2">
+                      <div className="h-6 bg-[#3a3b35] rounded w-16" />
+                      <div className="h-6 bg-[#3a3b35] rounded w-20" />
+                    </div>
+                  </div>
+                ))}
               </div>
             ) : oracles.length === 0 ? (
               <div className="text-center py-16">

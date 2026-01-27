@@ -45,7 +45,7 @@ const CATEGORY_TABS: { value: MarketCategory | 'all'; label: string; icon: typeo
 
 // Cache key for arena markets
 const MARKETS_CACHE_KEY = 'arena_markets_cache'
-const CACHE_DURATION = 60000 // 1 minute
+const CACHE_DURATION = 300000 // 5 minutes - increased for better UX
 
 export default function ArenaPage() {
   const { address, isConnected } = useAppKitAccount()

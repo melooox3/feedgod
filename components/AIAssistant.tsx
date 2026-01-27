@@ -127,7 +127,7 @@ export default function AIAssistant({ onFeedGenerated, currentConfig }: AIAssist
           </button>
         </div>
         <p className="text-xs text-gray-500 mt-2">
-          Examples: "BTC/USD feed", "SOL price with 30s updates", "ETH/USD using multiple sources"
+          Examples: &quot;BTC/USD feed&quot;, &quot;SOL price with 30s updates&quot;, &quot;ETH/USD using multiple sources&quot;
         </p>
       </form>
     </div>

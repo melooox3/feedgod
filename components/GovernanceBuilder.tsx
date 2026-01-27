@@ -428,7 +428,7 @@ export default function GovernanceBuilder() {
             <div>
               <h3 className="text-lg font-semibold text-white mb-2">Define Conditions</h3>
               <p className="text-sm text-gray-400">
-                Create the logic that determines your oracle's output
+                Create the logic that determines your oracle&apos;s output
               </p>
             </div>
 
